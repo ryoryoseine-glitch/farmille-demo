@@ -957,7 +957,7 @@ S.reportForm = () => appbar('使用結果入力') + `
     </div>
 
     <div class="field">
-      <label class="check-toggle" id="hikakuToggle"><span class="cbox"></span> 比較区（資材を使っていない区画）がある<span class="badge badge-opt" style="margin-left:auto">任意</span></label>
+      <label class="check-toggle" id="hikakuToggle"><span class="cbox"></span> 比較区（資材を使っていない区画）がある</label>
       <div id="hikakuPanel" class="harvest-panel" hidden>
         <div class="field"><label>比較区で他のBS資材を使っていますか <span class="badge badge-opt">任意</span></label>
           <select class="input"><option>使っていない</option><option>使っている</option></select>
@@ -2839,7 +2839,7 @@ function runSearch(sel) {
         const mrEl = scr.querySelector('#methodRadios');
         if (mrEl && !scr.querySelector('#methodDetailBtn')) {
           mrEl.insertAdjacentHTML('afterend',
-            `<button type="button" id="methodDetailBtn" class="btn btn-ghost" style="margin-top:10px" hidden>＋ 処理方法を詳細に書く（希釈倍率など・任意）</button>`);
+            `<button type="button" id="methodDetailBtn" class="btn btn-ghost" style="margin-top:10px" hidden>＋ 処理方法を詳細に書く（希釈倍率など）</button>`);
           const btn = scr.querySelector('#methodDetailBtn');
           let curM = null;
           const hideAll = () => ['spray','soil','seed','other'].forEach(m => { const p = document.getElementById('panel-' + m); if (p) p.hidden = true; });
@@ -2848,12 +2848,12 @@ function runSearch(sel) {
             curM = rd.dataset.m;
             hideAll();
             btn.hidden = false;
-            btn.textContent = '＋ 処理方法を詳細に書く（希釈倍率など・任意）';
+            btn.textContent = '＋ 処理方法を詳細に書く（希釈倍率など）';
           });
           btn.addEventListener('click', () => {
             const p = document.getElementById('panel-' + curM); if (!p) return;
             p.hidden = !p.hidden;
-            btn.textContent = p.hidden ? '＋ 処理方法を詳細に書く（希釈倍率など・任意）' : '－ 詳細を閉じる';
+            btn.textContent = p.hidden ? '＋ 処理方法を詳細に書く（希釈倍率など）' : '－ 詳細を閉じる';
           });
         }
 
