@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Farmille 完成見本</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
@@ -634,6 +635,46 @@
 </div>
 
 <script>
+/* 保存済みデータの文字化けを修復する。
+   以前のHTMLに <meta charset> が無く、ローカルで直接開くとUTF-8のバイト列が
+   Windows-1252として読まれたため、その状態で保存された前回値やお気に入りが
+   化けたまま残っている。お気に入りは製品名がキーなので、放置すると一致せず機能が壊れる。
+   化けた文字を元のバイトへ戻し、UTF-8として読み直す。正常な文字列は変換に失敗するので
+   そのまま残る（＝壊す心配がない）。 */
+(function () {
+  const CP1252 = {0x20AC:0x80,0x201A:0x82,0x0192:0x83,0x201E:0x84,0x2026:0x85,0x2020:0x86,
+    0x2021:0x87,0x02C6:0x88,0x2030:0x89,0x0160:0x8A,0x2039:0x8B,0x0152:0x8C,0x017D:0x8E,
+    0x2018:0x91,0x2019:0x92,0x201C:0x93,0x201D:0x94,0x2022:0x95,0x2013:0x96,0x2014:0x97,
+    0x02DC:0x98,0x2122:0x99,0x0161:0x9A,0x203A:0x9B,0x0153:0x9C,0x017E:0x9E,0x0178:0x9F};
+  const toBytes = str => {
+    const out = [];
+    for (const ch of str) {
+      const c = ch.codePointAt(0);
+      if (c <= 0xFF) out.push(c);
+      else if (CP1252[c] != null) out.push(CP1252[c]);
+      else return null;                       // 正常な日本語などはここで打ち切り
+    }
+    return out;
+  };
+  const repair = str => {
+    if (!/[\u00C2-\u00F4]/.test(str)) return null;   // 化けの痕跡が無ければ触らない
+    const bytes = toBytes(str);
+    if (!bytes) return null;
+    try {
+      const t = new TextDecoder('utf-8', {fatal: true}).decode(new Uint8Array(bytes));
+      return t === str ? null : t;
+    } catch (e) { return null; }              // UTF-8として不正なら元のまま
+  };
+  try {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
+    keys.filter(k => /^farmille/.test(k)).forEach(k => {
+      const fixed = repair(localStorage.getItem(k) || '');
+      if (fixed != null) localStorage.setItem(k, fixed);
+    });
+  } catch (e) { /* localStorageが使えない環境では何もしない */ }
+})();
+
 /* viewport（スマホで実寸表示にする。メタが無効化された場合の保険） */
 if (!document.querySelector('meta[name="viewport"]')) {
   const m = document.createElement('meta');
@@ -997,26 +1038,21 @@ S.reportForm = () => appbar('使用結果入力') + `
 
     <div class="field"><label>使用目的 <span class="badge badge-req">必須</span></label>
       <div class="fguide">この資材に期待した効果を選んでください（複数選択できます）。</div>
-      <div class="fguide eff-h">吸収・光合成</div>
+      <div class="fguide eff-h">栄養利用の効率改善</div>
       <div class="tag-cloud">
-        <span class="qchip tagtoggle">養分吸収の改善</span><span class="qchip tagtoggle">水分吸収の改善</span><span class="qchip tagtoggle">酸素の供給効率の改善</span>
-        <span class="qchip tagtoggle">CO2の供給効率の改善</span><span class="qchip tagtoggle">養分の利用効率の改善</span><span class="qchip tagtoggle">光合成改善</span>
+        <span class="qchip tagtoggle">養分吸収の改善</span><span class="qchip tagtoggle">水分吸収の改善</span><span class="qchip tagtoggle">酸素の供給効率の改善</span><span class="qchip tagtoggle">CO2の供給効率の改善</span><span class="qchip tagtoggle">養分の利用効率の改善</span>
       </div>
-      <div class="fguide eff-h">環境ストレス耐性</div>
+      <div class="fguide eff-h">非生物的ストレス耐性の改善</div>
       <div class="tag-cloud">
-        <span class="qchip tagtoggle">耐暑性改善</span><span class="qchip tagtoggle">耐寒性改善</span><span class="qchip tagtoggle">耐乾燥性改善</span>
-        <span class="qchip tagtoggle">湿害からの回復改善</span><span class="qchip tagtoggle">低照度下での生育改善</span><span class="qchip tagtoggle">塩害耐性改善</span>
-        <span class="qchip tagtoggle">遮光効果</span><span class="qchip tagtoggle">耐霜性改善</span><span class="qchip tagtoggle">環境ストレス耐性を高める</span>
+        <span class="qchip tagtoggle">耐暑性改善</span><span class="qchip tagtoggle">耐寒性改善</span><span class="qchip tagtoggle">耐乾燥性改善</span><span class="qchip tagtoggle">湿害からの回復改善</span><span class="qchip tagtoggle">低照度下での生育改善</span><span class="qchip tagtoggle">塩害耐性改善</span><span class="qchip tagtoggle">遮光効果</span><span class="qchip tagtoggle">耐霜性改善</span><span class="qchip tagtoggle">環境ストレス耐性を高める</span>
       </div>
-      <div class="fguide eff-h">収量・品質</div>
+      <div class="fguide eff-h">収量・品質の改善</div>
       <div class="tag-cloud">
-        <span class="qchip tagtoggle">収量改善</span><span class="qchip tagtoggle">秀品率の改善</span><span class="qchip tagtoggle">有用成分（栄養成分・機能性成分）の改善</span>
-        <span class="qchip tagtoggle">糖度増加</span>
+        <span class="qchip tagtoggle">収量改善</span><span class="qchip tagtoggle">秀品率の改善</span><span class="qchip tagtoggle">有用成分（栄養成分・機能性成分）の改善</span><span class="qchip tagtoggle">糖度増加</span>
       </div>
-      <div class="fguide eff-h">生育・回復</div>
+      <div class="fguide eff-h">その他</div>
       <div class="tag-cloud">
-        <span class="qchip tagtoggle">細胞壁の強化</span><span class="qchip tagtoggle">樹勢改善</span><span class="qchip tagtoggle">成り疲れ改善</span>
-        <span class="qchip tagtoggle">外部損傷の修復</span><span class="qchip tagtoggle">しおれ軽減</span><span class="qchip tagtoggle">根圏の有用微生物の活性化</span>
+        <span class="qchip tagtoggle">光合成改善</span><span class="qchip tagtoggle">細胞壁の強化</span><span class="qchip tagtoggle">樹勢改善</span><span class="qchip tagtoggle">成り疲れ改善</span><span class="qchip tagtoggle">外部損傷の修復</span><span class="qchip tagtoggle">しおれ軽減</span><span class="qchip tagtoggle">根圏の有用微生物の活性化</span>
       </div>
       <input class="input" style="margin-top:11px" placeholder="補足（任意）例）灌水量を変えずに樹勢を維持したかった"></div>
 
@@ -2186,10 +2222,10 @@ function runSearch(sel) {
   let openGroups = new Set();
   let openSecs = new Set(['eff']);   // 効果はグループ行まで常時表示
   const EFF_GROUPS4 = {
-    '吸収・光合成': ['養分吸収の改善','水分吸収の改善','養分の利用効率の改善','光合成改善','低照度下での生育改善','CO2の供給効率の改善','酸素の供給効率の改善'],
-    '環境ストレス耐性': ['耐暑性改善','耐寒性改善','耐乾燥性改善','塩害耐性改善','環境ストレス耐性を高める','湿害からの回復改善','しおれ軽減','遮光効果','耐霜性改善'],
-    '収量・品質': ['収量改善','秀品率の改善','糖度増加','有用成分（栄養成分・機能性成分）の改善'],
-    '生育・回復': ['樹勢改善','成り疲れ改善','細胞壁の強化','外部損傷の修復','根圏の有用微生物の活性化'],
+    '栄養利用の効率改善': ['養分吸収の改善','水分吸収の改善','酸素の供給効率の改善','CO2の供給効率の改善','養分の利用効率の改善'],
+    '非生物的ストレス耐性の改善': ['耐暑性改善','耐寒性改善','耐乾燥性改善','湿害からの回復改善','低照度下での生育改善','塩害耐性改善','遮光効果','耐霜性改善','環境ストレス耐性を高める'],
+    '収量・品質の改善': ['収量改善','秀品率の改善','有用成分（栄養成分・機能性成分）の改善','糖度増加'],
+    'その他': ['光合成改善','細胞壁の強化','樹勢改善','成り疲れ改善','外部損傷の修復','しおれ軽減','根圏の有用微生物の活性化'],
   };
   let openEffGroups = new Set();
   const effChipsHtml = () => {
@@ -2212,8 +2248,8 @@ function runSearch(sel) {
         (open ? `<div class="sug-chips" style="padding:2px 6px 10px 24px">${
           kids.map(t => `<span class="qchip" data-cat="effect" data-v="${esc(t.v)}" style="font-size:12px;padding:5px 11px">${esc(t.v)}</span>`).join('')}</div>` : '');
     };
-    return Object.entries(EFF_GROUPS4).map(([g, list]) => groupRow(g, list)).join('') +
-      groupRow('その他', others.map(t => t.v));
+    return Object.entries(EFF_GROUPS4).map(([g, list]) =>
+      groupRow(g, g === 'その他' ? list.concat(others.map(t => t.v)) : list)).join('');
   };
   const cropTreeHtml = () => {
     const q = cropQuery.trim().toLowerCase();
@@ -2578,23 +2614,23 @@ function runSearch(sel) {
 
     /* --- 1. 何が起きるか --- */
     const effGroups = {
-      '吸収・光合成': ['養分吸収の改善','水分吸収の改善','養分の利用効率の改善','光合成改善','低照度下での生育改善','CO2の供給効率の改善','酸素の供給効率の改善'],
-      '環境ストレス耐性': ['耐暑性改善','耐寒性改善','耐乾燥性改善','塩害耐性改善','環境ストレス耐性を高める','湿害からの回復改善','しおれ軽減'],
-      '収量・品質': ['収量改善','秀品率の改善','糖度増加','有用成分（栄養成分・機能性成分）の改善'],
-      '生育・回復': ['樹勢改善','成り疲れ改善','細胞壁の強化','外部損傷の修復','根圏の有用微生物の活性化'],
+      '栄養利用の効率改善': ['養分吸収の改善','水分吸収の改善','酸素の供給効率の改善','CO2の供給効率の改善','養分の利用効率の改善'],
+      '非生物的ストレス耐性の改善': ['耐暑性改善','耐寒性改善','耐乾燥性改善','湿害からの回復改善','低照度下での生育改善','塩害耐性改善','遮光効果','耐霜性改善','環境ストレス耐性を高める'],
+      '収量・品質の改善': ['収量改善','秀品率の改善','有用成分（栄養成分・機能性成分）の改善','糖度増加'],
+      'その他': ['光合成改善','細胞壁の強化','樹勢改善','成り疲れ改善','外部損傷の修復','しおれ軽減','根圏の有用微生物の活性化'],
     };
     const effs = p.effects || [];
+    const ungrouped = effs.filter(e => !Object.values(effGroups).flat().includes(e));
     const effHtml = Object.entries(effGroups).map(([g, list]) => {
-      const hit = effs.filter(e => list.includes(e));
+      const hit = effs.filter(e => list.includes(e)).concat(g === 'その他' ? ungrouped : []);
       if (!hit.length) return '';
       return `<div style="margin-top:10px"><div class="muted" style="font-size:10.5px;margin-bottom:5px">${esc(g)}</div>
         <div class="ts-chips" style="margin-top:0">${hit.map(e => chip(e)).join(' ')}</div></div>`;
     }).join('');
-    const other = effs.filter(e => !Object.values(effGroups).flat().includes(e));
     const box1 = `
       <div class="card pad">
         <p style="font-size:13.5px;line-height:1.7">${esc(p.benefit || p.usecase || '')}</p>
-        ${effHtml}${other.length ? `<div style="margin-top:10px"><div class="muted" style="font-size:10.5px;margin-bottom:5px">その他</div><div class="ts-chips" style="margin-top:0">${other.map(e => chip(e)).join(' ')}</div></div>` : ''}
+        ${effHtml}
       </div>
       ${p.effOfficial || p.moa ? `<div class="card" style="margin-top:10px">
         ${dRowV('期待効果（メーカー資料より抽出）', p.effOfficial)}
@@ -2825,10 +2861,10 @@ function runSearch(sel) {
       if (!scr.querySelector('.home-catalog')) {
         const escC = s2 => String(s2 == null ? '' : s2).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
         const EFF_G = {
-          '吸収・光合成': ['養分吸収の改善','水分吸収の改善','養分の利用効率の改善','光合成改善','低照度下での生育改善','CO2の供給効率の改善','酸素の供給効率の改善'],
-          '環境ストレス耐性': ['耐暑性改善','耐寒性改善','耐乾燥性改善','塩害耐性改善','環境ストレス耐性を高める','湿害からの回復改善','しおれ軽減','遮光効果','耐霜性改善'],
-          '収量・品質': ['収量改善','秀品率の改善','糖度増加','有用成分（栄養成分・機能性成分）の改善'],
-          '生育・回復': ['樹勢改善','成り疲れ改善','細胞壁の強化','外部損傷の修復','根圏の有用微生物の活性化'],
+          '栄養利用の効率改善': ['養分吸収の改善','水分吸収の改善','酸素の供給効率の改善','CO2の供給効率の改善','養分の利用効率の改善'],
+          '非生物的ストレス耐性の改善': ['耐暑性改善','耐寒性改善','耐乾燥性改善','湿害からの回復改善','低照度下での生育改善','塩害耐性改善','遮光効果','耐霜性改善','環境ストレス耐性を高める'],
+          '収量・品質の改善': ['収量改善','秀品率の改善','有用成分（栄養成分・機能性成分）の改善','糖度増加'],
+          'その他': ['光合成改善','細胞壁の強化','樹勢改善','成り疲れ改善','外部損傷の修復','しおれ軽減','根圏の有用微生物の活性化'],
         };
         const sel = [];
         const openG = new Set();
