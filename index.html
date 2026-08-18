@@ -28,6 +28,8 @@
   .screen-chips { display:flex; gap:6px; overflow-x:auto; max-width:min(92vw, 760px); padding:4px; scrollbar-width:thin; }
   .schip { flex:0 0 auto; border:1px solid var(--line); background:var(--card); color:var(--ink-2); border-radius:999px; padding:6px 13px; font-size:12px; white-space:nowrap; }
   .schip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
+  #navToggle, .nav-head { display:none; }
+  .pc-search, .campaign, .auth-btns { display:none; }
   .theme-toggle { flex:0 0 auto; border:1px solid var(--line-strong); background:var(--card); color:var(--ink-2); border-radius:999px; padding:6px 13px; font-size:12px; }
 
   /* ---- phone frame ---- */
@@ -79,7 +81,7 @@
 
   /* ---- home ---- */
   .hero-m { padding:22px 16px 4px; text-align:center; }
-  .hero-m h1 { font-size:21px; letter-spacing:.01em; }
+  .hero-m h1 { font-size:24px; letter-spacing:.01em; line-height:1.5; }
   .hero-m .lead { font-size:12px; color:var(--ink-2); margin-top:8px; }
   .prod-scroll { display:flex; gap:11px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:none; }
   .prod-scroll::-webkit-scrollbar { display:none; }
@@ -470,24 +472,150 @@
   body.app-mode .notch { display:none; }
   body.app-mode .appbar { padding-top:max(12px, env(safe-area-inset-top)); }
 
-  /* ---- PC表示（広い画面ではスマホ枠を外してウェブアプリ表示） ---- */
+  /* ---- PC表示（ウェブアプリとして再レイアウト） ---- */
   @media (min-width: 900px) {
     body { padding:0; gap:0; display:block; }
-    .topbar { position:fixed; top:10px; right:14px; z-index:99; justify-content:flex-end; }
+    .topbar { position:fixed; top:12px; right:16px; z-index:99; justify-content:flex-end; }
     .screen-chips { max-width:70vw; }
     .phone { width:100%; max-width:none; height:100vh; height:100dvh; border:none; border-radius:0; box-shadow:none; }
     .notch { display:none; }
-    .appbar { padding:14px 28px 12px; }
-    .appbar .ttl, .appbar .logo { max-width:820px; }
-    .body { max-width:820px; margin:0 auto; padding:22px 24px 60px; }
-    .hero-m { max-width:820px; margin:0 auto; }
-    .bottom-nav { justify-content:center; }
-    .bn-item { flex:0 0 96px; }
-    .fab-bar { left:50%; transform:translateX(-50%); width:min(92%, 760px); right:auto; }
-    .pick-footer { left:50%; transform:translateX(-50%); width:min(100%, 820px); right:auto; }
-    .report-scroll { margin:0; padding:2px 0 6px; }
-    .prod-card { flex:0 0 180px; }
+
+    /* ナビはヘッダーに集約（サイドバーなし） */
+    .phone { flex-direction:column; }
+    .bottom-nav { order:-1; flex-direction:row; align-items:center; justify-content:flex-start; gap:4px;
+      width:auto; flex:0 0 auto; padding:10px 24px; border-top:none; border-bottom:1px solid var(--line);
+      background:var(--card); position:relative; z-index:30; }
+    .bottom-nav::before { content:"Farmille"; font-weight:800; font-size:19px; color:var(--ink); margin-right:22px; white-space:nowrap; }
+    .bn-item { flex:0 0 auto; flex-direction:row; gap:8px; font-size:13px; font-weight:700; letter-spacing:0;
+      color:var(--ink-2); padding:9px 14px; border-radius:9px; }
+    .bn-item:hover { color:var(--ink); background:var(--bg); }
+    .bn-item.on { background:var(--green-soft); }
+    /* ホーム・探すはロゴと検索窓に集約するので非表示 */
+    .bn-item[data-id="home"], .bn-item[data-id="search"] { display:none; }
+    .bn-item[data-id="articles"] { order:1; }
+    .bn-item[data-id="mypage"] { order:9; margin-left:10px; }
+    /* 未ログイン時はマイページを隠し、ログイン後は認証ボタンを隠す */
+    .phone:not(.signed-in) .bn-item[data-id="mypage"] { display:none; }
+    .phone.signed-in .auth-btns { display:none; }
+    .auth-btns .a-logout { border:none; background:none; color:var(--ink-3); font-size:12px; padding:8px; }
+    .auth-btns { display:flex; align-items:center; gap:8px; order:8; margin-left:12px; }
+    .auth-btns .a-login { border:none; background:none; color:var(--ink-2); font-size:13px; font-weight:700; padding:9px 10px; border-radius:9px; }
+    .auth-btns .a-login:hover { color:var(--ink); background:var(--bg); }
+    .auth-btns .a-signup { border:1px solid var(--green); background:var(--card); color:var(--green-deep);
+      font-size:13px; font-weight:700; padding:9px 14px; border-radius:9px; white-space:nowrap; }
+    .auth-btns .a-signup:hover { background:var(--green-soft); }
+    .bottom-nav::before { cursor:pointer; }
+    /* 検索バーはナビの右、投稿ボタン、右端にマイページ */
+    .pc-search { order:5; margin-left:auto; }
+    .bn-post { order:6; flex:0 0 auto; margin-left:14px; }
+    .bn-post .plus { width:auto; height:auto; border-radius:10px; padding:10px 16px; margin-top:0; box-shadow:none;
+      display:flex; align-items:center; justify-content:center; gap:8px; }
+    .bn-post .plus::after { content:"投稿"; font-size:13px; font-weight:700; }
+    #navToggle { display:none; }
+    .screen-wrap { flex:1; min-height:0; }
+    /* 新着口コミをコンパクトに（PC） */
+    .home-reviews { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; }
+    .home-reviews .card.rc { padding:12px; }
+    .home-reviews .rc-prod { font-size:10px; margin-bottom:4px; }
+    .home-reviews .rc-name { font-size:12px; }
+    .home-reviews .rc-head .avatar { width:26px; height:26px; }
+    .home-reviews .rc-stars { margin-top:6px; font-size:11px; }
+    .home-reviews .rc-text { font-size:11.5px; line-height:1.6; margin-top:5px;
+      display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+    .home-reviews .rc-foot { margin-top:8px; }
+    .home-reviews .helpful-btn { padding:4px 9px; font-size:10px; }
+    .home-reviews .view-count { font-size:10px; }
+    /* ホーム下部の資材一覧（iHerb型グリッド） */
+    .home-catalog .cat-wrap { display:grid; grid-template-columns:230px minmax(0,1fr); gap:0 26px; align-items:start; }
+    .home-catalog .cat-side { position:sticky; top:16px; }
+    .home-catalog .cat-side h4 { font-size:13px; font-weight:800; margin:0 0 10px; }
+    .home-catalog .cat-side .fgroup { margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+    .home-catalog .cat-side .fgroup:last-child { border-bottom:none; }
+    .home-catalog .cat-side .fchip { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-strong);
+      background:var(--card); border-radius:999px; padding:6px 13px; font-size:12.5px; margin:0 6px 7px 0; cursor:pointer; }
+    .home-catalog .cat-side .fchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
+    .home-catalog .cat-side .frow { display:flex; align-items:center; gap:9px; padding:6px 2px; font-size:12.5px; cursor:pointer; color:var(--ink-2); }
+    .home-catalog .cat-side .frow:hover { color:var(--ink); }
+    .home-catalog .cat-side .frow .n { margin-left:auto; color:var(--ink-3); font-size:11.5px; }
+    .home-catalog .cat-side .frow.on { color:var(--green-deep); font-weight:700; }
+    .home-catalog .cat-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
+    .home-catalog .mat-card { flex-direction:column; align-items:stretch; gap:0; padding:0; overflow:hidden; }
+    .home-catalog .mat-card .mat-img { width:100%; height:150px; border-radius:0; background:var(--bg); }
+    .home-catalog .mat-card .mat-main { padding:12px 13px 14px; }
+    .home-catalog .mat-card .chev { display:none; }
+    .home-catalog .mat-card .mat-desc { -webkit-line-clamp:2; }
+    .home-catalog .cat-bar { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .home-catalog .cat-bar .ts-box { flex:1; margin:0; }
+    .home-catalog .cat-more { text-align:center; margin-top:18px; }
+    .ts-box[data-entry] { display:none; }
+    /* ヘッダー内の検索バー */
+    .pc-search { display:flex; align-items:center; gap:10px; flex:1; max-width:520px;
+      background:var(--bg); border:1.5px solid var(--line-strong); border-radius:999px; padding:8px 15px; cursor:pointer; }
+    .pc-search:hover { border-color:var(--green); }
+    .pc-search .ph { flex:1; font-size:13px; color:var(--ink-3); }
+    .pc-search .go { font-size:11.5px; font-weight:700; color:var(--green); white-space:nowrap; }
+    /* キャンペーン枠（周知用バナー） */
+    .campaign { display:block; max-width:1200px; margin:0 auto 6px; padding:0 24px; }
+    .campaign-inner { position:relative; display:flex; align-items:center; justify-content:center;
+      min-height:290px; border-radius:16px; overflow:hidden; padding:40px 64px; text-align:center;
+      background:linear-gradient(135deg, var(--green-soft-2) 0%, var(--green-soft) 100%);
+      border:1px solid color-mix(in srgb,var(--green) 22%,var(--line)); }
+    .campaign h2 { font-size:28px; letter-spacing:.01em; line-height:1.45; }
+    .campaign p { font-size:14.5px; color:var(--ink-2); margin-top:12px; line-height:1.8; }
+    .campaign .cbtn { margin-top:20px; padding:10px 22px; font-size:13.5px; }
+    .campaign .arrow { position:absolute; top:50%; transform:translateY(-50%); width:34px; height:34px; border-radius:50%;
+      border:none; background:color-mix(in srgb,var(--card) 80%, transparent); color:var(--ink-2); display:grid; place-items:center; font-size:16px; }
+    .campaign .arrow.l { left:34px; } .campaign .arrow.r { right:34px; }
+    .campaign .dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
+    .campaign .dot { width:7px; height:7px; border-radius:50%; background:color-mix(in srgb,var(--green) 30%, transparent); }
+    .campaign .dot.on { background:var(--green); }
+    /* 画面タイトルバー：ホーム（タイトルなし）では隠す */
+    .appbar .logo { display:none; }
+    .appbar:not(:has(.ttl)) { display:none; }
+    .topbar { display:none; }
+    .appbar { padding:14px 32px 12px; min-height:56px; }
+
+    .body { max-width:980px; margin:0 auto; padding:26px 32px 80px; }
+    .hero-m { max-width:980px; margin:0 auto; padding-top:34px; }
+    .hero-m { max-width:none; padding:46px 24px 26px; }
+    .hero-m h1 { font-size:30px; line-height:1.4; white-space:nowrap; }
+    .hero-m h1 br { display:none; }
+    .hero-m .lead { font-size:13px; }
+
+    /* 横スクロール→グリッド展開 */
+    .prod-scroll { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; overflow:visible; }
+    .prod-card { flex:none; width:auto; }
+    .report-scroll { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; overflow:visible; margin:0; padding:2px 0 6px; }
+    .report-scroll .alist-card { flex:none; width:auto; }
+    .report-scroll .alist-card .cover { aspect-ratio:16/10; }
+    .report-scroll .alist-card .abody { padding:9px 11px 10px; }
+    .report-scroll .alist-card .t { font-size:12px; line-height:1.35; }
+    .report-scroll .alist-card .abody > div[style*="line-clamp"] { font-size:10.5px !important; -webkit-line-clamp:2 !important; margin-top:5px !important; }
+    .report-scroll .alist-card .by { font-size:10px; margin-top:5px; }
+    .report-scroll .alist-card .foot { font-size:10px; margin-top:5px; }
+    .mini-reports { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; overflow:visible; }
+    .mini-reports .alist-card { flex:none; width:auto; }
+
+    /* 検索：左に絞り込み・右に結果の2カラム */
+    .body:has(> #tsResults) { display:grid; grid-template-columns:340px minmax(0,1fr); gap:0 28px; align-content:start; }
+    .body:has(> #tsResults) > .ts-box,
+    .body:has(> #tsResults) > #tsChips { grid-column:1 / -1; }
+    .body:has(> #tsResults) > #tsPanel { grid-column:1; grid-row:span 40; align-self:start; position:sticky; top:16px; margin-top:14px; }
+    .body:has(> #tsResults) > #tsLogic,
+    .body:has(> #tsResults) > .sec-h,
+    .body:has(> #tsResults) > #tsResults { grid-column:2; }
+    #tsResults.stack { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; align-items:start; }
+
+    /* 詳細ページ */
+    .mat-hero { padding:22px; gap:22px; }
+    .mat-hero-img { width:170px; height:170px; }
+    .fab-bar { left:auto; right:28px; bottom:24px; transform:none; width:420px; }
+    .pick-footer { left:50%; transform:translateX(-50%); width:min(100%, 980px); right:auto; }
+
+    /* フォーム・その他 */
     .photo-item, .photo-add { width:calc(33.33% - 7px); }
+    .stat-row.three { max-width:640px; }
+    .done-wrap { padding-top:110px; }
   }
 </style>
 
@@ -673,7 +801,7 @@ const S = {};
 /* ---- ホーム ---- */
 S.home = () => appbar('', {home:true}) + `
   <div class="hero-m">
-    <h1 style="font-size:16px">バイオスティミュラント資材の、<br>生産者による生産者のための<br>効果検証プラットフォーム</h1>
+    <h1>バイオスティミュラント資材の、<br>生産者による生産者のための<br>効果検証プラットフォーム</h1>
   </div>
   <div class="body" style="padding-top:12px">
     <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
@@ -2665,6 +2793,8 @@ function runSearch(sel) {
   function augment(id) {
     const scr = document.getElementById('screen');
     if (!scr) return;
+    if (window.__mountPcSearch) window.__mountPcSearch();
+    if (window.__mountHeaderExtras) window.__mountHeaderExtras();
     if (id === 'articles' || id === 'materialArticles') {
       scr.querySelectorAll('.alist-card, .art-mini').forEach(c => {
         if (c.closest('[data-go]') || c.hasAttribute('data-go')) return;
@@ -2673,6 +2803,132 @@ function runSearch(sel) {
       });
     }
     if (id === 'home') {
+      /* ホームの検索窓は「検索ページへ行く入口」として明示（入力欄ではなくボタン） */
+      const hbox = scr.querySelector('.ts-box');
+      if (hbox && !hbox.dataset.entry) {
+        hbox.dataset.entry = '1';
+        hbox.style.cssText += ';cursor:pointer;justify-content:space-between';
+        const inp = hbox.querySelector('#homeInput');
+        if (inp) inp.remove();
+        const panel = document.getElementById('homePanel'); if (panel) panel.remove();
+        const chips = document.getElementById('homeChips'); if (chips) chips.remove();
+        hbox.querySelector('.ts-ic')?.insertAdjacentHTML('afterend',
+          `<span style="flex:1;font-size:14px;color:var(--ink-3)">資材を検索する（作物・悩み・資材名から）</span>
+           <span class="link-more" style="font-weight:700">検索へ →</span>`);
+        hbox.setAttribute('data-go', 'search');
+      }
+      /* 事前登録CTAは削除 */
+      scr.querySelector('.home-cta')?.remove();
+      /* 新着口コミをコンパクトなグリッドに */
+      const revHead = [...scr.querySelectorAll('.sec-h')].find(s => s.textContent.includes('新着の口コミ'));
+      const revWrap = revHead?.nextElementSibling;
+      if (revWrap && !revWrap.classList.contains('home-reviews')) revWrap.classList.add('home-reviews');
+      /* ホーム下部：検索ページと同じ体系のフィルタつき資材一覧 */
+      if (!scr.querySelector('.home-catalog')) {
+        const escC = s2 => String(s2 == null ? '' : s2).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+        const EFF_G = {
+          '吸収・光合成': ['養分吸収の改善','水分吸収の改善','養分の利用効率の改善','光合成改善','低照度下での生育改善','CO2の供給効率の改善','酸素の供給効率の改善'],
+          '環境ストレス耐性': ['耐暑性改善','耐寒性改善','耐乾燥性改善','塩害耐性改善','環境ストレス耐性を高める','湿害からの回復改善','しおれ軽減','遮光効果','耐霜性改善'],
+          '収量・品質': ['収量改善','秀品率の改善','糖度増加','有用成分（栄養成分・機能性成分）の改善'],
+          '生育・回復': ['樹勢改善','成り疲れ改善','細胞壁の強化','外部損傷の修復','根圏の有用微生物の活性化'],
+        };
+        const sel = [];
+        const openG = new Set();
+        let mkQ = '', freeQ = '';
+        const isSel = t => sel.some(x => x.cat === t.cat && x.v === t.v && (x.cropName||'') === (t.cropName||''));
+        const toggle = t => { const i = sel.findIndex(x => x.cat===t.cat && x.v===t.v && (x.cropName||'')===(t.cropName||''));
+          if (i >= 0) sel.splice(i,1); else sel.push(t); };
+        const effAvail = new Set(); DB_PRODUCTS.forEach(p => (p.effects||[]).forEach(v => effAvail.add(v)));
+        const cropGroups = TAG_POOL.filter(t => t.cat === 'crop' && t.disp === t.v).map(t => t.v);
+        const makers = TAG_POOL.filter(t => t.cat === 'maker').map(t => t.v).sort((a,b)=>a.localeCompare(b,'ja'));
+        const chip = (label, t, extra) => `<span class="fchip${isSel(t)?' on':''}" data-pick='${escC(JSON.stringify(t))}'${extra||''}>${escC(label)}</span>`;
+        const sideHtml = () => `
+          <div class="fgroup">
+            <h4>資材名・メーカー名</h4>
+            <div class="ts-box" style="padding:8px 12px"><span class="ts-ic">${SEARCH_ICON}</span>
+              <input class="ts-input" data-catq placeholder="絞り込み" value="${escC(freeQ)}" autocomplete="off" style="font-size:12.5px"></div>
+          </div>
+          <div class="fgroup"><h4>効果分類で探す</h4>
+            ${Object.entries(EFF_G).map(([g,list]) => {
+              const kids = list.filter(v => effAvail.has(v));
+              if (!kids.length) return '';
+              const open = openG.has('e:'+g);
+              return `<div class="frow" data-tg="e:${escC(g)}"><span style="color:var(--green);font-size:11px;margin-right:6px">${open?'▾':'▸'}</span>${escC(g)}<span class="n">${kids.length}</span></div>`
+                + (open ? `<div style="padding:2px 0 8px 16px">${kids.map(v => chip(v, {cat:'effect', v})).join('')}</div>` : '');
+            }).join('')}
+          </div>
+          <div class="fgroup"><h4>作目で探す</h4>
+            ${cropGroups.map(g => {
+              const kids = (CROP_GROUPS_V2[g]||[]).filter(n => n !== g);
+              const open = openG.has('c:'+g);
+              return `<div class="frow" data-tg="c:${escC(g)}"><span style="color:var(--green);font-size:11px;margin-right:6px">${open?'▾':'▸'}</span>${escC(g)}<span class="n">${kids.length?kids.length+'品目':''}</span></div>`
+                + (open ? `<div style="padding:2px 0 8px 16px">${chip(g+'全て', {cat:'crop', v:g})}${kids.map(n => chip(n, {cat:'crop', v:g, cropName:n})).join('')}</div>` : '');
+            }).join('')}
+          </div>
+          <div class="fgroup"><h4>メーカーから探す（全${makers.length}社）</h4>
+            <div class="ts-box" style="padding:7px 11px;margin-bottom:8px"><span class="ts-ic">${SEARCH_ICON}</span>
+              <input class="ts-input" data-mkq placeholder="メーカー名で絞り込み" value="${escC(mkQ)}" autocomplete="off" style="font-size:12px"></div>
+            <div style="max-height:230px;overflow:auto">${
+              makers.filter(m => !mkQ || m.toLowerCase().includes(mkQ.toLowerCase()))
+                .map(m => `<div class="frow${isSel({cat:'maker',v:m})?' on':''}" data-pick='${escC(JSON.stringify({cat:'maker',v:m}))}'>${escC(m)}</div>`).join('')}</div>
+          </div>
+          <div class="fgroup"><button class="ts-clear" data-freset>すべての条件を解除</button></div>`;
+        const card = (hit) => {
+          const p = hit.p, i = DB_PRODUCTS.indexOf(p);
+          return `<div class="card mat-card" data-go="material" data-idx="${i}">
+            <div class="mat-img">${bottleImg()}</div>
+            <div class="mat-main">
+              <div class="mat-name">${escC(p.name)}</div>
+              <div class="mat-maker">${escC(p.maker)}</div>
+              <div class="mat-rate" style="gap:4px">${(p.effects||[]).slice(0,2).map(e2=>`<span class="chip" style="font-size:10px">${escC(e2)}</span>`).join('')}</div>
+              <div class="mat-desc">${escC(p.benefit || p.usecase || '')}</div>
+              ${hit.why ? `<div class="hint-pill" style="margin-top:6px">${hit.tier===1?'✓ ':''}${escC(hit.why)}</div>` : ''}
+            </div>
+          </div>`;
+        };
+        const wrap = document.createElement('div');
+        wrap.className = 'home-catalog';
+        wrap.innerHTML = `
+          <div class="sec-h" style="margin-top:30px"><h2>掲載資材から探す</h2>
+            <span class="muted cat-count" style="font-size:12px"></span></div>
+          <div class="cat-wrap"><div class="cat-side"></div>
+            <div><div class="cat-logic logic-hint" style="margin:0 0 12px"></div><div class="cat-grid"></div>
+              <div class="cat-more"><button class="btn btn-ghost btn-sm" data-go="search">検索ページでさらに詳しく探す</button></div></div></div>`;
+        (scr.querySelector('.body') || scr).appendChild(wrap);
+        const render = () => {
+          wrap.querySelector('.cat-side').innerHTML = sideHtml();
+          const q = freeQ.trim().toLowerCase();
+          let hits = runSearch(sel).hits;
+          if (q) hits = hits.filter(({p}) => p.name.toLowerCase().includes(q) || (p.en||'').toLowerCase().includes(q) || p.maker.toLowerCase().includes(q));
+          const shown = hits.slice(0, 12);
+          wrap.querySelector('.cat-count').textContent = `全 ${DB_PRODUCTS.length} 件中 ${hits.length} 件が該当（${shown.length} 件を表示）`;
+          const byCat = {};
+          sel.forEach(t => { (byCat[t.cat] = byCat[t.cat] || []).push(t.cropName || t.v); });
+          wrap.querySelector('.cat-logic').innerHTML = Object.keys(byCat).length
+            ? `絞り込み条件：${Object.values(byCat).map(vs => `<b>${vs.map(escC).join(' または ')}</b>`).join(' かつ ')}` : '';
+          wrap.querySelector('.cat-grid').innerHTML = shown.map(card).join('') ||
+            `<div class="card pad" style="grid-column:1/-1;text-align:center;color:var(--ink-3);font-size:12.5px">条件に合う資材が見つかりませんでした</div>`;
+        };
+        render();
+        wrap.addEventListener('click', ev => {
+          const tg = ev.target.closest('[data-tg]');
+          if (tg && !ev.target.closest('[data-pick]')) { const k = tg.dataset.tg; openG.has(k) ? openG.delete(k) : openG.add(k); render(); return; }
+          const pk = ev.target.closest('[data-pick]');
+          if (pk) { toggle(JSON.parse(pk.dataset.pick)); render(); return; }
+          if (ev.target.closest('[data-freset]')) { sel.length = 0; mkQ=''; freeQ=''; render(); }
+        });
+        wrap.addEventListener('input', ev => {
+          if (ev.target.closest('[data-catq]')) { freeQ = ev.target.value; render(); wrap.querySelector('[data-catq]')?.focus(); }
+          if (ev.target.closest('[data-mkq]')) { mkQ = ev.target.value; render(); const el2=wrap.querySelector('[data-mkq]'); if(el2){el2.focus(); el2.setSelectionRange(el2.value.length,el2.value.length);} }
+        });
+      }
+      /* 資材一覧のセクションはホームから削除（検索ページへ集約） */
+      const featuredH = [...scr.querySelectorAll('.sec-h')].find(s =>
+        s.textContent.includes('注目のBS資材') || s.textContent.includes('掲載資材をさがす'));
+      if (featuredH) { featuredH.nextElementSibling?.remove(); featuredH.remove(); }
+      /* 見出しを1行に収める（PC時のみ・実測調整） */
+      if (window.__renderCampaign) window.__renderCampaign();
+      if (window.__fitHero) { window.__fitHero(); setTimeout(window.__fitHero, 60); }
       /* CTA：完成見本の注記＋事前登録導線（URL設定時のみ有効） */
       const PREREG_URL = '';   // ← Googleフォーム等のURLを入れると事前登録ボタンが有効になる
       const cta = scr.querySelector('.home-cta');
@@ -3059,6 +3315,16 @@ function runSearch(sel) {
       }
     }
     if (id === 'mypage') {
+      const bodyEl0 = scr.querySelector('.body');
+      if (bodyEl0 && !bodyEl0.querySelector('[data-logout]')) {
+        bodyEl0.insertAdjacentHTML('beforeend',
+          `<div style="text-align:center;margin-top:18px"><button class="ts-clear" data-logout>ログアウト（完成見本の状態リセット）</button></div>`);
+        bodyEl0.querySelector('[data-logout]').addEventListener('click', () => {
+          document.querySelector('.phone').classList.remove('signed-in');
+          try { localStorage.removeItem('farmille_signed_in'); } catch (e) {}
+          go('home', true);
+        });
+      }
       const body = scr.querySelector('.body');
       if (body && !body.querySelector('[data-go="profilePublic"]')) {
         const favs = (window.getFavProducts && window.getFavProducts()) || [];
@@ -3107,5 +3373,105 @@ function runSearch(sel) {
   }, true);
 })();
 
+/* PC用：サイドバー折りたたみ（3本線） */
+/* PC：ヘッダー常設の検索バー（毎描画で差し込む） */
+window.__mountHeaderExtras=function(){
+  const nav=document.querySelector('.bottom-nav');
+  if(!nav) return;
+  if(!nav.dataset.logoWired){ nav.dataset.logoWired='1';
+    nav.addEventListener('click',e=>{ if(e.target===nav) go('home', true); });
+  }
+  if(!nav.querySelector('.auth-btns')){
+    const w=document.createElement('div'); w.className='auth-btns';
+    w.innerHTML='<button type="button" class="a-login">ログイン</button>'
+      +'<button type="button" class="a-signup" data-go="signup">新規会員登録</button>';
+    nav.appendChild(w);
+    /* 完成見本：ログインは状態切替のデモとして動作 */
+    w.querySelector('.a-login').addEventListener('click',()=>{
+      document.querySelector('.phone').classList.add('signed-in');
+      try{ localStorage.setItem('farmille_signed_in','1'); }catch(e){}
+      go('mypage');
+    });
+  }
+  try{ if(localStorage.getItem('farmille_signed_in')==='1') document.querySelector('.phone')?.classList.add('signed-in'); }catch(e){}
+  const art=nav.querySelector('.bn-item[data-id="articles"] span');
+  if(art && art.textContent!=='使用レポート一覧') art.textContent='使用レポート一覧';
+};
+window.__mountPcSearch=function(){
+  const bar=document.querySelector('.bottom-nav');
+  if(!bar || bar.querySelector('.pc-search')) return;
+  const el=document.createElement('div');
+  el.className='pc-search'; el.setAttribute('data-go','search');
+  el.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-3);flex:0 0 auto"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>'
+    +'<span class="ph">資材を検索（作物・悩み・資材名から）</span><span class="go">検索へ →</span>';
+  bar.appendChild(el);
+};
+
+/* PC：周知用キャンペーン枠（内容はここを書き換えるだけで差し替え可能） */
+window.FARMILLE_CAMPAIGNS = [
+  { title:'BS資材の使用結果を、みんなで持ち寄る。',
+    body:'農家の記録が集まるほど、「自分の条件で効くか」が見えてきます。まずは1件、使ってみた結果を共有してください。',
+    btn:'使用結果を投稿する', go:'pickMaterial' },
+  { title:'380製品を、作物と効果から横断で検索。',
+    body:'メーカーごとにばらばらだった表記を、農水省・JBSAの公式分類に整理しました。',
+    btn:'資材を検索する', go:'search' },
+];
+(function(){
+  let idx=0;
+  const render=()=>{
+    const scr=document.getElementById('screen');
+    if(!scr || typeof current==='undefined' || current!=='home') return;
+    const hero=scr.querySelector('.hero-m'); if(!hero) return;
+    let wrap=scr.querySelector('.campaign');
+    if(!wrap){ wrap=document.createElement('div'); wrap.className='campaign'; hero.after(wrap); }
+    const list=window.FARMILLE_CAMPAIGNS||[];
+    if(!list.length){ wrap.remove(); return; }
+    const c=list[idx]||list[0], many=list.length>1;
+    wrap.innerHTML='<div class="campaign-inner"><div style="max-width:640px">'
+      +'<h2>'+c.title+'</h2><p>'+c.body+'</p>'
+      +(c.btn?'<button class="btn btn-primary btn-sm cbtn" data-go="'+(c.go||'search')+'">'+c.btn+'</button>':'')
+      +'</div>'
+      +(many?'<button class="arrow l" data-camp="-1">&lsaquo;</button><button class="arrow r" data-camp="1">&rsaquo;</button>'
+        +'<div class="dots">'+list.map((_,i)=>'<span class="dot'+(i===idx?' on':'')+'"></span>').join('')+'</div>':'')
+      +'</div>';
+    wrap.querySelectorAll('[data-camp]').forEach(b=>b.addEventListener('click',e=>{
+      e.stopPropagation();
+      idx=(idx + (+b.dataset.camp) + list.length)%list.length; render();
+    }));
+  };
+  window.__renderCampaign=render;
+})();
+
+/* PC：ヒーロー見出しを1行に収める（実測して自動縮小） */
+(function(){
+  const fit=()=>{
+    const h1=document.querySelector('.hero-m h1');
+    if(!h1) return;
+    if(innerWidth<900){ h1.style.fontSize=''; h1.style.whiteSpace=''; return; }
+    h1.style.whiteSpace='nowrap';
+    h1.style.fontSize='30px';
+    const need=h1.scrollWidth, avail=h1.clientWidth;
+    if(need>avail){
+      const px=Math.max(14, Math.floor(30*avail/need));
+      h1.style.fontSize=px+'px';
+      if(h1.scrollWidth>h1.clientWidth+2) h1.style.whiteSpace='normal';
+    }
+  };
+  window.__fitHero=fit;
+  addEventListener('resize', fit);
+  const _go=go;
+  go=function(id,reset,anchor){ _go(id,reset,anchor); if(id==='home'){ fit(); setTimeout(fit,60); } };
+  fit(); setTimeout(fit,120);
+})();
+(function(){
+  const nav=document.querySelector('.bottom-nav');
+  if(nav && !document.getElementById('navToggle')){
+    const head=document.createElement('div');
+    head.className='nav-head';
+    head.innerHTML='<button id="navToggle" type="button" title="メニューを折りたたむ"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="nb">Farmille</span>';
+    nav.prepend(head);
+    head.querySelector('#navToggle').addEventListener('click',()=>document.querySelector('.phone').classList.toggle('nav-collapsed'));
+  }
+})();
 go('home', true);
 </script>
