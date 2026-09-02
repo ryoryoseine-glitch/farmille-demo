@@ -1259,7 +1259,7 @@ S.material = () => appbar('Skeepon', {share:true}) + `
       ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96)}
       ${reportCard('Skeepon 実証詳細レポート（サンプル）','いちご屋A','いちご','harvest',15,142)}
     </div>
-    <button class="btn btn-ghost" style="margin-top:10px" data-go="materialArticles">その他の記事（メーカー・JA等） 2件</button>
+    
 
     <div class="sec-h"><h2>感想口コミまとめ</h2></div>
     <div class="card rating-summary">
@@ -1750,27 +1750,14 @@ S.seller = () => appbar('アクプランタ株式会社') + `
         </div>
       </div>
     </div>
-    <div class="stat-row three">
+    <div class="stat-row">
       <div class="stat"><div class="num tnum">8</div><div class="lbl">掲載製品</div></div>
-      <div class="stat"><div class="num tnum">12</div><div class="lbl">回答数</div></div>
-      <div class="stat"><div class="num tnum">34</div><div class="lbl">参考になった</div></div>
     </div>
     <div class="sec-h"><h2>掲載製品</h2></div>
     <div class="prod-scroll">
       ${['Skeepon','ボンバルディア','グロウエイド'].map((n,i)=>`<div class="prod-card" data-go="material"><div class="img">${SEED}</div><div class="info"><div class="nm">${n}</div><div class="rt">${'★'.repeat(4)}☆</div></div></div>`).join('')}
     </div>
-    <div class="sec-h"><h2>投稿記事</h2></div>
-    <div class="stack">
-      ${artMini('高温期のSkeepon活用ガイド','アクプランタ株式会社','メーカー')}
-      ${artMini('トマト栽培でのBS資材使用タイミング','アクプランタ株式会社','メーカー')}
-    </div>
-    <div class="sec-h"><h2>公式回答</h2></div>
-    <div class="stack">
-      <div class="card pad" style="padding:13px 14px">
-        <div style="font-size:13px;font-weight:700">Q. 高温期（35℃以上）でも効果はありますか？</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:7px"><span class="official-badge">公式回答</span><span class="helpful">${THUMB} 参考になった 8</span></div>
-      </div>
-    </div>
+    
   </div>`;
 
 /* ---- 出品者ページ（JA・0件） ---- */
@@ -1785,24 +1772,9 @@ S.sellerJA = () => appbar('〇〇JA') + `
         <div class="org-links"><span class="loc">${PIN} 主な地域：静岡県東部</span></div>
       </div>
     </div>
-    <div class="stat-row">
-      <div class="stat"><div class="num tnum">8</div><div class="lbl">回答数</div></div>
-      <div class="stat"><div class="num tnum">21</div><div class="lbl">参考になった</div></div>
-    </div>
+
     <div class="broadcast-band">${DOC} このアカウントは記事・回答で情報発信を行っています</div>
-    <div class="sec-h"><h2>投稿記事</h2></div>
-    <div class="stack">
-      ${artMini('いちご栽培における高温対策の実証結果','〇〇JA','JA')}
-      ${artMini('地域実証：露地野菜でのBS資材導入事例','〇〇JA','JA')}
-      ${artMini('営農現場からの資材選びのポイント','〇〇JA','JA')}
-    </div>
-    <div class="sec-h"><h2>公式回答</h2></div>
-    <div class="stack">
-      <div class="card pad" style="padding:13px 14px">
-        <div style="font-size:13px;font-weight:700">Q. この資材は寒冷地でも使えますか？</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:7px"><span class="official-badge">公式回答</span><span class="helpful">${THUMB} 参考になった 5</span></div>
-      </div>
-    </div>
+    
   </div>`;
 
 /* ---- 出品者申請 ---- */
@@ -2023,7 +1995,6 @@ const SCREENS = [
   { id:'reportArticle', label:'実証詳細レポート' },
   { id:'done', label:'投稿完了' },
   { id:'articles', label:'記事一覧' },
-  { id:'materialArticles', label:'その他の記事' },
   { id:'articleDetail', label:'記事詳細' },
   { id:'profilePublic', label:'公開プロフィール' },
   { id:'mypage', label:'マイページ' },
@@ -3190,11 +3161,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
   S.material = () => {
     const p = selProd;
     const vOK = isMakerVerified(p);
-    const pendBand = `<div class="card pad" style="margin-top:10px;background:var(--bg)">
-        <div style="font-size:12.5px;font-weight:700">この製品の詳細情報は、メーカー確認後に掲載されます</div>
-        <div class="muted" style="font-size:11.5px;margin-top:5px;line-height:1.7">Farmilleは、メーカー未確認の製品では効果や使い方の説明文を掲載せず、公式分類への整理と出典の提示にとどめています。</div>
-        <div style="margin-top:9px"><span class="link-more" data-go="sellerApply" style="cursor:pointer">このメーカーの担当者の方ですか？ 情報の確認・掲載はこちら →</span></div>
-      </div>`;
+    /* 未確認バンドは廃止（「−」表示と免責文で足りるため。2026-09-02） */
     const chip = (t, style) => `<span class="chip"${style ? ` style="${style}"` : ''}>${esc(t)}</span>`;
     const grey = 'background:var(--bg);color:var(--ink-2);border:1px solid var(--line)';
     const amber = 'background:var(--amber-soft);color:var(--amber)';
@@ -3207,7 +3174,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       <div class="card pad">
         <p style="font-size:13.5px;line-height:1.8">${esc(p.effOfficial || p.usecase || '')}</p>
         <div class="disclaimer">メーカー記入（完成見本のためサンプル表示です）</div>
-      </div>` : pendBand;
+      </div>` : `<div class="card pad"><p class="muted" style="font-size:13px">−（メーカー確認後に掲載されます）</p></div>`;
 
     /* --- 施用タイミング（8ステージ一律・メーカー確認後に記入） --- */
     const STAGES8 = ['栽培開始前','播種・定植時','播種・定植直後','生育初〜中期','開花・生殖成長開始期','着果・生育中期','生育後期〜収穫前','収穫後'];
@@ -3285,7 +3252,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96)}
         ${reportCard('Skeepon 実証詳細レポート（サンプル）','いちご屋A','いちご','harvest',15,142)}
       </div>
-      <button class="btn btn-ghost" style="margin-top:10px" data-go="materialArticles">その他の記事（メーカー・JA等） 2件</button>`;
+      `;
     const boxReviews = `
       <div class="compliance" style="margin-bottom:10px"><span class="ck">${CK}</span>
         感想口コミ・実証詳細レポートは、農家個人の体験にもとづく感想・記録です。効果を保証するものではありません。使用前に必ずメーカー公式の情報でもご確認ください。</div>
@@ -3323,9 +3290,6 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         <div class="mat-hero-img">${bottleImg()}</div>
         <div style="flex:1;min-width:0">
           <h2 style="font-size:17px">${esc(p.name)}</h2>
-          ${vOK
-            ? `<div style="margin-top:5px"><span class="set-by" style="background:var(--green-soft-2);color:var(--green-deep)">メーカー確認済み</span></div>`
-            : `<div style="margin-top:5px"><span class="set-by">メーカー確認待ち ・ Farmille整理の情報のみ</span></div>`}
           ${p.en && p.en !== p.name ? `<div class="muted" style="font-size:11px;margin-top:2px">${esc(p.en)}</div>` : ''}
           <div class="mat-maker" data-go="seller" style="margin-top:5px;cursor:pointer;color:var(--green);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--green) 40%,transparent)">${esc(p.maker)}</div>
           ${(p.mat8 || []).length ? `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">${p.mat8.map(m2 => `<span class="chip">${esc(m2)}</span>`).join('')}</div>` : ''}
@@ -4256,7 +4220,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         const nm = scr.querySelector('.org-name h2'); if (nm) nm.textContent = sp.maker;
         const logo = scr.querySelector('.org-logo'); if (logo) logo.textContent = sp.maker.replace(/株式会社|有限会社|\s/g, '').slice(0, 1) || '社';
         const desc = scr.querySelector('.org-desc');
-        if (desc) desc.textContent = `${sp.maker}の掲載製品ページです。製品情報はメーカー公式資料からFarmilleが独自に抽出・整理したものです。`;
+        if (desc) desc.remove();
         /* 公式サイト：出典URLのオリジンがあればリンク、なければ削除 */
         const links = scr.querySelector('.org-links');
         if (links) {
@@ -4270,8 +4234,6 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         /* 統計：掲載製品は実数、他はサンプル明記 */
         const stats = scr.querySelectorAll('.stat');
         if (stats[0]) { stats[0].querySelector('.num').textContent = prods.length; }
-        if (stats[1]) stats[1].querySelector('.lbl').textContent = '回答数（サンプル）';
-        if (stats[2]) stats[2].querySelector('.lbl').textContent = '参考になった（サンプル）';
         /* 掲載製品：実データ（星なし・NO IMAGE） */
         const rowEl = scr.querySelector('.prod-scroll');
         if (rowEl) rowEl.innerHTML = prods.map(x => `
