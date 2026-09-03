@@ -4631,6 +4631,21 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         });
       });
     }
+    /* ログイン済みなら閲覧ゲートを解除 */
+    let signedIn = false;
+    try { signedIn = localStorage.getItem('farmille_signed_in') === '1'; } catch (err) {}
+    if (signedIn && id === 'reportArticle') {
+      const bl = scr.querySelector('div[style*="blur(7px)"]');
+      if (bl) {
+        bl.style.filter = 'none'; bl.style.maxHeight = 'none';
+        bl.style.pointerEvents = 'auto'; bl.style.userSelect = 'auto';
+        const ov = bl.nextElementSibling; if (ov) ov.remove();
+      }
+    }
+    if (signedIn && id === 'material') {
+      const cta = [...scr.querySelectorAll('.card')].find(c5 => c5.textContent.includes('続きを読むには、会員登録が必要です'));
+      if (cta) cta.remove();
+    }
     if (id === 'articles' || id === 'materialArticles') {
       const ai = scr.querySelector('#artSearch');
       if (ai && !ai.dataset.init) {
