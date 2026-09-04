@@ -188,7 +188,8 @@
   .hero-search { border-radius:999px !important; padding:14px 8px 14px 18px !important; box-shadow:var(--shadow); }
   .hero-search .go-arrow { flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:var(--green);
     color:#fff; display:grid; place-items:center; border:none; }
-  .hero-pills { position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:12px; }
+  .hero-pills { position:relative; display:flex; flex-wrap:nowrap; justify-content:center; gap:8px; margin-top:12px; }
+  @media (max-width: 899px) { .hero-pill { padding:7px 10px; font-size:12px; white-space:nowrap; } }
   .hero-pill.on { background:var(--green-soft); border-color:var(--green); color:var(--green-deep); font-weight:700; }
   .pill-drop { position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%); z-index:50;
     width:min(400px, calc(100vw - 32px)); text-align:left; background:var(--card);
@@ -276,7 +277,6 @@
   .view-count { display:inline-flex; align-items:center; gap:5px; color:var(--ink-3); font-size:12px; white-space:nowrap; }
   .helpful { display:inline-flex; align-items:center; gap:6px; color:var(--ink-3); font-size:12.5px; }
   .helpful-btn { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-strong); background:var(--card); color:var(--ink-2); border-radius:999px; padding:6px 13px; font-size:12.5px; white-space:nowrap; font-variant-numeric:tabular-nums; flex:0 0 auto; }
-  .report-grid .hb-label, .report-scroll .hb-label { display:none; }
   .hint-pill { display:inline-flex; gap:6px; align-items:center; font-size:10.5px; color:var(--ink-3); background:var(--bg); border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
   .type-label { font-size:10.5px; padding:2px 9px; border-radius:999px; background:var(--green-soft); color:var(--green-deep); font-weight:700; white-space:nowrap; }
 
@@ -292,7 +292,7 @@
   .hero-m > *:not(.hero-bg), .hero-wrap, .hero-pills { position:relative; z-index:1; }
   .hero-m h1 { letter-spacing:.01em; line-height:1.6; }
   /* 1行目は絶対に折り返さない（幅に収まるサイズまで自動で縮小） */
-  .h1-main { display:block; white-space:nowrap; font-size:min(24px, calc((100vw - 40px) / 18)); }
+  .h1-main { display:block; white-space:nowrap; font-size:min(24px, calc((100vw - 40px) / 13)); }
   .h1-main .hl { color:var(--green-deep); font-size:1.16em; font-weight:900; }
   .lead .hl2 { color:var(--green-deep); font-weight:800; font-size:1.08em; }
   /* 2行目以降は意味のまとまりごとに改行する */
@@ -551,11 +551,73 @@
   .tagtoggle.on, .cultchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:600; }
   [data-vsort] .qchip { cursor:pointer; }
   [data-vsort] .qchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
+  #tsPanel .sug[data-cat="material"] { border-radius:9px; padding-left:8px; padding-right:8px; transition:background .12s; }
+  #tsPanel .sug[data-cat="material"]:hover { background:var(--green-soft-2); }
+  #tsPanel .sug[data-cat="material"]::after { content:'＋'; color:var(--ink-3); font-weight:700; margin-left:8px; flex:0 0 auto; }
+  #tsPanel .sug[data-cat="material"]:hover::after { color:var(--green-deep); }
+  .alist-card { display:flex; flex-direction:column; }
+  .alist-card .abody { display:flex; flex-direction:column; flex:1; }
+  .alist-card .rp-by { margin-top:auto; padding-top:8px; }
+  #tsNumRow .qchip { cursor:pointer; }
+  #tsNumRow .qchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
   #rvStarFilter .qchip { cursor:pointer; }
   #rvStarFilter .qchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
   /* 検索画面：AgList式2カラム（PC）。サイドの絞り込みパネルは常設 */
   .s-cols { margin-top:14px; }
   .s-side .ts-panel { position:static; display:block !important; box-shadow:none; border:1px solid var(--line); border-radius:12px; max-height:none; }
+  /* 画面タイトルバー：ホーム（タイトルなし・ロゴのみ）はヘッダーナビと重複するため隠す */
+  .appbar .logo { display:none; }
+  .appbar:not(:has(.ttl)) { display:none; }
+  /* ヘッダーナビは全幅共通（スマホもPC同様の上部ナビ） */
+    .notch { display:none; }
+
+    /* ナビはヘッダーに集約（サイドバーなし） */
+    .phone { flex-direction:column; }
+    .bottom-nav { order:-1; flex-direction:row; align-items:center; justify-content:flex-start; gap:4px;
+      width:auto; flex:0 0 auto; padding:10px 24px; border-top:none; border-bottom:1px solid var(--line);
+      background:var(--card); position:relative; z-index:30; }
+    .bottom-nav::before { content:"Farmille"; font-weight:800; font-size:19px; color:var(--ink); margin-right:22px; white-space:nowrap; }
+    .bn-item { flex:0 0 auto; flex-direction:row; gap:8px; font-size:13px; font-weight:700; letter-spacing:0;
+      color:var(--ink-2); padding:9px 14px; border-radius:9px; }
+    .bn-item:hover { color:var(--ink); background:var(--bg); }
+    .bn-item.on { background:var(--green-soft); }
+    /* ホーム・探すはロゴと検索窓に集約するので非表示 */
+    .bn-item[data-id="home"] { display:none; }
+    .bn-item svg { display:none; }   /* PCヘッダーはテキストのみのナビにする（AgList風） */
+    .nav-extra { display:flex; }
+    .bn-item[data-id="search"] { order:0; flex-direction:row-reverse; }
+    .bn-item[data-id="search"] svg { display:block; width:15px; height:15px; }
+    .bn-item[data-id="articles"] { order:1; }
+    .bn-item[data-id="mypage"] { order:9; margin-left:10px; }
+    /* 未ログイン時はマイページを隠し、ログイン後は認証ボタンを隠す */
+    .phone:not(.signed-in) .bn-item[data-id="mypage"] { display:none; }
+    .phone.signed-in .auth-btns { display:none; }
+    .auth-btns .a-logout { border:none; background:none; color:var(--ink-3); font-size:12px; padding:8px; }
+    .auth-btns { display:flex; align-items:center; gap:8px; order:8; margin-left:12px; flex:0 0 auto; white-space:nowrap; }
+    .auth-btns .a-login { border:none; background:none; color:var(--ink-2); font-size:13px; font-weight:700; padding:9px 10px; border-radius:9px; white-space:nowrap; }
+    .auth-btns .a-login:hover { color:var(--ink); background:var(--bg); }
+    .auth-btns .a-signup { border:1px solid var(--green); background:var(--card); color:var(--green-deep);
+      font-size:13px; font-weight:700; padding:9px 14px; border-radius:9px; white-space:nowrap; }
+    .auth-btns .a-signup:hover { background:var(--green-soft); }
+    .bottom-nav::before { cursor:pointer; }
+    /* 検索バーはナビの右、投稿ボタン、右端にマイページ */
+    .pc-search { order:5; margin-left:auto; }
+    .bn-post { order:6; flex:0 0 auto; margin-left:auto; }   /* ここから右寄せグループ */
+    .bn-post .plus { width:auto; height:auto; border-radius:10px; padding:10px 16px; margin-top:0; box-shadow:none;
+      display:flex; align-items:center; justify-content:center; gap:8px; }
+    .bn-post .plus::after { content:"投稿"; font-size:13px; font-weight:700; }
+    #navToggle { display:none; }
+  @media (max-width: 899px) {
+    .bottom-nav { overflow-x:auto; padding:8px 12px; gap:2px; }
+    .bottom-nav::before { font-size:17px; margin-right:10px; }
+    .bn-item { padding:8px 8px; font-size:12px; }
+    .bn-item[data-id="mypage"] { margin-left:0; }
+    .pc-search .ph, .pc-search .go { display:none; }
+    .pc-search { padding:8px; margin-left:auto; }
+    .auth-btns { margin-left:6px; }
+    .auth-btns .a-signup { padding:8px 10px; font-size:12px; }
+    .bn-post .plus { padding:8px 12px; }
+  }
   @media (min-width: 900px) {
     .s-cols { display:grid; grid-template-columns:264px 1fr; gap:18px; align-items:start; }
     .s-side { position:sticky; top:70px; }
@@ -649,7 +711,7 @@
   .pick-row.sel { border-color:var(--green); background:var(--green-soft-2); }
   .pick-row .ring { width:18px; height:18px; border-radius:50%; border:2px solid var(--line-strong); flex:0 0 auto; }
   .pick-row.sel .ring { border-color:var(--green); background:radial-gradient(circle at center, var(--green) 0 4.5px, transparent 5.5px); }
-  .pick-footer { position:absolute; left:0; right:0; bottom:0; z-index:20; background:var(--card); border-top:1px solid var(--line);
+  .pick-footer { position:sticky; bottom:0; z-index:20; background:var(--card); border-top:1px solid var(--line);
     box-shadow:0 -8px 30px rgba(30,35,31,.12); border-radius:18px 18px 0 0; padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px)); }
   .pick-footer .pf-name { display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:700; margin-bottom:11px; }
   .pick-footer .btn + .btn { margin-top:8px; }
@@ -698,6 +760,8 @@
   .feed-item.fi-photo .feed-grad { background:linear-gradient(180deg, rgba(0,0,0,.35), transparent 22%); }
 
   [hidden] { display:none !important; }
+  .rp-foot .helpful-btn { font-size:11px; padding:4px 10px; }
+  .rp-foot .view-count, .rc-foot .view-count, .foot .view-count { margin-left:auto; }
 
   /* 実機（タッチ端末・狭い画面）では枠を外して全画面アプリ表示に（JSで body.app-mode を付与） */
   body.app-mode { padding:0; gap:0; height:100dvh; min-height:100dvh; align-items:stretch; overflow:hidden; }
@@ -713,43 +777,6 @@
     .topbar { position:fixed; top:12px; right:16px; z-index:99; justify-content:flex-end; }
     .screen-chips { max-width:70vw; }
     .phone { width:100%; max-width:none; height:100vh; height:100dvh; border:none; border-radius:0; box-shadow:none; }
-    .notch { display:none; }
-
-    /* ナビはヘッダーに集約（サイドバーなし） */
-    .phone { flex-direction:column; }
-    .bottom-nav { order:-1; flex-direction:row; align-items:center; justify-content:flex-start; gap:4px;
-      width:auto; flex:0 0 auto; padding:10px 24px; border-top:none; border-bottom:1px solid var(--line);
-      background:var(--card); position:relative; z-index:30; }
-    .bottom-nav::before { content:"Farmille"; font-weight:800; font-size:19px; color:var(--ink); margin-right:22px; white-space:nowrap; }
-    .bn-item { flex:0 0 auto; flex-direction:row; gap:8px; font-size:13px; font-weight:700; letter-spacing:0;
-      color:var(--ink-2); padding:9px 14px; border-radius:9px; }
-    .bn-item:hover { color:var(--ink); background:var(--bg); }
-    .bn-item.on { background:var(--green-soft); }
-    /* ホーム・探すはロゴと検索窓に集約するので非表示 */
-    .bn-item[data-id="home"] { display:none; }
-    .bn-item svg { display:none; }   /* PCヘッダーはテキストのみのナビにする（AgList風） */
-    .nav-extra { display:flex; }
-    .bn-item[data-id="search"] { order:0; }
-    .bn-item[data-id="articles"] { order:1; }
-    .bn-item[data-id="mypage"] { order:9; margin-left:10px; }
-    /* 未ログイン時はマイページを隠し、ログイン後は認証ボタンを隠す */
-    .phone:not(.signed-in) .bn-item[data-id="mypage"] { display:none; }
-    .phone.signed-in .auth-btns { display:none; }
-    .auth-btns .a-logout { border:none; background:none; color:var(--ink-3); font-size:12px; padding:8px; }
-    .auth-btns { display:flex; align-items:center; gap:8px; order:8; margin-left:12px; flex:0 0 auto; white-space:nowrap; }
-    .auth-btns .a-login { border:none; background:none; color:var(--ink-2); font-size:13px; font-weight:700; padding:9px 10px; border-radius:9px; white-space:nowrap; }
-    .auth-btns .a-login:hover { color:var(--ink); background:var(--bg); }
-    .auth-btns .a-signup { border:1px solid var(--green); background:var(--card); color:var(--green-deep);
-      font-size:13px; font-weight:700; padding:9px 14px; border-radius:9px; white-space:nowrap; }
-    .auth-btns .a-signup:hover { background:var(--green-soft); }
-    .bottom-nav::before { cursor:pointer; }
-    /* 検索バーはナビの右、投稿ボタン、右端にマイページ */
-    .pc-search { order:5; margin-left:auto; }
-    .bn-post { order:6; flex:0 0 auto; margin-left:auto; }   /* ここから右寄せグループ */
-    .bn-post .plus { width:auto; height:auto; border-radius:10px; padding:10px 16px; margin-top:0; box-shadow:none;
-      display:flex; align-items:center; justify-content:center; gap:8px; }
-    .bn-post .plus::after { content:"投稿"; font-size:13px; font-weight:700; }
-    #navToggle { display:none; }
     .screen-wrap { flex:1; min-height:0; }
     /* 新着感想口コミをコンパクトに（PC） */
     /* 会員登録CTA・メーカー向け・フッター（PC） */
@@ -866,9 +893,6 @@
     .campaign .dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
     .campaign .dot { width:7px; height:7px; border-radius:50%; background:color-mix(in srgb,var(--green) 30%, transparent); }
     .campaign .dot.on { background:var(--green); }
-    /* 画面タイトルバー：ホーム（タイトルなし）では隠す */
-    .appbar .logo { display:none; }
-    .appbar:not(:has(.ttl)) { display:none; }
     .topbar { display:none; }
     .appbar { padding:14px 32px 12px; min-height:56px; }
 
@@ -878,7 +902,7 @@
     .hero-bg { top:-56px; bottom:-290px; }   /* ヘッダー下〜ピルの下まで（本文には被せない） */
     /* PCは2行組（長い方＝37文字）。意味群の改行はPCでは解除して1行に流す */
     .hero-m h1 { line-height:1.6; margin:0 auto; letter-spacing:.01em; }
-    .h1-main { font-size:min(36px, calc((100vw - 72px) / 35.5)); white-space:nowrap; }
+    .h1-main { font-size:min(38px, calc((100vw - 72px) / 29)); white-space:nowrap; }
     /* 幅が狭いときは小さくしすぎず、意味群の改行を復活させて2〜3行で見せる */
     .h1-sub { margin-top:2px; font-size:max(26px, min(45px, calc((100vw - 72px) / 38))); }
     .h1-sub br { display:none; }
@@ -927,7 +951,7 @@
     .mat-hero { padding:22px; gap:22px; }
     .mat-hero-img { width:170px; height:170px; }
     .fab-bar { left:auto; right:28px; bottom:24px; transform:none; width:420px; }
-    .pick-footer { left:50%; transform:translateX(-50%); width:min(100%, 980px); right:auto; }
+    .pick-footer { width:min(100%, 980px); margin-left:auto; margin-right:auto; border-radius:14px 14px 0 0; box-shadow:var(--shadow-lift); }
 
     /* フォーム・その他 */
     .photo-item, .photo-add { width:calc(33.33% - 7px); }
@@ -1066,32 +1090,35 @@ const appbar = (title, opts = {}) => `
 const reviewCard = (name, crop, star, help, text, views, product, photos = 0) => `
   <div class="card rc" ${product ? 'data-go="material" data-anchor="sec-reviews"' : ''}>
     ${product ? `<div class="rc-prod">${product} の感想口コミ</div>` : ''}
-    <div class="rc-head">${avatarHtml(name, "", 30)}<span class="rc-name">${name}</span></div>
+    <div class="rc-head">${avatarHtml(name, "", 30)}<span class="rc-name">${name}</span><span class="type-label" style="font-size:9.5px">農家</span></div>
     <div class="rc-stars">${stars(star)}<span class="score-num">${Number(star).toFixed(1)}</span></div>
     <div class="rc-crops"><span class="chip">${crop}</span></div>
     ${text ? `<div class="rc-text">${text}</div>` : ''}
     ${photos ? `<div class="review-photos">${Array.from({length:photos}).map(()=>`<div class="rphoto">${IMGP}</div>`).join('')}</div>` : ''}
-    <div class="rc-foot"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>${help}</button></div>
+    <div class="rc-foot"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>${help}</button>${views ? vc(views) : ''}</div>
   </div>`;
 
 const REPORT_EXCERPTS = {
   'しおさい農園':'1回目の使用後は、見た目で分かるほどの変化はありませんでした。2回目の使用から数日後、午後の葉の萎れがやや軽くなったように…',
   'たなか農園':'猛暑日が続いた週も散布した株は夕方まで葉が立っていました。散布は朝のうちに1000倍で。混用も問題ありませんでした…',
   'いちご屋A':'定植後の活着がスムーズで、根張りに差を感じました。11月からの果色と日持ちも比較しています…',
+  'いちごマン':'高温が続いた週も、使用区は夕方の萎れが軽く見えました。収量は月ごとに記録しています…',
+  'のはら農園':'着果負担が大きい時期に試しました。葉色の持ちに差が出たので、次作も比較を続けます…',
 };
 /* note風カードの部品：ハート（グッド）・保存（ブックマーク）・サンプル日付 */
 const HEART_O = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.7-9.5-9C1 8.5 3 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19 5 21 8.5 20.5 12c-2 4.3-8.5 9-8.5 9z" stroke-linejoin="round"/></svg>`;
 const BKMK = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4.5L6 21z" stroke-linejoin="round"/></svg>`;
 const rpTime = seed => ['2日前','4日前','1週間前','2週間前','3週間前'][String(seed).length % 5];
 
-const reportCard = (title, author, crop, key, help, views) => `
+const reportCard = (title, author, crop, key, help, views, prod) => `
   <div class="alist-card" data-go="reportArticle" data-kind="report">
     <div class="cover">${ph(key)}</div>
     <div class="abody">
       <div class="t">${title}</div>
       ${REPORT_EXCERPTS[author] ? `<div style="font-size:11px;color:var(--ink-2);line-height:1.55;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${REPORT_EXCERPTS[author]}</div>` : ``}
       <div class="rp-by">${avatarHtml(author, "xs")}<b>${author}</b><span class="rp-time">${rpTime(author)}</span></div>
-      <div class="rp-foot">${HEART_O}<span class="tnum">${help}</span><span class="bk" title="保存">${BKMK}</span></div>
+      <div class="rp-foot"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span><span class="tnum">${help}</span></button><span class="bk" title="保存">${BKMK}</span>${views ? vc(views) : ''}</div>
+      ${prod ? `<div class="vc-prod" data-go="material"><span class="thumb">NO IMAGE</span><div style="min-width:0"><div class="vp-name">${prod[0]}</div><div class="muted" style="font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${prod[1]}</div></div><span class="arr">→</span></div>` : ''}
     </div>
   </div>`;
 
@@ -1167,7 +1194,7 @@ const S = {};
 S.home = () => appbar('', {home:true}) + `
   <div class="hero-m">
     <div class="hero-bg"></div>
-    <h1><span class="h1-main">日本で<span class="hl">唯一</span>の<br class="lb-sp"><span class="hl">バイオスティミュラント</span>・関連資材の<br class="lb-sp"><span class="hl">検索・口コミ</span>サイト</span></h1>
+    <h1><span class="h1-main">日本で<span class="hl">唯一</span>の<br class="lb-sp"><span class="hl">バイオスティミュラント</span>の<br class="lb-sp"><span class="hl">検索・口コミ</span>サイト</span></h1>
     <p class="lead"><span class="lead-strong">作物や効果・資材名から<span class="hl2">検索</span>。<br class="lb-sp">実際に使った<span class="hl2">体験</span>を、<br class="lb-sp"><span class="hl2">生産者</span>どうしで<span class="hl2">共有</span>しましょう。</span></p>
   </div>
   <div class="body" style="padding-top:12px">
@@ -1187,10 +1214,10 @@ S.home = () => appbar('', {home:true}) + `
 
     <div class="sec-h"><h2>新着記事（実証詳細レポート）</h2><a class="link-more" data-go="articles">記事を読む →</a></div>
     <div class="report-scroll">
-      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,210)}
-      ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96)}
-      ${reportCard('ボンバルディア 実証詳細レポート','いちご屋A','いちご','harvest',15,142)}
-      ${reportCard('サンシェード液 実証詳細レポート','のはら農園','ミニトマト','unused',6,58)}
+      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,210,['Skeepon','アクプランタ株式会社'])}
+      ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96,['Skeepon','アクプランタ株式会社'])}
+      ${reportCard('ボンバルディア 実証詳細レポート','いちご屋A','いちご','harvest',15,142,['ボンバルディア','△△バイオ'])}
+      ${reportCard('サンシェード液 実証詳細レポート','のはら農園','ミニトマト','unused',6,58,['サンシェード液','△△バイオ'])}
     </div>
 
     <div class="sec-h"><h2>新着の感想口コミ</h2><a class="link-more" data-go="material" data-anchor="sec-reviews">感想口コミを読む →</a></div>
@@ -1218,6 +1245,15 @@ S.search = () => appbar('BS資材を探す') + `
         <div class="logic-hint" id="tsLogic"></div>
         <div class="sec-h" style="margin-top:0"><span class="muted" style="font-size:12.5px">該当 <b class="tnum" id="tsCount" style="color:var(--ink)">0</b> 件</span>
           <select class="input" id="tsSort" style="width:auto;padding:7px 11px;font-size:12px"><option value="rep">実証詳細レポートが多い順</option><option value="score">★が高い順</option><option value="fav">お気に入り登録数が多い順</option><option value="new">新着順</option></select></div>
+        <div id="tsNumRow" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:8px 0 10px">
+          ${[['レポート', [['rep',1,'1件〜'],['rep',3,'3件〜'],['rep',4,'4件〜']]],
+             ['★評価', [['score',3.5,'3.5〜'],['score',4.0,'4.0〜'],['score',4.5,'4.5〜']]],
+             ['お気に入り', [['fav',10,'10〜'],['fav',30,'30〜']]]].map(gr2 => `
+            <span style="display:inline-flex;align-items:center;gap:5px">
+              <span class="muted" style="font-size:11px;font-weight:700;flex:0 0 auto">${gr2[0]}</span>
+              ${gr2[1].map(nf2 => `<span class="qchip" data-numf="${nf2[0]}:${nf2[1]}" style="font-size:11.5px;padding:4px 10px">${nf2[2]}</span>`).join('')}
+            </span>`).join('')}
+        </div>
         <div class="stack" id="tsResults"></div>
       </div>
     </div>
@@ -1296,7 +1332,7 @@ function qaItem(q, who, a, help, extra = '') {
     <div class="qa-a"><span class="qa-marker a">A</span><div>
       <div class="ans-name">アクプランタ株式会社 ${CHECK} <span class="official-badge">公式回答</span></div>
       <div class="qa-text">${a}</div>
-      <div class="helpful" style="margin-top:7px">${THUMB} 参考になった ${help}</div></div></div>
+      <div style="margin-top:7px"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>${help}</button></div></div></div>
     ${extra}
   </div>`;
 }
@@ -1307,7 +1343,7 @@ S.qa = () => appbar('Skeepon の Q&A') + `
     <button class="btn btn-primary" style="margin-bottom:16px">質問する</button>
     <div class="stack">
       ${qaItem('高温期（35℃以上）でも効果はありますか？','やまちゃん農園','高温期でも一定の効果が確認されています。散布は気温が下がる早朝・夕方を推奨します。濃度は通常時と同様で問題ありません。',8,
-        `<div class="qa-a"><span class="qa-marker">A</span><div><div class="ans-name">のはら農園</div><div class="qa-text">うちは静岡ですが、真夏でも夕方散布で問題なく使えています。</div><div class="helpful" style="margin-top:7px">${THUMB} 参考になった 5</div></div></div>`)}
+        `<div class="qa-a"><span class="qa-marker">A</span><div><div class="ans-name">のはら農園</div><div class="qa-text">うちは静岡ですが、真夏でも夕方散布で問題なく使えています。</div><div style="margin-top:7px"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>5</button></div></div></div>`)}
       ${qaItem('他社の液肥と混用しても大丈夫ですか？','みどり菜園','基本的には可能ですが、強アルカリ性の資材との混用は避けてください。事前に少量でのテスト混用を推奨します。',6)}
     </div>
     <div class="hint-pill" style="margin-top:14px">感想口コミ欄＝農家の本音の場 ／ Q&amp;A＝公式との対話の場</div>
@@ -1576,6 +1612,13 @@ S.reportArticle = () => appbar('', {share:true}) + `
     <h1 class="art-title">Skeepon 実証詳細レポート（サンプル）</h1>
     <div class="byline"><span class="avatar" style="width:32px;height:32px;font-size:13px" data-go="profilePublic">${initials("しおさい農園")}</span><span style="font-weight:700;color:var(--ink)" data-go="profilePublic">しおさい農園</span><span class="muted" style="font-size:12px">2026年8月2日</span></div>
 
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">
+      <span class="chip-sel"><span class="cat-mini">作物</span>ミニトマト（アイコ）</span>
+      <span class="chip-sel"><span class="cat-mini">効果</span>耐暑性改善</span>
+      <span class="chip-sel"><span class="cat-mini">効果</span>しおれ軽減</span>
+      <span class="chip-sel"><span class="cat-mini">施用方法</span>散布（茎葉）</span>
+    </div>
+
     <div class="card ref" style="margin-top:14px" data-go="material"><div class="t-ic">${SEED}</div>
       <div><div class="muted" style="font-size:10.5px">対象資材</div><div class="t-name">Skeepon</div><div class="muted" style="font-size:12px">アクプランタ株式会社（公式）</div></div>
       <span class="cev">${CHEV}</span></div>
@@ -1587,6 +1630,11 @@ S.reportArticle = () => appbar('', {share:true}) + `
     <div class="a-body">
       <p>1回目の使用後は、見た目で分かるほどの変化はありませんでした。</p>
       <p>2回目の使用から数日後、Skeeponを使用した株では、午後の葉の萎れが使用前よりやや軽くなったように感じました。特に上部の葉が比較的立っており、夕方まで樹勢を維持している株が増えたように見えました。</p>
+    </div>
+
+    <div style="position:relative;margin-top:8px">
+      <div id="gateBlur" style="filter:blur(7px);pointer-events:none;user-select:none;max-height:1500px;overflow:hidden">
+    <div class="a-body">
       <p>3回目の使用後も同じ傾向が見られましたが、すべての株に明確な変化があったわけではありません。</p>
       <p>暑い時期の萎れ対策として手応えがあり、来季も使う予定です。</p>
     </div>
@@ -1595,8 +1643,6 @@ S.reportArticle = () => appbar('', {share:true}) + `
       <div><div class="fimg">${ph('unused')}</div><div class="figcap">対照区（同じ日・同じ距離と角度）</div></div>
     </div>
 
-    <div style="position:relative;margin-top:8px">
-      <div style="filter:blur(7px);pointer-events:none;user-select:none;max-height:1500px;overflow:hidden">
     <h3 class="a-h3">良くなかった点（薬害など）</h3>
     <div class="a-body"><p>使用による葉焼けや変色、生育不良などの悪影響は見られませんでした。</p></div>
 
@@ -1636,7 +1682,7 @@ S.reportArticle = () => appbar('', {share:true}) + `
     <div class="compliance"><span class="ck">${CK}</span>この実証詳細レポートには、病害虫の防除、殺菌・殺虫、農薬の代替など、農薬としての効果を断定する表現を含めていません。</div>
 
       </div>
-      <div style="position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:130px">
+      <div id="gateOverlay" style="position:absolute;inset:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:130px">
         <div class="card pad" style="pointer-events:auto;box-shadow:var(--shadow-lift);text-align:center;padding:18px 22px;max-width:420px;position:sticky;top:120px">
           <div style="font-size:14.5px;font-weight:800">続きは無料会員登録で読めます（1分）</div>
           <div class="muted" style="font-size:11.5px;margin-top:4px">定量データのグラフ・使い方の詳細・比較条件が見られます</div>
@@ -1647,7 +1693,7 @@ S.reportArticle = () => appbar('', {share:true}) + `
       </div>
     </div>
     <div class="rc-foot" style="margin-top:16px">
-      <button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>24</button>${vc(312)}
+      <button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span>24</button><span class="bk" title="保存">${BKMK}</span>${vc(312)}
     </div>
   </div>`;
 
@@ -1682,10 +1728,10 @@ S.articles = () => appbar('記事を読む') + `
       <span class="fpill on" data-f="all">すべて</span><span class="fpill" data-f="report">実証詳細レポート</span><span class="fpill" data-f="other">その他の記事</span>
     </div>
     <div class="report-grid" id="artGrid" style="margin-top:12px">
-      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,210)}
-      ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96)}
-      ${reportCard('ボンバルディア 実証詳細レポート','いちご屋A','いちご','harvest',15,142)}
-      ${reportCard('サンシェード液 実証詳細レポート','のはら農園','ミニトマト','unused',6,58)}
+      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,210,['Skeepon','アクプランタ株式会社'])}
+      ${reportCard('Skeepon 実証詳細レポート（サンプル）','たなか農園','ミニトマト','apply',8,96,['Skeepon','アクプランタ株式会社'])}
+      ${reportCard('ボンバルディア 実証詳細レポート','いちご屋A','いちご','harvest',15,142,['ボンバルディア','△△バイオ'])}
+      ${reportCard('サンシェード液 実証詳細レポート','のはら農園','ミニトマト','unused',6,58,['サンシェード液','△△バイオ'])}
       ${orgArticleCard('いちご栽培における高温対策の実証結果','〇〇JA','JA',9,84)}
       ${orgArticleCard('高温期のSkeepon活用ガイド','アクプランタ株式会社','メーカー',12,96)}
       ${orgArticleCard('微生物資材の選び方と土壌診断の基礎','農研コンサル','専門家',7,63)}
@@ -1705,36 +1751,44 @@ S.materialArticles = () => appbar('Skeepon のその他の記事') + `
 /* ---- マイページ ---- */
 S.mypage = () => appbar('マイページ') + `
   <div class="body">
-    <div style="height:84px;border-radius:14px 14px 0 0;background:linear-gradient(135deg, var(--green-soft), var(--green-soft-2));margin-bottom:-34px"></div>
-    <div class="card prof-head" style="border-radius:0 0 14px 14px">
-      <span class="avatar" style="font-size:26px">${initials('しおさい農園')}</span>
-      <div class="uname">いちごマン</div>
-      <div class="prof-rows">
-        <div class="prow"><span class="plabel">都道府県</span><span class="pval">茨城県 <span class="badge badge-pub">🌏 全ユーザーに公開</span></span></div>
-        <div class="prow"><span class="plabel">市区町村</span><span class="pval">水戸市 <span class="badge" style="background:var(--bg);color:var(--ink-2)">🔒 自分だけに公開</span> <span class="link-more" style="font-size:11px;cursor:pointer">公開範囲を設定</span></span></div>
-        <div class="prow"><span class="plabel">主な作目</span><span class="pval"><span class="chip">いちご</span><span class="chip">ミニトマト</span></span></div>
-        <div class="prow"><span class="plabel">所属</span><span class="pval"><span class="aff-badge aff-blue">全青協</span></span></div>
+    <div class="card" style="overflow:hidden;padding:0">
+      <div style="height:148px;background:linear-gradient(120deg, #DCEBDD, #EFF5EC 55%, #F7F4E8)"></div>
+      <div style="padding:0 18px 16px">
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+          <span class="avatar" style="width:76px;height:76px;font-size:30px;border:3px solid var(--card);flex:0 0 auto;margin-top:-32px">${initials('しおさい農園')}</span>
+          <div style="flex:1;min-width:180px;padding-bottom:2px">
+            <div style="font-size:17px;font-weight:800">いちごマン <span class="type-label" style="font-size:10px;vertical-align:2px">農家</span></div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px">
+              <span class="muted" style="font-size:11px">地域</span><span class="chip">茨城県</span>
+              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">全青協</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" data-go="profileEdit" style="flex:0 0 auto;padding:7px 16px;font-size:12px">プロフィールを編集</button>
+        </div>
+        <p style="font-size:13px;line-height:1.8;margin-top:12px">茨城県でいちごとミニトマトを栽培しています。高温対策や草勢維持に関心があります。</p>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px">
+          <span class="muted" style="font-size:11px">主な作目</span>
+          <span class="chip">いちご</span><span class="chip">ミニトマト</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:12px">
+          <a style="color:var(--green-deep);font-weight:600;cursor:pointer">${EXT} ichigo-farm.com</a>
+          <a style="color:var(--green-deep);font-weight:600;cursor:pointer">${EXT} Facebook</a>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px">
+          <span>実証詳細レポート <b class="tnum">1</b></span>
+          <span>感想口コミ <b class="tnum">2</b></span>
+          <span>お気に入り <b class="tnum">12</b></span>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:10px">公開範囲：都道府県まで公開中（市区町村・本名は非公開） <span class="link-more" style="cursor:pointer;font-size:12px">設定 →</span></div>
       </div>
-      <div class="quote-box">茨城県でいちごとミニトマトを栽培しています。高温対策や草勢維持に関心があります。</div>
-      <div style="margin-top:10px">
-        <div class="file-row"><span class="file-ic">LINK</span>
-          <div style="flex:1;min-width:0"><div class="fr-title">ichigo-farm.com</div><div class="muted" style="font-size:10.5px;margin-top:2px">ウェブサイト</div></div>
-          <a class="file-dl">${EXT}開く</a></div>
-        <div class="file-row"><span class="file-ic">LINK</span>
-          <div style="flex:1;min-width:0"><div class="fr-title">facebook.com/ichigofarm</div><div class="muted" style="font-size:10.5px;margin-top:2px">Facebook</div></div>
-          <a class="file-dl">${EXT}開く</a></div>
-        <div class="fguide" style="margin-top:6px">自己紹介にリンクを置く場合は、プロフィール編集からご入力ください。</div>
-      </div>
-      <button class="btn btn-ghost edit-btn" style="padding:10px;font-size:13px">プロフィールを編集</button>
-      <div class="fguide" style="margin-top:6px;text-align:center">アイコン・背景・自己紹介文は「プロフィールを編集」から変更できます。</div>
     </div>
     <div class="sec-h"><h2>これまでの投稿</h2></div>
     <div class="filter-row" id="myTabs">
       <span class="fpill on" data-mytab="rep">実証詳細レポート 1</span>
       <span class="fpill" data-mytab="rev">感想口コミ 2</span>
     </div>
-    <div class="stack" id="myRep" style="margin-top:10px">
-      ${reportCard('耐暑性改善・しおれ軽減｜ミニトマト','いちごマン','ミニトマト','used',24,210)}
+    <div class="report-scroll" id="myRep" style="margin-top:10px">
+      ${reportCard('耐暑性改善・しおれ軽減｜ミニトマト','いちごマン','ミニトマト','used',24,210,['Skeepon','アクプランタ株式会社'])}
     </div>
     <div class="stack" id="myRev" hidden style="margin-top:10px">
       ${reviewCard('いちごマン','ミニトマト',4,12,'高温期でも草勢が保てました。散布もしやすい。',128,'Skeepon')}
@@ -1742,12 +1796,48 @@ S.mypage = () => appbar('マイページ') + `
     </div>
   </div>`;
 
+/* ---- プロフィール編集 ---- */
+S.profileEdit = () => appbar('プロフィールを編集') + `
+  <div class="body" style="max-width:640px;margin:0 auto">
+    <div class="md-slots" style="margin-bottom:12px">
+      <div class="md-slot"><div class="ph">＋<br>アイコンを変更</div>
+        <div class="req">PNG / JPG ・ 400px四方以上</div>
+        <div class="now muted">現在：頭文字「し」を表示中</div></div>
+      <div class="md-slot"><div class="ph">＋<br>背景画像を変更</div>
+        <div class="req">PNG / JPG ・ 横1200px以上推奨</div>
+        <div class="now muted">現在：未設定（標準の背景）</div></div>
+    </div>
+    <div class="field"><label>ニックネーム <span class="badge badge-req">必須</span></label>
+      <input class="input" value="いちごマン"></div>
+    <div class="field"><label>自己紹介 <span class="badge badge-opt">任意</span></label>
+      <textarea class="textarea">茨城県でいちごとミニトマトを栽培しています。高温対策や草勢維持に関心があります。</textarea></div>
+    <div class="field"><label>主な作目 <span class="badge badge-opt">任意</span></label>
+      <div id="peCropChips" class="ts-chips"></div>
+      <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
+        <input id="peCropInput" class="ts-input" placeholder="作物名を入力（例：みかん、デコポン）" autocomplete="off"></div>
+      <div id="peCropPanel" class="ts-panel"></div></div>
+    <div class="field"><label>所属 <span class="badge badge-opt">任意</span></label>
+      <div class="fguide">団体名を検索して選択、見つからない場合はそのままEnterで追加できます（複数可）。</div>
+      <div id="peOrgChips" class="ts-chips"></div>
+      <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
+        <input id="peOrgInput" class="ts-input" placeholder="例）全青協、JA青年部" autocomplete="off"></div>
+      <div id="peOrgPanel" class="ts-panel"></div></div>
+    <div class="field"><label>リンク <span class="badge badge-opt">任意</span></label>
+      <div class="fguide">自己紹介に表示するリンクを入力してください（複数可）。</div>
+      <input class="input" value="https://ichigo-farm.com">
+      <input class="input" style="margin-top:6px" value="https://facebook.com/ichigofarm">
+      <input class="input" style="margin-top:6px" placeholder="https://"></div>
+    <div class="field"><label>地域の公開範囲</label>
+      <label class="check-toggle"><span class="cbox"></span> 市区町村も表示する<span class="muted" style="margin-left:auto;font-size:11px">チェックなしの場合は都道府県まで表示します</span></label></div>
+    <div class="form-actions"><button class="btn btn-primary" data-go="mypage">保存する</button><div class="draft" data-go="mypage" style="cursor:pointer">キャンセル</div></div>
+  </div>`;
+
 /* ---- 一般ユーザー登録 ---- */
 S.signup = () => appbar('Farmilleをはじめる') + `
   <div class="body">
-    <div class="card pad" style="background:var(--green-soft);border:1px solid color-mix(in srgb, var(--green) 30%, var(--line));margin-bottom:12px;text-align:center;padding:16px">
-      <div style="font-size:15px;font-weight:800;color:var(--green-deep)">🌱 会員登録をお願いします</div>
-      <div style="font-size:12.5px;margin-top:5px;line-height:1.7">投稿と実証詳細レポートの閲覧には、無料の会員登録が必要です。<br><b>1分で完了します！</b></div></div>
+    <div class="card pad" style="background:var(--green-soft-2);border:1px solid color-mix(in srgb, var(--green) 22%, var(--line));margin-bottom:12px;text-align:center;padding:15px">
+      <div style="font-size:14px;font-weight:700">投稿と実証詳細レポートの閲覧には、会員登録が必要です</div>
+      <div style="font-size:12.5px;margin-top:4px;color:var(--green-deep);font-weight:700">登録は無料・1分で完了します。</div></div>
     <p class="muted" style="font-size:12.5px;margin-bottom:18px">匿名で参加できます。実名や所属の公開は不要です。</p>
     <div class="field"><label>ニックネーム <span class="badge badge-req">必須</span></label>
       <input class="input" placeholder="例）農家の山田">
@@ -1865,6 +1955,60 @@ S.sellerApply = () => appbar('法人アカウントの申請') + `
   </div>`;
 
 /* ---- 投稿先選択（＋ボタンから） ---- */
+/* ---- メーカー掲載の流れ ---- */
+S.makerFlow = () => appbar('メーカー掲載の流れ') + `
+  <div class="body" style="max-width:820px;margin-left:auto;margin-right:auto">
+    <h2 style="font-size:19px">資材の掲載と情報管理の流れ</h2>
+    <p class="muted" style="font-size:13px;line-height:1.9;margin-top:8px">掲載と情報の確認・修正は無料です。すでにFarmille編集部が登録している資材は、新しくページを作るのではなく、既存ページの情報を確認・修正するかたちで引き継ぎます（感想口コミ・実証詳細レポートの資産を分裂させないため）。</p>
+
+    <div class="stack" style="margin-top:16px">
+      ${[
+        ['1','出品者申請','会社情報・ご担当者・掲載したい資材を送信します。検索して見つからない資材は、その場で「未掲載の資材」として追加できます。申請は無料です。',['sellerApply','出品者申請フォームへ →']],
+        ['2','Farmilleによる確認とログインIDの発行','会社概要ページなどで実在を確認のうえ、管理画面のログインIDをメールでお送りします（目安：5営業日）。確認のやり取りは管理画面またはメールで行います。',null],
+        ['3','製品情報の入力','管理画面から、製品説明・リンク資料・施用方法・作用機作・登録認証番号・製品画像などを入力します。途中保存できます。',['makerDash','製品情報管理（見本）を見る →']],
+        ['4','編集部確認のうえ、資材ページへ反映','確認が済んだ項目から順次「メーカー確認済み」として掲載されます。未確認の項目は資材ページで「−」表示のままです。',null],
+      ].map(x2 => `<div class="card pad" style="display:flex;gap:14px;align-items:flex-start">
+          <span style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px">${x2[0]}</span>
+          <div style="min-width:0">
+            <div style="font-weight:800;font-size:14px">${x2[1]}</div>
+            <div class="muted" style="font-size:12.5px;line-height:1.85;margin-top:5px">${x2[2]}</div>
+            ${x2[3] ? `<div style="margin-top:8px"><span class="link-more" data-go="${x2[3][0]}" style="cursor:pointer;font-size:12.5px">${x2[3][1]}</span></div>` : ''}
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <h3 class="a-h3" style="margin-top:30px">掲載情報の2つの状態</h3>
+    <div class="card pad" style="font-size:12.5px;line-height:1.9">
+      <div style="display:flex;gap:10px;align-items:flex-start"><span class="chip" style="flex:0 0 auto">編集部登録</span><div class="muted">Farmille編集部が公開資料をもとに登録した状態です。メーカー確認前の項目は「−」で表示されます。</div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px"><span class="chip" style="flex:0 0 auto;background:var(--green-soft);color:var(--green-deep)">メーカー確認済み</span><div class="muted">メーカーの確認・記入を経た項目の状態です。掲載後に内容の誤りなどが確認された場合は、表示を戻すことがあります。</div></div>
+      <div class="muted" style="margin-top:10px;font-size:11.5px">※ 掲載・確認済み表示・情報修正は今後も無料の範囲です。有料プランは検討中の構想で、掲載の条件にはなりません。</div>
+    </div>
+
+    <h3 class="a-h3" style="margin-top:26px">入力いただける項目（資材ページに対応）</h3>
+    <div class="card pad" style="font-size:12.5px;line-height:2.0">
+      <div>・製品説明（効果を保証する表現は不可）</div>
+      <div>・リンク・資料：概要／使用上の注意／技術資料の3グループ</div>
+      <div>・施用方法：散布／灌注／混和／浸漬／粉衣・塗布／その他 ＋ 方法ごとの詳細（自由記述）</div>
+      <div>・作用機作</div>
+      <div>・登録・認証：肥料登録番号など（公的な登録情報と照合します）</div>
+      <div>・製品画像：パッケージ正面・白背景・正方形を推奨。条件を満たす画像がない場合はNO IMAGE表示で掲載します</div>
+    </div>
+
+    <h3 class="a-h3" style="margin-top:26px">掲載できない内容（抜粋）</h3>
+    <div class="card pad" style="font-size:12.5px;line-height:2.0">
+      <div>・効果を保証する表現、農薬的な効能（防除・殺菌など）の標榜</div>
+      <div>・メーカー自身による使用前後の比較画像（効果の検証は、生産者の実証詳細レポートの枠組みで掲載されます）</div>
+      <div>・感想口コミの投稿の呼びかけや、投稿への特典の提示</div>
+      <div>・受賞ロゴ・ランキング表記、QRコードなどの誘導</div>
+    </div>
+
+    <div class="disclaimer" style="margin-top:14px;line-height:1.9">
+      <div>・確認の目安は5営業日です。内容により前後します。</div>
+      <div>・掲載可否の基準について、個別のお問い合わせにはお答えしていません。</div>
+    </div>
+    <div class="hint-pill" style="margin-top:14px">※ 完成見本のため、各操作はデモとして動作します</div>
+  </div>`;
+
 S.pickMaterial = () => appbar('投稿する') + `
   <div class="body" style="padding-bottom:190px">
     <p class="muted" style="font-size:13px;margin-bottom:12px">どの資材について書きますか？</p>
@@ -1874,9 +2018,15 @@ S.pickMaterial = () => appbar('投稿する') + `
     <div class="hint-pill" style="margin-top:14px">資材ページの「書く」ボタンからも投稿できます</div>
   </div>
   <div class="pick-footer" id="pickFooter" hidden>
-    <div class="pf-name"><span class="t-ic" style="width:34px;height:34px">${SEED}</span><span id="pfName"></span></div>
+    <div class="pf-name">
+      <span class="mat-img" style="width:42px;height:42px;flex:0 0 auto;background:#fff;border:1px solid var(--line);padding:3px">${bottleImg()}</span>
+      <span style="min-width:0"><span id="pfName" style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        <span id="pfMaker" class="muted" style="display:block;font-size:11px;font-weight:400;margin-top:1px"></span></span>
+    </div>
     <button class="btn btn-primary" data-go="reportForm">実証詳細レポートを書く</button>
+    <div class="fguide" style="text-align:center;margin:5px 0 7px">対照区を設けた、詳しい体験の共有です</div>
     <button class="btn btn-ghost" data-go="reviewForm">感想口コミを書く</button>
+    <div class="fguide" style="text-align:center;margin:5px 0 0">星5段階の評価とコメント・写真で、気軽に体験を共有できます</div>
   </div>`;
 
 /* ---- 記事詳細（メーカー/JA記事） ---- */
@@ -1926,7 +2076,7 @@ S.profilePublic = () => appbar('しおさい農園') + `
     </div>
     <div class="sec-h"><h2>これまでの投稿</h2></div>
     <div class="stack">
-      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,312)}
+      ${reportCard('Skeepon 実証詳細レポート（サンプル）','しおさい農園','ミニトマト','used',24,312,['Skeepon','アクプランタ株式会社'])}
       ${reviewCard('しおさい農園','ミニトマト',4,9,'高温期の補助として使っています。灌水に混ぜるだけなので手間がかかりません。',88,'Skeepon')}
     </div>
   </div>`;
@@ -2054,6 +2204,7 @@ const SCREENS = [
   { id:'done', label:'投稿完了' },
   { id:'articles', label:'記事一覧' },
   { id:'reviewsAll', label:'感想口コミ一覧' },
+  { id:'profileEdit', label:'プロフィール編集' },
   { id:'articleDetail', label:'記事詳細' },
   { id:'profilePublic', label:'公開プロフィール' },
   { id:'mypage', label:'マイページ' },
@@ -2061,6 +2212,7 @@ const SCREENS = [
   { id:'seller', label:'出品者(メーカー)' },
   { id:'sellerJA', label:'出品者(JA)' },
   { id:'sellerApply', label:'出品者申請' },
+  { id:'makerFlow', label:'メーカー掲載の流れ' },
   { id:'makerDash', label:'製品情報管理(メーカー)' },
 ];
 const NAV = [
@@ -2654,7 +2806,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
   let effQuery = '', cropQuery = '', makerQuery = '';
   let openGroups = new Set();
   let openMids = new Set();
-  let openSecs = new Set(['eff']);   // 効果はグループ行まで常時表示
+  let openSecs = new Set();
   const EFF_GROUPS4 = {
     '栄養利用の効率改善': ['養分吸収の改善','水分吸収の改善','酸素の供給効率の改善','CO2の供給効率の改善','養分の利用効率の改善'],
     '非生物的ストレス耐性の改善': ['耐暑性改善','耐寒性改善','耐乾燥性改善','湿害からの回復改善','低照度下での生育改善','塩害耐性改善','遮光効果','耐霜性改善','環境ストレス耐性を高める'],
@@ -2792,15 +2944,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       const matChipsHtml = MAT8F.map(m =>
         `<div class="sug" data-cat="material" data-v="${esc(m.rep)}" style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:7px 2px">
            <span style="flex:1;min-width:0;font-size:13px;font-weight:700">${esc(m.label)}</span><span class="alias-note tnum" style="flex:0 0 auto">${m.n}</span></div>`).join('');
-      const NUMF = window.__numFilters = window.__numFilters || { rep: 0, score: 0, fav: 0 };
-      const numChip = (k2, v2, lb2) => `<span class="qchip${NUMF[k2] === v2 ? ' on' : ''}" data-numf="${k2}:${v2}" style="font-size:12px;padding:5px 11px">${lb2}</span>`;
-      const numBody = `
-        <div class="muted" style="font-size:11px;font-weight:700;margin:2px 0 4px">実証詳細レポートの件数</div>
-        <div class="sug-chips">${numChip('rep',1,'1件以上')}${numChip('rep',3,'3件以上')}${numChip('rep',4,'4件以上')}</div>
-        <div class="muted" style="font-size:11px;font-weight:700;margin:8px 0 4px">★評価</div>
-        <div class="sug-chips">${numChip('score',3.5,'★3.5以上')}${numChip('score',4.0,'★4.0以上')}${numChip('score',4.5,'★4.5以上')}</div>
-        <div class="muted" style="font-size:11px;font-weight:700;margin:8px 0 4px">お気に入り登録数</div>
-        <div class="sug-chips">${numChip('fav',10,'10以上')}${numChip('fav',30,'30以上')}</div>`;
+      window.__numFilters = window.__numFilters || { rep: 0, score: 0, fav: 0 };
       const applyBody = `<div class="sug-chips">${['散布','灌注','混和','浸漬','粉衣・塗布','その他'].map(a2 =>
         `<span class="qchip" data-cat="apply" data-v="${a2}" style="font-size:12px;padding:5px 11px">${a2}</span>`).join('')}</div>`;
       const recentHtml = (window.__recent || []).length ? `<div class="ts-pg" style="padding:8px 12px">
@@ -2810,20 +2954,19 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         `<div style="padding:10px 12px 0"><button class="ts-clear" data-clearall style="width:100%;text-align:center;padding:8px">すべての条件をクリア</button></div>` +
         recentHtml +
         `<div class="logic-hint" style="padding:6px 12px 2px">作物 × 効果 など、条件を組み合わせて検索できます</div>` +
-        sec('mat', '資材ジャンルで探す',
-          selHtml('material'),
-          `<div>${matChipsHtml}</div>`) +
-        sec('app', '施用方法で探す', '', applyBody) +
-        sec('num', '件数・評価でしぼる', '', numBody) +
         sec('eff', '効果分類で探す',
           `<input data-efffilter class="input" style="${mini}" placeholder="効果名で検索（例：耐暑）" value="${esc(effQuery)}">${selHtml('effect')}`,
           `<div id="effChips">${effChipsHtml()}</div>`) +
+        sec('mat', '資材ジャンルで探す',
+          selHtml('material'),
+          `<div>${matChipsHtml}</div>`) +
         sec('crop', '作物で探す',
           `<input data-cropfilter class="input" style="${mini}" placeholder="作物名で検索（例：トマト、柿）" value="${esc(cropQuery)}">${selHtml('crop')}`,
           `<div id="cropTree">${cropTreeHtml()}</div>`) +
         sec('mk', `メーカーから探す（全${TAG_POOL.filter(t => t.cat === 'maker').length}社）`,
           `<input data-mkfilter class="input" style="${mini}" placeholder="メーカー名で絞り込み" value="${esc(makerQuery)}">${selHtml('maker')}`,
-          `<div class="sug-chips" id="mkChips">${mkChipsHtml()}</div>`);
+          `<div class="sug-chips" id="mkChips">${mkChipsHtml()}</div>`) +
+        sec('app', '施用方法で探す', '', applyBody);
       return;
     }
     const m = proposeTags(q).filter(t => !isSel(t));
@@ -2840,7 +2983,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     let carryText = '';
     if (carry && !isHome) { selTags = carry.tags; pending = carry.pending; carryText = carry.text || ''; carry = null; }
     else { selTags = []; pending = []; }
-    effQuery = ''; cropQuery = ''; makerQuery = ''; openGroups = new Set(); openMids = new Set(); openSecs = new Set(['eff']); openEffGroups = new Set();
+    effQuery = ''; cropQuery = ''; makerQuery = ''; openGroups = new Set(); openMids = new Set(); openSecs = new Set(); openEffGroups = new Set();
     const toSearch = text => { carry = { tags: selTags, pending, text: text || '' }; go('search'); };
     const input = document.getElementById(inputId); if (!input) return;
     const chips = document.getElementById(chipsId);
@@ -2894,6 +3037,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       }
       if (e.target.closest('[data-clearall]')) {
         selTags = []; pending = []; window.__numFilters = { rep: 0, score: 0, fav: 0 };
+        document.querySelectorAll('#tsNumRow .qchip.on').forEach(x2 => x2.classList.remove('on'));
         render(); if (window.renderResults) window.renderResults(); return;
       }
       const nfEl = e.target.closest('[data-numf]');
@@ -2987,12 +3131,12 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const st2 = sampleStats(idx);
     const desc2 = pv ? (p.benefit || p.usecase || '') : '';
     return `<div class="card mat-card" data-go="material" data-idx="${idx}" style="padding:12px 14px;gap:12px">
-      <div class="mat-img" style="background:#fff;border:1px solid var(--line);padding:4px">${bottleImg()}</div>
+      <div class="mat-img" style="width:112px;height:112px;flex:0 0 auto;background:#fff;border:1px solid var(--line);padding:6px">${bottleImg()}</div>
       <div class="mat-main" style="min-width:0">
         <div class="mat-maker" style="margin:0 0 1px;font-size:10.5px">${esc(p.maker)}${pv ? ' ・ メーカー確認済み' : ''}</div>
         <div class="mat-name" style="font-size:14.5px">${esc(p.name)}</div>
         <div style="font-size:11.5px;margin-top:3px"><span style="color:var(--amber);font-weight:800">★ <span class="tnum">${st2.score.toFixed(1)}</span></span><span class="muted">（${st2.rev}）</span>
-          <span class="muted"> ・ 実証詳細レポート <b class="tnum" style="color:var(--ink)">${st2.rep}</b> 件 ・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum" style="color:var(--ink)">${st2.fav}</b></span></div>
+          <span class="muted"> ・ 実証詳細レポート <b class="tnum" style="color:${st2.rep > 0 ? 'var(--amber)' : 'var(--ink)'};font-size:${st2.rep > 0 ? '1.2em' : '1em'}">${st2.rep}</b> 件 ・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum" style="color:var(--ink)">${st2.fav}</b></span></div>
         ${desc2 ? `<div class="mat-desc" style="margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">${esc(desc2)}</div>` : ''}
         ${mats ? `<div class="mat-rate" style="gap:5px;margin-top:5px;flex-wrap:wrap">${mats}</div>` : ''}
         ${tierBadge(hit) ? `<div style="margin-top:5px">${tierBadge(hit)}</div>` : ''}
@@ -3261,7 +3405,8 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const pfName = document.getElementById('pfName');
     if (!input || !list) return;
     let selIdx = selProd ? DB_PRODUCTS.indexOf(selProd) : -1;   /* 資材ページ経由なら自動選択 */
-    if (selIdx >= 0) { if (pfName) pfName.textContent = selProd.name; if (footer) footer.hidden = false; }
+    const pfMaker = document.getElementById('pfMaker');
+    if (selIdx >= 0) { if (pfName) pfName.textContent = selProd.name; if (pfMaker) pfMaker.textContent = selProd.maker; if (footer) footer.hidden = false; }
     const row = (p, i) => `
       <div class="pick-row${i === selIdx ? ' sel' : ''}" data-pick="${i}" data-idx="${i}">
         <span class="ring"></span>
@@ -3296,6 +3441,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       const r = e.target.closest('[data-pick]'); if (!r) return;
       selIdx = +r.dataset.pick; selProd = DB_PRODUCTS[selIdx];
       if (pfName) pfName.textContent = selProd.name;
+      if (pfMaker) pfMaker.textContent = selProd.maker;
       if (footer) footer.hidden = false;
       render();
     });
@@ -3323,14 +3469,17 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ${site ? `<div style="margin-top:12px"><a class="link-more" href="${esc(site)}" target="_blank" rel="noopener">公式サイト・公式資料 ↗</a></div>` : ''}
       </div>
       <div class="sec-h" style="margin-top:20px"><h2>掲載資材 <span class="muted tnum" style="font-size:12px">${prods.length}件</span></h2></div>
-      <div class="stack">
-        ${prods.map(x => `<div class="card mat-card" data-go="material" data-idx="${x.i}">
-          <div class="mat-img" style="background:#fff;border:1px solid var(--line);padding:4px">${bottleImg()}</div>
-          <div class="mat-main">
-            <div class="mat-name">${esc(x.pp.name)}</div>
-            <div class="mat-rate" style="gap:5px">${(x.pp.effects || []).slice(0, 3).map(e2 => `<span class="chip">${esc(e2)}</span>`).join(' ')}</div>
-          </div>${CHEV}</div>`).join('')}
-      </div>
+      <div class="prod-marquee" style="overflow-x:auto"><div style="display:flex;gap:12px;padding:4px 2px">
+        ${prods.map(x => { const st9 = sampleStats(x.i); return `<div class="pm-card" data-go="material" data-idx="${x.i}">
+          <div class="img">${bottleImg()}</div>
+          <div class="info">
+            <div class="mk">${esc(x.pp.maker)}</div>
+            <div class="nm">${esc(x.pp.name)}</div>
+            <div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st9.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st9.rev})</span></div>
+            <div class="cnt"><span style="white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${st9.rep > 0 ? 'var(--amber)' : 'inherit'}">${st9.rep}</b>件</span></div>
+            <div class="ef">${(x.pp.mat8 || []).slice(0, 2).map(m9 => `<span class="pm-tag">${esc(m9)}</span>`).join('')}</div>
+          </div></div>`; }).join('')}
+      </div></div>
       <div class="card pad" style="margin-top:18px;background:var(--bg)">
         <div style="font-size:12.5px;font-weight:700">このメーカーの担当者の方ですか？</div>
         <div class="muted" style="font-size:11.5px;margin-top:4px">公式メーカーアカウントに登録すると、製品情報の確認・修正や会社紹介の掲載ができます。</div>
@@ -3409,7 +3558,10 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ${vOK ? dRowV('登録・認証', '肥料登録済み（完成見本のためサンプル表示です）') : ''}
         ${dRowV('販売状況', '市販中（サンプル）')}
       </div>
-      <div class="disclaimer" style="margin-top:8px">「−」の項目はメーカーへの確認後に掲載されます。メーカー資料の記載：「${esc(p.rawCrops || '記載なし')}」。作物・効果・施用方法の分類は、農林水産省の通知（30消安第6281号）・JBSAの公式分類を参考にFarmilleが整理しています。効果を検証・保証するものではありません。${vOK ? '主な成分・作用機作・施用方法の詳細はメーカー記入（完成見本のためサンプル表示です）。' : '詳細な使い方・説明文は、メーカーへの確認後に掲載されます。'}登録・認証（肥料登録・農薬登録など）は、メーカーが記入した場合に表示されます。 <span style="color:var(--green-deep);font-weight:600;cursor:pointer" data-go="sellerApply">メーカーご担当者様はご連絡ください →</span></div>`;
+      <div class="disclaimer" style="margin-top:8px;line-height:1.9">
+        <div>・「−」の項目は、メーカーへの確認後に掲載されます。<span style="color:var(--green-deep);font-weight:600;cursor:pointer" data-go="sellerApply">メーカーご担当者様はご連絡ください →</span></div>
+        <div>・作物・効果・施用方法の分類は、農林水産省の通知（30消安第6281号）・JBSAの公式分類を参考にFarmilleが整理しています。効果を検証・保証するものではありません。</div>
+      </div>`;
 
     /* --- 5. リンク・情報 --- */
     /* 登録・認証（肥料登録／農薬登録 等）はFarmilleでは表示しない。
@@ -3460,7 +3612,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ${reviewCard('トマト好き','ミニトマト',4,9,'葉の展開が良くなり、樹全体のバランスが整いました。病害の発生も少なく、管理がしやすかったです。',94,null,0)}
         ${reviewCard('いちご屋A','いちご',4,7,'定植後の活着がスムーズで、根張りが良くなった実感があります。果色も良く、収穫後の日持ちも向上しました。',71,null,2)}
       </div>
-      <div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" data-go="reviewsAll">感想口コミをすべて見る（${revN}件）</button></div>`;
+      <div style="text-align:center;margin-top:12px"><div class="muted" style="letter-spacing:.2em;margin-bottom:2px">・・・</div><span class="link-more" data-go="reviewsAll" style="cursor:pointer">もっと見る（全${revN}件） →</span></div>`;
 
     /* --- 7. 関連 --- */
     const sameMaker = DB_PRODUCTS.filter(x => x !== p && x.maker === p.maker).slice(0, 6);
@@ -3490,10 +3642,10 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           <div class="mat-maker" data-go="seller" style="margin-top:5px;cursor:pointer;color:var(--green);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--green) 40%,transparent)">${esc(p.maker)}</div>
           ${(p.mat8 || []).length ? `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">${p.mat8.map(m2 => `<span class="chip">${esc(m2)}</span>`).join('')}</div>` : ''}
           <div class="muted" style="font-size:11.5px;margin-top:6px">
-            <span data-scrollto="anchorReports" style="cursor:pointer;white-space:nowrap">実証詳細レポート <b class="tnum" style="color:var(--ink)">${repN}件</b></span>
+            <span data-scrollto="anchorReports" style="cursor:pointer;white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${repN > 0 ? 'var(--amber)' : 'var(--ink)'};font-size:${repN > 0 ? '1.15em' : '1em'}">${repN}件</b></span>
             <span data-scrollto="anchorReviews" style="cursor:pointer;font-size:10.5px;white-space:nowrap"> ・ 感想口コミ <b class="tnum">${revN}件</b></span>
             <span style="font-size:10.5px;white-space:nowrap"> ・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum">${stx.fav}</b></span></div>
-          <button type="button" data-fav style="margin-top:8px;border:1px solid var(--line-strong);background:var(--card);border-radius:999px;padding:5px 13px;font-size:12px;cursor:pointer;color:${isFav(p) ? '#E05252' : 'var(--ink-2)'}">${isFav(p) ? '♥ お気に入り済み' : '♡ お気に入り'}</button>
+          <button type="button" data-fav style="margin-top:8px;border:1px solid var(--line-strong);background:var(--card);border-radius:999px;padding:5px 13px;font-size:12px;cursor:pointer;color:${isFav(p) ? '#E05252' : 'var(--ink-2)'}">${isFav(p) ? '★ お気に入り済み' : '☆ お気に入り'}</button>
         </div>
       </div>
       <div class="compliance" style="margin-top:12px"><span class="ck">${CK}</span>
@@ -3817,7 +3969,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
               <div class="mk">${escM(p.maker)}</div>
               <div class="nm">${escM(p.name)}</div>
               <div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st.rev})</span></div>
-              <div class="cnt"><span style="white-space:nowrap">実証詳細レポート <b class="tnum">${st.rep}</b>件</span> <span style="white-space:nowrap">・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum">${st.fav}</b></span></div>
+              <div class="cnt"><span style="white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${st.rep > 0 ? 'var(--amber)' : 'inherit'};font-size:${st.rep > 0 ? '1.2em' : '1em'}">${st.rep}</b>件</span> <span style="white-space:nowrap">・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum">${st.fav}</b></span></div>
               <div class="ef">${tags.map(t2 => `<span class="pm-tag">${escM(t2)}</span>`).join('')}</div>
             </div></div>`; };
         const cards = pick.map(pmCard).join('');
@@ -3919,17 +4071,17 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ].map(v => bind({ ...v, anchor: 'anchorReviews' }));
         /* 実証詳細レポート（記事カード＋資材行） */
         const REPS = [
-          { n:'炎天マスター',   user:'のはら園芸', crop:'なす',   img:'used',    txt:'猛暑の8月でも成り疲れが軽く、収穫後半まで持ちました。比較区との差も記録しています。' },
-          { n:'アクティバイオ', user:'いちご屋A',  crop:'いちご', img:'apply',   txt:'定植後の活着が早く、初期生育が揃いました。散布の様子も写真で記録しています。' },
-          { n:'ホストップ',     user:'田中ファーム', crop:'きゅうり', img:'harvest', txt:'収穫後半のバテが減りました。収量の推移を月ごとにまとめています。' },
+          { n:'炎天マスター',   user:'のはら園芸', crop:'なす',   img:'used',    ttl:'耐暑性改善・しおれ軽減｜なす', txt:'猛暑の8月でも成り疲れが軽く、収穫後半まで持ちました。比較区との差も記録しています。' },
+          { n:'アクティバイオ', user:'いちご屋A',  crop:'いちご', img:'apply',   ttl:'養分吸収の改善｜いちご', txt:'定植後の活着が早く、初期生育が揃いました。散布の様子も写真で記録しています。' },
+          { n:'ホストップ',     user:'田中ファーム', crop:'きゅうり', img:'harvest', ttl:'成り疲れ改善・収量改善｜きゅうり', txt:'収穫後半のバテが減りました。収量の推移を月ごとにまとめています。' },
         ].map(v => bind({ ...v, anchor: 'anchorReports' }));
         const repCard = v => `<div class="alist-card" data-go="reportArticle">
             <div class="cover">${typeof ph === 'function' ? ph(v.img) : ''}</div>
             <div class="abody">
-              <div class="t">${eV(v.p.name)} 実証詳細レポート（サンプル）</div>
+              <div class="t">${eV(v.p.name)} 実証詳細レポート（サンプル）｜${eV(v.crop)}</div>
               <div class="rp-ex">${eV(v.txt)}</div>
               <div class="rp-by">${avatarHtml(v.user, "xs")}<b>${eV(v.user)}</b><span class="rp-time">${rpTime(v.user)}</span></div>
-              <div class="rp-foot">${HEART_O}<span class="tnum">${(v.i * 7) % 40 + 5}</span><span class="bk" title="保存">${BKMK}</span></div>
+              <div class="rp-foot"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span><span class="tnum">${(v.i * 7) % 40 + 5}</span></button><span class="bk" title="保存">${BKMK}</span>${vc((v.i * 37) % 260 + 60)}</div>
               ${prodRow(v)}
             </div></div>`;
         const revCard = v => `<div class="card voice-card">
@@ -3938,7 +4090,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
                 <div class="muted" style="font-size:10.5px;margin-top:1px">${eV(v.crop)}で使用 ・ ${rpTime(v.user)}</div></div></div>
             <div class="stars" style="margin-top:7px">${'★'.repeat(v.st)}${'☆'.repeat(5 - v.st)}</div>
             <div class="vc-text">${eV(v.txt)}</div>
-            <div class="rp-foot">${HEART_O}<span class="tnum">${(v.i * 11) % 30 + 3}</span><span class="bk" title="保存">${BKMK}</span></div>
+            <div class="rp-foot"><button class="helpful-btn">${THUMB}<span class="hb-label">参考になった</span><span class="tnum">${(v.i * 11) % 30 + 3}</span></button><span class="bk" title="保存">${BKMK}</span>${vc((v.i * 29) % 180 + 40)}</div>
             ${prodRow(v)}
           </div>`;
         const wrapV = document.createElement('div');
@@ -3963,14 +4115,27 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
               <p>いちばん参考になるのは、生産者が実際に使った体験です。</p>
               <p>Farmilleで、みなさんの体験を共有して、より良い資材選びを実現しましょう。</p>
               <div class="letter-actions">
-                <button class="btn btn-primary btn-sm" data-go="signup">感想口コミを投稿する</button>
                 <button class="btn btn-primary btn-sm" data-go="signup">実証詳細レポートを投稿する</button>
+                <button class="btn btn-primary btn-sm" data-go="signup">感想口コミを投稿する</button>
               </div>
             </div>
           </div>
+          <div class="card" id="supportCard" style="margin-top:26px;padding:26px 24px">
+            <div style="min-height:150px">
+              <span id="supBadge" style="background:var(--green-soft);color:var(--green-deep);font-weight:800;font-size:11.5px;padding:4px 12px;border-radius:6px;letter-spacing:.08em">応援メッセージ</span>
+              <h3 id="supTitle" style="margin-top:12px;font-size:18px">農林水産省 ◯◯◯◯課（見本）</h3>
+              <div id="supBody" class="muted" style="margin-top:8px;font-size:13px;line-height:1.9"><b style="color:var(--ink)">「生産現場の声が、資材選びの新しい基準になる」</b><br>バイオスティミュラントの普及には、現場での使用実態にもとづく情報の蓄積が欠かせません。生産者どうしが体験を共有するこの取り組みに期待しています。</div>
+              <div id="supFrom" style="margin-top:9px;font-size:12.5px;font-weight:700" hidden></div>
+            </div>
+            <div id="supDots" style="text-align:center;margin-top:14px">
+              <span class="dot-btn on" data-sup="0" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);margin:0 4px;cursor:pointer"></span>
+              <span class="dot-btn" data-sup="1" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--line-strong);margin:0 4px;cursor:pointer"></span>
+            </div>
+            <div class="hint-pill" style="margin-top:10px">※ 完成見本のサンプル表示です（応援メッセージの掲載は調整中の構想）</div>
+          </div>
           <div class="signup-cta">
             <h2>会員登録して、あなたの体験を共有してください</h2>
-            <p>登録は無料で、1分で完了します。検索と感想口コミの閲覧は、登録なしで利用できます。<br>会員登録すると、実証詳細レポートの閲覧・投稿、感想口コミの投稿、お気に入りの保存ができます。</p>
+            <p><span style="color:var(--green-deep);font-weight:800">登録は無料で、1分で完了します。</span>検索と感想口コミの閲覧は、登録なしで利用できます。<br>会員登録すると、実証詳細レポートの閲覧・投稿、感想口コミの投稿、お気に入りの保存ができます。</p>
             <div class="sc-actions"><button class="btn btn-primary" data-go="signup" style="width:auto;padding:13px 30px">無料で会員登録</button>
               <a class="link-more" data-go="search" style="font-size:13.5px">資材をさがす →</a></div>
             <div class="muted" style="font-size:10.5px;margin-top:12px">※ 完成見本のため、登録はデモとして動作します。</div>
@@ -3991,7 +4156,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
               <div class="sf-col"><h5>参加する</h5>
                 <a data-go="signup">新規会員登録</a><a data-go="pickMaterial">実証詳細レポートを投稿</a><a data-go="mypage">マイページ</a></div>
               <div class="sf-col"><h5>メーカー・団体の方</h5>
-                <a data-go="sellerApply">出品者申請</a><a data-go="seller">メーカーページ（見本）</a></div>
+                <a data-go="makerFlow">メーカー掲載の流れ</a><a data-go="sellerApply">出品者申請</a><a data-go="seller">メーカーページ（見本）</a></div>
             </div>
             <div class="sf-bottom"><span>© 2026 Farmille</span>
               <span class="sf-legal"><a class="dis">プライバシーポリシー（準備中）</a><a class="dis">利用規約（準備中）</a></span></div>
@@ -4249,6 +4414,8 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         /* 単位のsuggest（datalist） */
         if (!scr.querySelector('#unitList')) {
           scr.insertAdjacentHTML('beforeend', `<datalist id="dilList">${['倍','mL/L','g/L','%','ppm'].map(u2 => `<option value="${u2}">`).join('')}</datalist>
+            <datalist id="metricList">${['可販果収量','1株あたり収量','10aあたり収量','平均果重','平均糖度','可販果率','秀品率','裂果率','障害果率','発芽率','活着率','草丈','茎径','葉数','葉色値（SPAD）','根重','地上部重','日持ち日数'].map(u2 => `<option value="${u2}">`).join('')}</datalist>
+            <datalist id="kbUnitList">${['g','kg','kg/10a','t/10a','kg/株','%','Brix','cm','mm','枚','本','個','日','SPAD'].map(u2 => `<option value="${u2}">`).join('')}</datalist>
             <datalist id="unitList">${['L/10a','mL/10a','kg/10a','g/10a','L/m²','mL/m²','g/m²','mL/株','g/株','L/樹','mL/樹','mL/本','mL/kg種子','g/kg種子','mL/育苗箱','g/育苗箱','L/トレー','L','kg'].map(u2 => `<option value="${u2}">`).join('')}</datalist>`);
           scr.querySelectorAll('.method-panel select.unit').forEach(sel2 => {
             const isDil = [...sel2.options].some(o2 => o2.textContent === '倍');
@@ -4312,12 +4479,18 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
             b.className = 'card pad';
             b.style.marginTop = blocks.children.length ? '12px' : '0';
             b.innerHTML = `<div class="amount-row">
-                <input class="input kb-metric" placeholder="指標名　例）平均果重" value="${escK(metric || '')}">
-                <input class="input kb-unit" placeholder="単位　例）g" style="max-width:130px" value="${escK(unit || '')}">
+                <input class="input kb-metric" list="metricList" placeholder="指標名　例）平均果重" value="${escK(metric || '')}">
+                <input class="input kb-unit" list="kbUnitList" placeholder="単位　例）g" style="max-width:130px" value="${escK(unit || '')}">
                 ${blocks.children.length ? '<button type="button" class="md-btn kb-del" style="flex:0 0 auto">×</button>' : ''}</div>
               <div class="kb-rows" style="margin-top:2px"></div>
               <button type="button" class="md-btn kb-add" style="margin-top:8px">＋ 系列を追加</button>
               <div class="kb-chart" style="margin-top:11px"></div>`;
+            const METRIC_UNIT = { '可販果収量':'kg/10a','1株あたり収量':'kg','10aあたり収量':'kg/10a','平均果重':'g','平均糖度':'Brix','可販果率':'%','秀品率':'%','裂果率':'%','障害果率':'%','発芽率':'%','活着率':'%','草丈':'cm','茎径':'mm','葉数':'枚','葉色値（SPAD）':'','根重':'g','地上部重':'g','日持ち日数':'日' };
+            const mIn = b.querySelector('.kb-metric'), uIn = b.querySelector('.kb-unit');
+            mIn.addEventListener('change', () => {
+              const u9 = METRIC_UNIT[mIn.value.trim()];
+              if (u9 !== undefined && !uIn.value.trim()) { uIn.value = u9; uIn.dispatchEvent(new Event('input')); }
+            });
             const rows = b.querySelector('.kb-rows');
             const addRow = (lb, v) => { const d = document.createElement('div'); d.className = 'amount-row'; d.style.marginTop = '7px';
               d.innerHTML = `<input class="input kr-lb" placeholder="系列の名称　例）使用区、9月中旬 など" value="${escK(lb || '')}"><input class="input kr-v" placeholder="数値" inputmode="decimal" style="max-width:110px" value="${escK(v === 0 || v ? v : '')}"><button type="button" class="md-btn kr-x" style="flex:0 0 auto">×</button>`;
@@ -4621,6 +4794,51 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       }
     }
     if (id === 'home') {
+      const SUP = [
+        ['応援メッセージ', '農林水産省 ◯◯◯◯課（見本）',
+         '<b style="color:var(--ink)">「生産現場の声が、資材選びの新しい基準になる」</b><br>バイオスティミュラントの普及には、現場での使用実態にもとづく情報の蓄積が欠かせません。生産者どうしが体験を共有するこの取り組みに期待しています。',
+         ''],
+        ['はじめての方へ', '実証詳細レポートと感想口コミ、2つの共有方法があります',
+         `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:4px">
+            <div style="border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)">
+              <div style="display:flex;align-items:center;gap:7px"><span style="background:var(--green);color:#fff;font-size:10px;font-weight:800;padding:3px 9px;border-radius:6px">じっくり</span><b style="color:var(--ink);font-size:13px">実証詳細レポート</b></div>
+              <ul style="margin:8px 0 0;padding-left:17px;font-size:12px;line-height:1.85">
+                <li>使用区と対照区を比べた、詳しい体験の共有</li>
+                <li>収量などの定量データは自動でグラフに</li>
+                <li>閲覧・投稿には無料の会員登録が必要です</li>
+              </ul>
+            </div>
+            <div style="border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)">
+              <div style="display:flex;align-items:center;gap:7px"><span style="background:var(--green-soft);color:var(--green-deep);font-size:10px;font-weight:800;padding:3px 9px;border-radius:6px">気軽に</span><b style="color:var(--ink);font-size:13px">感想口コミ</b></div>
+              <ul style="margin:8px 0 0;padding-left:17px;font-size:12px;line-height:1.85">
+                <li>星5段階の評価と、ひとことの感想</li>
+                <li>星だけの投稿でもOK。写真も付けられます</li>
+                <li>閲覧は登録なしでどなたでも</li>
+              </ul>
+            </div>
+          </div>`,
+         ''],
+      ];
+      const dots2 = scr.querySelector('#supDots');
+      if (dots2 && !dots2.dataset.init) { dots2.dataset.init = '1';
+        let supIdx = 0;
+        const showSup = k2 => {
+          const badge2 = scr.querySelector('#supBadge');
+          if (!badge2) { clearInterval(supTimer); return; }   /* 画面遷移後はタイマーを止める */
+          supIdx = k2;
+          badge2.textContent = SUP[k2][0];
+          scr.querySelector('#supTitle').textContent = SUP[k2][1];
+          scr.querySelector('#supBody').innerHTML = SUP[k2][2];
+          const fr2 = scr.querySelector('#supFrom');
+          fr2.textContent = SUP[k2][3]; fr2.hidden = !SUP[k2][3];
+          dots2.querySelectorAll('.dot-btn').forEach((x2, i2) => x2.style.background = i2 === k2 ? 'var(--green)' : 'var(--line-strong)');
+        };
+        let supTimer = setInterval(() => showSup((supIdx + 1) % SUP.length), 6000);
+        dots2.addEventListener('click', e2 => { const d2 = e2.target.closest('[data-sup]'); if (!d2) return;
+          clearInterval(supTimer);
+          showSup(+d2.dataset.sup);
+          supTimer = setInterval(() => showSup((supIdx + 1) % SUP.length), 6000); });
+      }
       scr.querySelectorAll('[data-vsort]').forEach(sorter => {
         if (sorter.dataset.init) return; sorter.dataset.init = '1';
         sorter.addEventListener('click', e2 => {
@@ -4635,12 +4853,12 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     let signedIn = false;
     try { signedIn = localStorage.getItem('farmille_signed_in') === '1'; } catch (err) {}
     if (signedIn && id === 'reportArticle') {
-      const bl = scr.querySelector('div[style*="blur(7px)"]');
+      const bl = scr.querySelector('#gateBlur');
       if (bl) {
         bl.style.filter = 'none'; bl.style.maxHeight = 'none';
         bl.style.pointerEvents = 'auto'; bl.style.userSelect = 'auto';
-        const ov = bl.nextElementSibling; if (ov) ov.remove();
       }
+      const ov = scr.querySelector('#gateOverlay'); if (ov) ov.remove();
     }
     if (signedIn && id === 'material') {
       const cta = [...scr.querySelectorAll('.card')].find(c5 => c5.textContent.includes('続きを読むには、会員登録が必要です'));
@@ -4656,6 +4874,63 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
             c4.style.display = (!q4 || jaHit(c4.innerText, q4)) ? '' : 'none';
           });
         });
+      }
+    }
+    if (id === 'profileEdit') {
+      const escC = s9 => String(s9 == null ? '' : s9).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+      /* 主な作目：作物マスタ検索ピッカー（複数可） */
+      const pci = scr.querySelector('#peCropInput');
+      if (pci && !pci.dataset.init) {
+        pci.dataset.init = '1';
+        const pchips = scr.querySelector('#peCropChips'), ppanel = scr.querySelector('#peCropPanel');
+        let sel9 = ['いちご', 'ミニトマト'];
+        const draw9 = () => { pchips.innerHTML = sel9.map((n,i) =>
+          `<span class="chip-sel"><span class="cat-mini">作物</span>${escC(n)}<button data-rm9="${i}">×</button></span>`).join(''); };
+        const panel9 = q => {
+          if (!q) { ppanel.innerHTML = ''; return; }
+          const res9 = [];
+          Object.keys(CROP_GROUPS).forEach(g => { if (jaHit(g, q) && !sel9.includes(g)) res9.push({name:g, group:'作物群', grp:1}); });
+          CROPS.forEach(c => { if (sel9.includes(c.name)) return;
+            const ah = (c.aliases||[]).find(a => jaHit(a, q));
+            if (jaHit(c.name, q) || ah) res9.push({name:c.name, group:c.group, alias:ah}); });
+          const cands9 = res9.slice(0, 9);
+          ppanel.innerHTML = cands9.length ? `<div class="ts-pg">` + cands9.map(c =>
+            `<div class="sug" data-nm9="${escC(c.name)}"><span class="cat-label" style="--h:${c.grp?'var(--green)':'var(--ink-3)'}">${c.grp?'作物群':escC(c.group)}</span><span>${escC(c.name)}</span>${c.alias?`<span class="alias-note">別名: ${escC(c.alias)}</span>`:''}</div>`).join('') + `</div>`
+            : `<div class="ts-empty">「${escC(q)}」に一致する作物がありません</div>`;
+        };
+        pci.addEventListener('input', () => panel9(pci.value.trim()));
+        ppanel.addEventListener('click', e9 => { const el9 = e9.target.closest('[data-nm9]'); if (!el9) return;
+          sel9.push(el9.dataset.nm9); pci.value = ''; ppanel.innerHTML = ''; draw9(); });
+        pchips.addEventListener('click', e9 => { const rm9 = e9.target.closest('[data-rm9]'); if (!rm9) return;
+          sel9.splice(+rm9.dataset.rm9, 1); draw9(); });
+        draw9();
+      }
+      /* 所属：タグ検索＋自由追加（複数可） */
+      const poi = scr.querySelector('#peOrgInput');
+      if (poi && !poi.dataset.init) {
+        poi.dataset.init = '1';
+        const ochips = scr.querySelector('#peOrgChips'), opanel = scr.querySelector('#peOrgPanel');
+        const ORG_TAGS = ['全青協', 'JA青年部', '4Hクラブ', '農業法人', '生産部会', '研究会', '指導農業士', '青年農業士', '農業委員会'];
+        let orgs9 = ['全青協'];
+        const drawO = () => { ochips.innerHTML = orgs9.map((n,i) =>
+          `<span class="chip-sel"><span class="cat-mini">所属</span>${escC(n)}<button data-rmo="${i}">×</button></span>`).join(''); };
+        const panelO = q => {
+          if (!q) { opanel.innerHTML = ''; return; }
+          const hits9 = ORG_TAGS.filter(t => !orgs9.includes(t) && jaHit(t, q)).slice(0, 6);
+          opanel.innerHTML = `<div class="ts-pg">`
+            + hits9.map(t => `<div class="sug" data-org9="${escC(t)}"><span class="cat-label" style="--h:var(--ink-3)">タグ</span><span>${escC(t)}</span></div>`).join('')
+            + (orgs9.includes(q) ? '' : `<div class="sug" data-org9="${escC(q)}"><span class="cat-label" style="--h:var(--green)">追加</span><span>「${escC(q)}」を所属として追加</span></div>`)
+            + `</div>`;
+        };
+        poi.addEventListener('input', () => panelO(poi.value.trim()));
+        poi.addEventListener('keydown', e9 => { if (e9.key === 'Enter') { e9.preventDefault();
+          const v9 = poi.value.trim(); if (v9 && !orgs9.includes(v9)) { orgs9.push(v9); drawO(); } poi.value = ''; opanel.innerHTML = ''; } });
+        opanel.addEventListener('click', e9 => { const el9 = e9.target.closest('[data-org9]'); if (!el9) return;
+          if (!orgs9.includes(el9.dataset.org9)) orgs9.push(el9.dataset.org9);
+          poi.value = ''; opanel.innerHTML = ''; drawO(); });
+        ochips.addEventListener('click', e9 => { const rmo = e9.target.closest('[data-rmo]'); if (!rmo) return;
+          orgs9.splice(+rmo.dataset.rmo, 1); drawO(); });
+        drawO();
       }
     }
     if (id === 'sellerApply') {
@@ -4684,6 +4959,8 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       }
     }
     if (id === 'mypage') {
+      try { localStorage.setItem('farmille_signed_in', '1'); } catch (err) {}
+      document.querySelector('.phone')?.classList.add('signed-in');
       const tabs2 = scr.querySelector('#myTabs');
       if (tabs2 && !tabs2.dataset.init) { tabs2.dataset.init = '1';
         tabs2.addEventListener('click', e2 => { const t2 = e2.target.closest('[data-mytab]'); if (!t2) return;
@@ -4694,6 +4971,18 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     if (id === 'search') {
       const so = scr.querySelector('#tsSort');
       if (so && !so.dataset.init) { so.dataset.init = '1'; so.addEventListener('change', () => window.renderResults && window.renderResults()); }
+      const nr = scr.querySelector('#tsNumRow');
+      if (nr && !nr.dataset.init) { nr.dataset.init = '1';
+        nr.addEventListener('click', e2 => {
+          const c2 = e2.target.closest('[data-numf]'); if (!c2) return;
+          const [k2, v2] = c2.dataset.numf.split(':');
+          const NF = window.__numFilters = window.__numFilters || { rep: 0, score: 0, fav: 0 };
+          const was = NF[k2] === +v2;
+          NF[k2] = was ? 0 : +v2;
+          nr.querySelectorAll(`[data-numf^="${k2}:"]`).forEach(x2 => x2.classList.remove('on'));
+          if (!was) c2.classList.add('on');
+          if (window.renderResults) window.renderResults();
+        }); }
     }
     /* 全画面フッター：ホームのサイトマップを他画面にも */
     if (id === 'home') {
