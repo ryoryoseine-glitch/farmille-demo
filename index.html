@@ -609,6 +609,8 @@
     #navToggle { display:none; }
   @media (max-width: 899px) {
     .bottom-nav { overflow-x:auto; padding:8px 12px; gap:2px; }
+    /* 枠付きスマホ表示では丸角ベゼルにかからないよう余白を確保 */
+    body:not(.app-mode) .phone > .bottom-nav { padding:20px 24px 10px; }
     .bottom-nav::before { font-size:17px; margin-right:10px; }
     .bn-item { padding:8px 8px; font-size:12px; }
     .bn-item[data-id="mypage"] { margin-left:0; }
@@ -1938,16 +1940,23 @@ S.sellerApply = () => appbar('法人アカウントの申請') + `
     <div class="field"><label>ご担当者名・部署 <span class="badge badge-req">必須</span> <span class="muted" style="font-size:11px;font-weight:400">公開されません</span></label>
       <input class="input" placeholder="例）営業部 金子">
       <div class="fguide" style="margin-top:6px;margin-bottom:0">管理画面から変更できます。</div></div>
-    <div class="field"><label>本社・主な拠点の所在地 <span class="badge badge-req">必須</span></label><input class="input" placeholder="東京都〇〇区…"></div>
+    <div class="field"><label>本社・主な拠点の所在地 <span class="badge badge-opt">任意</span></label><input class="input" placeholder="東京都〇〇区…"></div>
     <div class="field"><label>公式サイトURL <span class="badge badge-req">必須</span></label>
       <input class="input" placeholder="https://example.co.jp">
       <div class="fguide" style="margin-top:6px;margin-bottom:0">お持ちでない場合は「なし」とご記入ください。</div></div>
-    <div class="field"><label>掲載・編集権を希望する資材 <span class="badge badge-req">必須</span></label>
+    <div class="field"><label>掲載・編集を希望する資材 <span class="badge badge-opt">任意</span></label>
+      <div class="fguide">アンケートとしてお伺いします。Farmille上にすでに掲載されていて編集したい資材、またはこれから掲載したい資材があれば記入してください。製品名は正式名称でお願いします。</div>
+      <div style="font-size:12px;font-weight:700;margin:8px 0 6px">Farmilleに掲載済みの資材</div>
       <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
-        <input class="ts-input" id="saMatInput" placeholder="資材名で検索して選択" autocomplete="off"></div>
+        <input class="ts-input" id="saMatInput" placeholder="資材名・メーカー名で検索して選択" autocomplete="off"></div>
       <div id="saMatChips" class="ts-chips"></div>
       <div id="saMatPanel" class="ts-panel"></div>
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">Farmilleに未掲載の資材は、製品名を入力してEnterでそのまま追加できます。</div></div>
+      <div style="font-size:12px;font-weight:700;margin:14px 0 6px">Farmilleに未掲載の資材（新規掲載の希望）</div>
+      <div class="amount-row">
+        <input class="input" id="saNewInput" placeholder="製品名を入力　例）〇〇エキス液剤">
+        <button type="button" class="md-btn" id="saNewAdd" style="flex:0 0 auto">＋ 追加</button></div>
+      <div id="saNewChips" class="ts-chips" style="margin-top:6px"></div>
+      <div class="fguide" style="margin-top:6px;margin-bottom:0">掲載済みか分からない場合は、上の検索で見つからなければこちらに入力してください。</div></div>
     <div class="form-actions">
       <button class="btn btn-primary">申請する</button>
       <div class="draft">Farmilleからのご案内で登録される方はこちら（招待コード入力）</div>
@@ -4121,7 +4130,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
             </div>
           </div>
           <div class="card" id="supportCard" style="margin-top:26px;padding:26px 24px">
-            <div style="min-height:150px">
+            <div id="supBox" style="min-height:150px">
               <span id="supBadge" style="background:var(--green-soft);color:var(--green-deep);font-weight:800;font-size:11.5px;padding:4px 12px;border-radius:6px;letter-spacing:.08em">応援メッセージ</span>
               <h3 id="supTitle" style="margin-top:12px;font-size:18px">農林水産省 ◯◯◯◯課（見本）</h3>
               <div id="supBody" class="muted" style="margin-top:8px;font-size:13px;line-height:1.9"><b style="color:var(--ink)">「生産現場の声が、資材選びの新しい基準になる」</b><br>バイオスティミュラントの普及には、現場での使用実態にもとづく情報の蓄積が欠かせません。生産者どうしが体験を共有するこの取り組みに期待しています。</div>
@@ -4577,13 +4586,13 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           fCompare.insertAdjacentHTML('beforebegin', `
             <div id="compareRedesign">
               <div class="fguide" style="margin:4px 0 0">今回のBS資材を<b>使った区（使用区）</b>と<b>使っていない区（対照区）</b>を比べた場合にご記入ください。</div>
-              ${optField('両方の区で共通して使っているもの','肥料・農薬・土壌改良材など、使用区・対照区の両方で使っているもの。','例）液肥〇〇（週1回）、殺菌剤△△')}
-              ${optField('使用区だけで使っている資材','今回のBS資材のほかに、使用区だけで使っているものがあれば。','例）なし')}
-              ${optField('対照区だけで使っている資材','対照区だけで使っているものがあれば。','例）△△液肥')}
               <div class="field"><label>調査した範囲（使用区） <span class="badge badge-req">必須</span></label>
                 <input class="input" placeholder="例）15株（5株×3反復）／畝10m×3反復"></div>
               <div class="field"><label>調査した範囲（対照区） <span class="badge badge-req">必須</span></label>
                 <input class="input" placeholder="例）15株（5株×3反復）／畝10m×3反復"></div>
+              ${optField('両方の区で共通して使っているもの','肥料・農薬・土壌改良材など、使用区・対照区の両方で使っているもの。','例）液肥〇〇（週1回）、殺菌剤△△')}
+              ${optField('使用区だけで使っている資材','今回のBS資材のほかに、使用区だけで使っているものがあれば。','例）なし')}
+              ${optField('対照区だけで使っている資材','対照区だけで使っているものがあれば。','例）△△液肥')}
             </div>`);
           [fCompare, fBoth, fDiff, fCount].forEach(f => f && f.remove());
         }
@@ -4833,6 +4842,25 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           fr2.textContent = SUP[k2][3]; fr2.hidden = !SUP[k2][3];
           dots2.querySelectorAll('.dot-btn').forEach((x2, i2) => x2.style.background = i2 === k2 ? 'var(--green)' : 'var(--line-strong)');
         };
+        /* スライドごとの高さ差でカードが伸縮しないよう、最大高さに固定する */
+        const boxSup = scr.querySelector('#supBox');
+        if (boxSup) {
+          const probe = document.createElement('div');
+          probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:' + boxSup.clientWidth + 'px';
+          boxSup.parentElement.appendChild(probe);
+          let maxH = 150;
+          SUP.forEach(sp9 => {
+            probe.innerHTML = boxSup.innerHTML;
+            probe.querySelector('#supBadge').textContent = sp9[0];
+            probe.querySelector('#supTitle').textContent = sp9[1];
+            probe.querySelector('#supBody').innerHTML = sp9[2];
+            const f9 = probe.querySelector('#supFrom'); f9.textContent = sp9[3]; f9.hidden = !sp9[3];
+            probe.querySelectorAll('[id]').forEach(x9 => x9.removeAttribute('id'));
+            maxH = Math.max(maxH, probe.offsetHeight);
+          });
+          probe.remove();
+          boxSup.style.minHeight = maxH + 'px';
+        }
         let supTimer = setInterval(() => showSup((supIdx + 1) % SUP.length), 6000);
         dots2.addEventListener('click', e2 => { const d2 = e2.target.closest('[data-sup]'); if (!d2) return;
           clearInterval(supTimer);
@@ -4947,11 +4975,21 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           const hits3 = DB_PRODUCTS.filter(p3 => !sel3.includes(p3.name) && (jaHit(p3.name, q3) || jaHit(p3.en || '', q3) || jaHit(p3.maker, q3))).slice(0, 8);
           panel3.innerHTML = `<div class="ts-pg">` + (hits3.map(p3 =>
             `<div class="sug" data-saname="${p3.name.replace(/"/g, '&quot;')}"><span class="cat-label" style="--h:var(--green)">資材</span><span>${p3.name}</span><span class="alias-note">${p3.maker}</span></div>`).join('')
-            || `<div class="ts-empty">見つかりません。Enterでそのまま追加できます</div>`) + `</div>`;
+            || `<div class="ts-empty">見つかりません。未掲載の資材は下の欄に入力してください</div>`) + `</div>`;
         };
         inp3.addEventListener('input', renderPanel3);
-        inp3.addEventListener('keydown', e3 => { if (e3.key === 'Enter' && !e3.isComposing && inp3.value.trim()) {
-          e3.preventDefault(); sel3.push(inp3.value.trim() + '（未掲載）'); inp3.value = ''; renderChips3(); renderPanel3(); } });
+        inp3.addEventListener('keydown', e3 => { if (e3.key === 'Enter') e3.preventDefault(); });
+        /* 未掲載の資材：専用欄で追加式 */
+        const newInp = scr.querySelector('#saNewInput'), newBtn = scr.querySelector('#saNewAdd'), newChips = scr.querySelector('#saNewChips');
+        const news3 = [];
+        const drawNew3 = () => { newChips.innerHTML = news3.map((n3, i3) =>
+          `<span class="chip-sel"><span class="cat-mini">未掲載</span>${n3}<button data-sanrm="${i3}">×</button></span>`).join(''); };
+        const addNew3 = () => { const v3 = newInp.value.trim();
+          if (v3 && !news3.includes(v3)) { news3.push(v3); drawNew3(); } newInp.value = ''; };
+        newBtn.addEventListener('click', addNew3);
+        newInp.addEventListener('keydown', e3 => { if (e3.key === 'Enter' && !e3.isComposing) { e3.preventDefault(); addNew3(); } });
+        newChips.addEventListener('click', e3 => { const rm3 = e3.target.closest('[data-sanrm]'); if (!rm3) return;
+          news3.splice(+rm3.dataset.sanrm, 1); drawNew3(); });
         panel3.addEventListener('click', e3 => { const el3 = e3.target.closest('[data-saname]'); if (!el3) return;
           sel3.push(el3.dataset.saname); inp3.value = ''; renderChips3(); renderPanel3(); });
         chips3.addEventListener('click', e3 => { const rm3 = e3.target.closest('[data-sarm]'); if (!rm3) return;
