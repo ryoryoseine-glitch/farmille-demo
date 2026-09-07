@@ -550,6 +550,9 @@
   .tag-cloud { display:flex; flex-wrap:wrap; gap:7px; }
   .tagtoggle.on, .cultchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:600; }
   [data-vsort] .qchip { cursor:pointer; }
+  /* タグ選択の共通スタイル：選択中は緑塗りにする */
+  .qchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
+  .qchip.on .cat-label { color:#fff; background:transparent; opacity:.85; }
   [data-vsort] .qchip.on { background:var(--green); border-color:var(--green); color:#fff; font-weight:700; }
   #tsPanel .sug[data-cat="material"] { border-radius:9px; padding-left:8px; padding-right:8px; transition:background .12s; }
   #tsPanel .sug[data-cat="material"]:hover { background:var(--green-soft-2); }
@@ -621,7 +624,7 @@
     .bn-post .plus { padding:8px 12px; }
   }
   @media (min-width: 900px) {
-    .s-cols { display:grid; grid-template-columns:264px 1fr; gap:18px; align-items:start; }
+    .s-cols { display:grid; grid-template-columns:360px 1fr; gap:20px; align-items:start; }
     .s-side { position:sticky; top:70px; }
     .s-side .ts-panel { max-height:calc(100vh - 90px); overflow:auto; }
   }
@@ -940,7 +943,7 @@
     .mini-reports .alist-card { flex:none; width:auto; }
 
     /* 検索：左に絞り込み・右に結果の2カラム */
-    .body:has(> #tsResults) { display:grid; grid-template-columns:340px minmax(0,1fr); gap:0 28px; align-content:start; }
+    .body:has(> #tsResults) { display:grid; grid-template-columns:400px minmax(0,1fr); gap:0 28px; align-content:start; }
     .body:has(> #tsResults) > .ts-box,
     .body:has(> #tsResults) > #tsChips { grid-column:1 / -1; }
     .body:has(> #tsResults) > #tsPanel { grid-column:1; grid-row:span 40; align-self:start; position:sticky; top:16px; margin-top:14px; max-height:calc(100vh - 32px); overflow:auto; }
@@ -1109,6 +1112,10 @@ const REPORT_EXCERPTS = {
 };
 /* note風カードの部品：ハート（グッド）・保存（ブックマーク）・サンプル日付 */
 const HEART_O = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.7-9.5-9C1 8.5 3 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19 5 21 8.5 20.5 12c-2 4.3-8.5 9-8.5 9z" stroke-linejoin="round"/></svg>`;
+const ICO_PUB = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9s1.3-6.4 3.8-9z"/></svg>`;
+const ICO_PRIV = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>`;
+const pubTag = () => `<span style="display:inline-flex;align-items:center;gap:3px;color:var(--green-deep);font-weight:700">${ICO_PUB}公開</span>`;
+const privTag = () => `<span style="display:inline-flex;align-items:center;gap:3px;color:var(--ink-3);font-weight:700">${ICO_PRIV}非公開</span>`;
 const BKMK = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4.5L6 21z" stroke-linejoin="round"/></svg>`;
 const rpTime = seed => ['2日前','4日前','1週間前','2週間前','3週間前'][String(seed).length % 5];
 
@@ -1148,7 +1155,7 @@ const matCard = m => `
     <div class="mat-main">
       <div class="mat-name">${m.name}</div>
       <div class="mat-maker">${m.maker}${m.official ? ' '+CHECK : ''}</div>
-      <div class="mat-rate">${stars(Math.round(m.score))}<span class="sc tnum">${m.score.toFixed(1)}</span><span class="muted">感想口コミ ${m.revs}件 ・ 記事 ${m.articles}件</span></div>
+      <div class="mat-rate">${m.revs ? `${stars(Math.round(m.score))}<span class="sc tnum">${m.score.toFixed(1)}</span>` : ``}<span class="muted">感想口コミ ${m.revs}件 ・ 記事 ${m.articles}件</span></div>
       <div class="mat-desc">${m.desc}</div>
     </div>${CHEV}
   </div>`;
@@ -1781,7 +1788,7 @@ S.mypage = () => appbar('マイページ') + `
           <span>感想口コミ <b class="tnum">2</b></span>
           <span>お気に入り <b class="tnum">12</b></span>
         </div>
-        <div class="muted" style="font-size:12px;margin-top:10px">公開範囲：都道府県まで公開中（市区町村・本名は非公開） <span class="link-more" style="cursor:pointer;font-size:12px">設定 →</span></div>
+        <div class="muted" style="font-size:12px;margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${pubTag()}都道府県まで公開中 ／ ${privTag()}市区町村・本名 <span class="link-more" style="cursor:pointer;font-size:12px">設定 →</span></div>
       </div>
     </div>
     <div class="sec-h"><h2>これまでの投稿</h2></div>
@@ -1840,28 +1847,25 @@ S.signup = () => appbar('Farmilleをはじめる') + `
     <div class="card pad" style="background:var(--green-soft-2);border:1px solid color-mix(in srgb, var(--green) 22%, var(--line));margin-bottom:12px;text-align:center;padding:15px">
       <div style="font-size:14px;font-weight:700">投稿と実証詳細レポートの閲覧には、会員登録が必要です</div>
       <div style="font-size:12.5px;margin-top:4px;color:var(--green-deep);font-weight:700">登録は無料・1分で完了します。</div></div>
-    <p class="muted" style="font-size:12.5px;margin-bottom:18px">匿名で参加できます。実名や所属の公開は不要です。</p>
-    <div class="field"><label>ニックネーム <span class="badge badge-req">必須</span></label>
-      <input class="input" placeholder="例）農家の山田">
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">本名でなくてOKです</div></div>
-    <div class="field"><label>本名 <span class="badge badge-req">必須</span></label>
+    <p class="muted" style="font-size:12.5px;margin-bottom:18px">ニックネームで参加できます。本名や連絡先が公開されることはありません。</p>
+    <div class="field"><label>ニックネーム <span class="badge badge-req">必須</span> ${pubTag()}</label>
+      <input class="input" placeholder="例）農家の山田"></div>
+    <div class="field"><label>本名 <span class="badge badge-req">必須</span> ${privTag()}</label>
       <div class="amount-row">
         <input class="input" placeholder="姓　例）山田">
         <input class="input" placeholder="名　例）太郎">
       </div>
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">公開されません。実証詳細レポートの投稿時に、ご自身で公開を選んだ場合のみ表示されます。</div></div>
-    <div class="field"><label>メールアドレス <span class="badge badge-req">必須</span></label><input class="input" placeholder="you@example.com"></div>
-    <div class="field"><label>電話番号 <span class="badge badge-opt">任意</span></label>
+      <div class="fguide" style="margin-top:6px;margin-bottom:0">※ 本名で投稿するを選択した場合のみ、公開されることがあります。</div></div>
+    <div class="field"><label>メールアドレス <span class="badge badge-req">必須</span> ${privTag()}</label><input class="input" placeholder="you@example.com"></div>
+    <div class="field"><label>電話番号 <span class="badge badge-opt">任意</span> ${privTag()}</label>
       <input class="input" placeholder="例）090-1234-5678">
       <div class="fguide" style="margin-top:6px;margin-bottom:0">パスワードを忘れたときのご連絡に使用します。公開されません。</div></div>
-    <div class="field"><label>あなたの立場 <span class="badge badge-req">必須</span></label>
+    <div class="field"><label>あなたの立場 <span class="badge badge-req">必須</span> ${pubTag()}</label>
       <div class="radios">
-        <label class="radio on"><span class="ring"></span> 農家</label>
-        <label class="radio"><span class="ring"></span> JA・農業団体関係者</label>
-        <label class="radio"><span class="ring"></span> 行政関係者</label>
-        <label class="radio"><span class="ring"></span> メーカー関係者</label>
-        <label class="radio"><span class="ring"></span> 専門家・研究者</label>
-        <label class="radio"><span class="ring"></span> その他</label>
+        <label class="radio on"><span class="ring"></span> 生産者</label>
+        <label class="radio"><span class="ring"></span> JA関係者（指導員等も含む）</label>
+        <label class="radio"><span class="ring"></span> 行政関係者（県の普及員など）</label>
+        <label class="radio"><span class="ring"></span> その他（メーカー関係者、専門家、研究者）</label>
       </div>
       <div class="fguide" style="margin-top:8px;margin-bottom:0">立場は、投稿やマイページで肩書きとして表示されます。</div></div>
     <div class="field"><label>お住まいの地域 <span class="badge badge-req">必須</span></label>
@@ -1871,7 +1875,8 @@ S.signup = () => appbar('Farmilleをはじめる') + `
         <select class="input" id="suPref">${prefOptions('')}</select>
         <input class="input" id="suCity" placeholder="市区町村">
       </div>
-      <div class="fguide" style="margin-top:8px">マイページには<b>県名まで</b>表示されます。市区町村が公開されることはありません。</div></div>
+      <div class="fguide" style="margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${pubTag()}県名まで ／ ${privTag()}市区町村</div>
+      <div class="fguide" style="margin-top:4px;margin-bottom:0">※ 投稿で「市区町村も公開する」を選択した場合のみ、公開されることがあります。</div></div>
     <div class="field"><label>パスワード <span class="badge badge-req">必須</span></label><input class="input" type="password" placeholder="••••••••"></div>
     <label class="check-toggle" style="margin-top:10px"><span class="cbox"></span> <span><span style="text-decoration:underline">利用規約</span>・<span style="text-decoration:underline">感想口コミガイドライン</span>に同意する <span class="badge badge-req">必須</span></span></label>
     <div class="fguide" style="margin-top:4px">アイコン・主な作目・所属などは、あとからマイページで設定できます。</div>
@@ -1884,17 +1889,19 @@ S.signup = () => appbar('Farmilleをはじめる') + `
   </div>`;
 
 /* ---- 出品者ページ（メーカー） ---- */
-S.seller = () => appbar('アクプランタ株式会社') + `
+S.seller = () => { const e9 = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const P9 = window.__mdProfile || { intro: '植物が環境ストレスに適応する仕組みの研究から生まれた、酢酸ベースのバイオスティミュラントを開発・販売しています。', url: 'https://ac-planta.com', addr: '東京都文京区' };
+  return appbar('アクプランタ株式会社') + `
   <div class="body">
     <div class="card org-head">
       <div class="org-logo">〇</div>
       <div style="flex:1;min-width:0">
         <div class="org-name"><h2>アクプランタ株式会社</h2>${CHECK}</div>
         <span class="type-label" style="margin-top:5px;display:inline-block">メーカー</span>
-        <p class="org-desc">バイオスティミュラント資材や土壌改良資材を扱う農業資材メーカーです。主に全国の施設園芸・露地野菜向けに製品を展開しています。</p>
+        <p class="org-desc">${e9(P9.intro)}</p>
         <div class="org-links">
-          <a>${EXT} 公式サイトを見る</a>
-          <span class="loc">${PIN} 主な地域：全国</span>
+          <a href="${e9(P9.url)}" target="_blank" rel="noopener">${EXT} ${e9(P9.url).replace('https://','')}</a>
+          <span class="loc">${PIN} ${e9(P9.addr)}</span>
         </div>
       </div>
     </div>
@@ -1907,6 +1914,7 @@ S.seller = () => appbar('アクプランタ株式会社') + `
     </div>
     
   </div>`;
+};
 
 /* ---- 出品者ページ（JA・0件） ---- */
 S.sellerJA = () => appbar('〇〇JA') + `
@@ -1928,35 +1936,26 @@ S.sellerJA = () => appbar('〇〇JA') + `
 /* ---- 出品者申請 ---- */
 S.sellerApply = () => appbar('法人アカウントの申請') + `
   <div class="body">
-    <p class="muted" style="font-size:12.5px;margin-bottom:18px">ご申請内容を確認のうえ、通常3営業日以内に、ログインIDとパスワード設定用のご案内をメールでお送りします。資材の掲載がなくても、記事や回答での情報発信にご利用いただけます。（当面はメーカー様のみ受け付けています）</p>
-    <div class="field"><label>正式名称（法人名） <span class="badge badge-req">必須</span></label><input class="input" placeholder="例）〇〇バイオ株式会社"></div>
+    <p class="muted" style="font-size:12.5px;margin-bottom:18px">ご申請内容を確認のうえ、ログインIDとパスワード設定用のご案内をメールでお送りします。資材の掲載がなくても、記事や回答での情報発信にご利用いただけます。（当面はメーカー様のみ受け付けています）</p>
+    <div class="field"><label>法人名 <span class="badge badge-req">必須</span></label><input class="input" placeholder="例）〇〇バイオ株式会社"></div>
     <div class="field"><label>法人番号 <span class="badge badge-req">必須</span></label>
       <input class="input" placeholder="例）1234567890123">
       <div class="fguide" style="margin-top:6px;margin-bottom:0">13桁の法人番号。<span style="text-decoration:underline">国税庁 法人番号公表サイト ↗</span> で確認できます。</div></div>
-        <div class="field"><label>パスワード <span class="badge badge-req">必須</span></label><input class="input" type="password" placeholder="••••••••"></div>
-    <div class="field"><label>連絡先メールアドレス <span class="badge badge-req">必須</span> <span class="muted" style="font-size:11px;font-weight:400">公開されません</span></label>
-      <input class="input" placeholder="tanto@example.co.jp">
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">ご担当者のメール。管理画面から変更できます。パスワード再設定の送付先になります。</div></div>
     <div class="field"><label>ご担当者名・部署 <span class="badge badge-req">必須</span> <span class="muted" style="font-size:11px;font-weight:400">公開されません</span></label>
       <input class="input" placeholder="例）営業部 金子">
       <div class="fguide" style="margin-top:6px;margin-bottom:0">管理画面から変更できます。</div></div>
+    <div class="field"><label>連絡先メールアドレス <span class="badge badge-req">必須</span> <span class="muted" style="font-size:11px;font-weight:400">公開されません</span></label>
+      <input class="input" placeholder="tanto@example.co.jp">
+      <div class="fguide" style="margin-top:6px;margin-bottom:0">ご担当者のメール。確認後、このアドレスにログインIDとパスワード設定用のご案内をお送りします。</div></div>
+    <div class="field"><label>ご担当者電話番号 <span class="badge badge-req">必須</span> <span class="muted" style="font-size:11px;font-weight:400">公開されません</span></label>
+      <input class="input" placeholder="例）03-1234-5678">
+      <div class="fguide" style="margin-top:6px;margin-bottom:0">確認が必要な場合のご連絡に使用します。</div></div>
     <div class="field"><label>本社・主な拠点の所在地 <span class="badge badge-opt">任意</span></label><input class="input" placeholder="東京都〇〇区…"></div>
-    <div class="field"><label>公式サイトURL <span class="badge badge-req">必須</span></label>
-      <input class="input" placeholder="https://example.co.jp">
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">お持ちでない場合は「なし」とご記入ください。</div></div>
-    <div class="field"><label>掲載・編集を希望する資材 <span class="badge badge-opt">任意</span></label>
+    <div class="field"><label>公式サイトURL <span class="badge badge-opt">任意</span></label>
+      <input class="input" placeholder="https://example.co.jp"></div>
+    <div class="field"><label>備考：掲載・編集を希望する資材 <span class="badge badge-opt">任意</span></label>
       <div class="fguide">アンケートとしてお伺いします。Farmille上にすでに掲載されていて編集したい資材、またはこれから掲載したい資材があれば記入してください。製品名は正式名称でお願いします。</div>
-      <div style="font-size:12px;font-weight:700;margin:8px 0 6px">Farmilleに掲載済みの資材</div>
-      <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
-        <input class="ts-input" id="saMatInput" placeholder="資材名・メーカー名で検索して選択" autocomplete="off"></div>
-      <div id="saMatChips" class="ts-chips"></div>
-      <div id="saMatPanel" class="ts-panel"></div>
-      <div style="font-size:12px;font-weight:700;margin:14px 0 6px">Farmilleに未掲載の資材（新規掲載の希望）</div>
-      <div class="amount-row">
-        <input class="input" id="saNewInput" placeholder="製品名を入力　例）〇〇エキス液剤">
-        <button type="button" class="md-btn" id="saNewAdd" style="flex:0 0 auto">＋ 追加</button></div>
-      <div id="saNewChips" class="ts-chips" style="margin-top:6px"></div>
-      <div class="fguide" style="margin-top:6px;margin-bottom:0">掲載済みか分からない場合は、上の検索で見つからなければこちらに入力してください。</div></div>
+      <textarea class="textarea" placeholder="例）スキーポン（掲載中・編集希望）、〇〇エキス液剤（新規掲載の希望）"></textarea></div>
     <div class="form-actions">
       <button class="btn btn-primary">申請する</button>
       <div class="draft">Farmilleからのご案内で登録される方はこちら（招待コード入力）</div>
@@ -1972,10 +1971,11 @@ S.makerFlow = () => appbar('メーカー掲載の流れ') + `
 
     <div class="stack" style="margin-top:16px">
       ${[
-        ['1','出品者申請','会社情報・ご担当者・掲載したい資材を送信します。検索して見つからない資材は、その場で「未掲載の資材」として追加できます。申請は無料です。',['sellerApply','出品者申請フォームへ →']],
-        ['2','Farmilleによる確認とログインIDの発行','会社概要ページなどで実在を確認のうえ、管理画面のログインIDをメールでお送りします（目安：5営業日）。確認のやり取りは管理画面またはメールで行います。',null],
-        ['3','製品情報の入力','管理画面から、製品説明・リンク資料・施用方法・作用機作・登録認証番号・製品画像などを入力します。途中保存できます。',['makerDash','製品情報管理（見本）を見る →']],
-        ['4','編集部確認のうえ、資材ページへ反映','確認が済んだ項目から順次「メーカー確認済み」として掲載されます。未確認の項目は資材ページで「−」表示のままです。',null],
+        ['1','出品者申請フォームから登録','会社情報・ご担当者を送信します。掲載・編集を希望する資材があれば、備考欄にご記入ください。申請は無料です。',['sellerApply','出品者申請フォームへ →']],
+        ['2','Farmilleからのご連絡（メール）','確認のうえ、ログインIDとパスワード設定用のご案内をメールでお送りします。',null],
+        ['3','所有権と対象資材の確認','編集権のお申し込み書類にご記入・ご返送ください。書類をもとに、掲載中のページが貴社の製品であること（販売元・所有権）を確認します。ほかに掲載したい資材があれば、あわせてご記入ください。',null],
+        ['4','編集権の移行','対象資材の編集権をお渡しします。管理画面から、掲載ポリシーに沿って製品説明・リンク資料・施用方法・作用機作・登録認証などをご記入ください。保存した内容は、Farmilleの確認を経て資材ページに反映されます。',['makerDash','製品情報管理（見本）を見る →']],
+        ['5','継続的な管理','掲載情報の管理権と責任をお持ちいただき、変更があれば随時更新してください。Farmilleは掲載後に内容を監査し、問題のある表現はご連絡・修正することがあります。',null],
       ].map(x2 => `<div class="card pad" style="display:flex;gap:14px;align-items:flex-start">
           <span style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px">${x2[0]}</span>
           <div style="min-width:0">
@@ -1999,12 +1999,13 @@ S.makerFlow = () => appbar('メーカー掲載の流れ') + `
       <div>・リンク・資料：概要／使用上の注意／技術資料の3グループ</div>
       <div>・施用方法：散布／灌注／混和／浸漬／粉衣・塗布／その他 ＋ 方法ごとの詳細（自由記述）</div>
       <div>・作用機作</div>
-      <div>・登録・認証：肥料登録番号など（公的な登録情報と照合します）</div>
+      <div>・登録・認証：肥料登録・農薬登録・有機JAS適合など</div>
       <div>・製品画像：パッケージ正面・白背景・正方形を推奨。条件を満たす画像がない場合はNO IMAGE表示で掲載します</div>
     </div>
 
     <h3 class="a-h3" style="margin-top:26px">掲載できない内容（抜粋）</h3>
     <div class="card pad" style="font-size:12.5px;line-height:2.0">
+      <div class="fguide" style="margin-top:0">農林水産省「バイオスティミュラントの表示等に係るガイドライン」（令和7年5月30日策定）に準拠しています。</div>
       <div>・効果を保証する表現、農薬的な効能（防除・殺菌など）の標榜</div>
       <div>・メーカー自身による使用前後の比較画像（効果の検証は、生産者の実証詳細レポートの枠組みで掲載されます）</div>
       <div>・感想口コミの投稿の呼びかけや、投稿への特典の提示</div>
@@ -2012,7 +2013,6 @@ S.makerFlow = () => appbar('メーカー掲載の流れ') + `
     </div>
 
     <div class="disclaimer" style="margin-top:14px;line-height:1.9">
-      <div>・確認の目安は5営業日です。内容により前後します。</div>
       <div>・掲載可否の基準について、個別のお問い合わせにはお答えしていません。</div>
     </div>
     <div class="hint-pill" style="margin-top:14px">※ 完成見本のため、各操作はデモとして動作します</div>
@@ -2065,23 +2065,33 @@ S.articleDetail = () => appbar('', {share:true}) + `
 /* ---- 公開プロフィール（他のユーザーから見た画面） ---- */
 S.profilePublic = () => appbar('しおさい農園') + `
   <div class="body">
-    <div class="card prof-head">
-      <span class="avatar" style="font-size:26px">${initials('しおさい農園')}</span>
-      <div class="uname">しおさい農園</div>
-      <div class="prof-rows">
-        <div class="prow"><span class="plabel">地域</span><span class="pval">千葉県</span></div>
-        <div class="prow"><span class="plabel">主な作目</span><span class="pval"><span class="chip">ミニトマト</span><span class="chip">いちご</span></span></div>
-        <div class="prow"><span class="plabel">栽培形態</span><span class="pval"><span class="chip">施設園芸</span><span class="chip">土耕栽培</span></span></div>
-        <div class="prow"><span class="plabel">所属</span><span class="pval"><span class="aff-badge aff-blue">全青協</span></span></div>
+    <div class="card" style="overflow:hidden;padding:0">
+      <div style="height:148px;background:linear-gradient(120deg, #DCEBDD, #EFF5EC 55%, #F7F4E8)"></div>
+      <div style="padding:0 18px 16px">
+        <div style="display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+          <span class="avatar" style="width:76px;height:76px;font-size:30px;border:3px solid var(--card);flex:0 0 auto;margin-top:-32px">${initials('しおさい農園')}</span>
+          <div style="flex:1;min-width:180px;padding-bottom:2px">
+            <div style="font-size:17px;font-weight:800">しおさい農園 <span class="type-label" style="font-size:10px;vertical-align:2px">農家</span></div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px">
+              <span class="muted" style="font-size:11px">地域</span><span class="chip">千葉県</span>
+              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">全青協</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:13px;line-height:1.8;margin-top:12px">千葉県でミニトマトを栽培しています。高温対策や草勢維持に関心があります。</p>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px">
+          <span class="muted" style="font-size:11px">主な作目</span>
+          <span class="chip">ミニトマト</span><span class="chip">いちご</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:12px">
+          <a style="color:var(--green-deep);font-weight:600;cursor:pointer">${EXT} shiosai-farm.com</a>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px">
+          <span>実証詳細レポート <b class="tnum">1</b></span>
+          <span>感想口コミ・回答 <b class="tnum">8</b></span>
+          <span>参考になった <b class="tnum">56</b></span>
+        </div>
       </div>
-      <div class="quote-box">千葉県でミニトマトを栽培しています。高温対策や草勢維持に関心があります。</div>
-      <div class="prof-links">
-        <a>${EXT} shiosai-farm.com</a>
-      </div>
-    </div>
-    <div class="stat-row">
-      <div class="stat"><div class="num tnum">8</div><div class="lbl">感想口コミ・回答</div></div>
-      <div class="stat"><div class="num tnum">56</div><div class="lbl">参考になった</div></div>
     </div>
     <div class="sec-h"><h2>これまでの投稿</h2></div>
     <div class="stack">
@@ -2733,6 +2743,16 @@ function prodAxis(p, cat) {
 }
 /* 作物軸のマッチ格付け： 1=個別明記 / 2=分類該当(厳密) / 3=広域申告からの展開 */
 const MID_SET = new Set(Object.values(CROP_MIDS).flat().filter(m => m !== 'その他'));
+/* FAMIC準拠の表示ルール用：個別作目・大作物群それぞれへの「直接記載」件数 */
+const CROP_DIRECT = {};
+const GROUP_DIRECT = {};
+DB_PRODUCTS.forEach(p9 => {
+  (p9.named || []).forEach(n9 => {
+    const c9 = CROP_BY_NAME[n9] || CROP_BY_NAME[CROP_NAME_ALIAS[n9]];
+    if (c9) CROP_DIRECT[c9.n] = (CROP_DIRECT[c9.n] || 0) + 1;
+  });
+  (p9.crops || []).forEach(g9 => { GROUP_DIRECT[g9] = (GROUP_DIRECT[g9] || 0) + 1; });
+});
 function cropTier(p, tag) {
   /* タグが中作物群名の場合：個別作物名がその中作物群に属する製品だけを厳密に絞り込む */
   if (tag.cropName && MID_SET.has(tag.cropName)) {
@@ -2847,10 +2867,12 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       groupRow(g, g === 'その他' ? list.concat(others.map(t => t.v)) : list)).join('');
   };
   const cropTreeHtml = () => {
+    const selOn = (v9, n9) => selTags.some(x9 => x9.cat === 'crop' && x9.v === v9 && (x9.cropName || '') === (n9 || '')) ? ' on' : '';
     const q = cropQuery.trim().toLowerCase();
     if (q) {
       let hit = TAG_POOL.filter(t => t.cat === 'crop' && jaHit(t.disp, q) && !isSel(t));
-      hit.sort((a, b) => ((a.disp === (a.cropName || a.v)) ? 0 : 1) - ((b.disp === (b.cropName || b.v)) ? 0 : 1));
+      const rank9 = t9 => (t9.cropName && !MID_SET.has(t9.cropName)) ? 0 : (t9.cropName ? 1 : 2);   /* 個別作目→中作物群→大作物群 */
+      hit.sort((a, b) => rank9(a) - rank9(b));
       const seenK = new Set();
       hit = hit.filter(t => { const k = t.v + '|' + (t.cropName || ''); if (seenK.has(k)) return false; seenK.add(k); return true; }).slice(0, 14);
       return hit.map(t =>
@@ -2859,28 +2881,38 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         `<div class="ts-empty">該当する作物がありません</div>`;
     }
     const groups = TAG_POOL.filter(t => t.cat === 'crop' && t.disp === t.v);
-    return groups.map(g => {
+    /* FAMIC準拠の表示ルール：
+       ・一覧に出す個別作目＝資材の直接記載があるものだけ（上位分類のみの記載では配下を展開しない）
+       ・中作物群は「直接記載の作目が多く省略すると見づらい場合」だけ挟み、少なければ階層を繰り上げる
+       ・一覧にない作目も、検索窓からはFAMIC全作目を検索できる */
+    const treeHtml = groups.map(g => {
+      const allVis = CROP_MASTER.filter(c => c.g === g.v && CROP_DIRECT[c.n]).map(c => c.n);
+      const gDirect = GROUP_DIRECT[g.v] || 0;
+      if (!allVis.length && !gDirect) return '';
       const open = openGroups.has(g.v);
-      const kids = (CROP_GROUPS_V2[g.v] || []).filter(n => n !== g.v);
       const head = `<div class="sug" data-ctoggle="${esc(g.v)}" style="font-weight:600;gap:7px">
         <span style="color:var(--green);font-size:11px;flex:0 0 auto">${open ? '▾' : '▸'}</span>
         <span style="flex:1;min-width:0">${esc(g.v)}</span>
-        <span class="alias-note" style="flex:0 0 auto;white-space:nowrap">${(CROP_GROUPS[g.v] || []).length ? (CROP_GROUPS[g.v] || []).length + '品目' : ''}</span></div>`;
-      const midBlock = m2 => {
-        const mkey = g.v + '|' + m2;
-        const mOpen = openMids.has(mkey);
-        const crops = CROP_MASTER.filter(c => c.g === g.v && c.m === m2).map(c => c.n);
-        return `<div style="display:flex;align-items:center;gap:6px;margin:3px 0">
-            <span class="qchip" data-cat="crop" data-v="${esc(g.v)}" data-name="${esc(m2)}" style="font-size:12px;padding:5px 11px">${esc(m2)}</span>
-            <span data-mtoggle="${esc(mkey)}" style="cursor:pointer;font-size:11px;color:var(--green-deep);font-weight:600;flex:0 0 auto">${mOpen ? '品目を閉じる ▴' : crops.length + '品目 ▾'}</span></div>
-          ${mOpen ? `<div class="sug-chips" style="padding:2px 0 8px 14px">${crops.map(n2 =>
-            `<span class="qchip" data-cat="crop" data-v="${esc(g.v)}" data-name="${esc(n2)}" style="font-size:12px;padding:5px 11px">${esc(n2)}</span>`).join('')}</div>` : ''}`;
-      };
-      const body = open ? `<div style="padding:2px 6px 10px 24px">
-          <div style="margin-bottom:3px"><span class="qchip" data-cat="crop" data-v="${esc(g.v)}" style="font-size:12px;padding:5px 11px;background:var(--green-soft-2);border-color:color-mix(in srgb,var(--green) 35%,var(--line));color:var(--green-deep);font-weight:700">${esc(g.v)}全て</span></div>
-          ${kids.map(midBlock).join('')}</div>` : '';
-      return head + body;
+        <span class="alias-note" style="flex:0 0 auto;white-space:nowrap">${allVis.length ? '記載あり ' + allVis.length + '品目' : ''}</span></div>`;
+      if (!open) return head;
+      const cropChip = n2 => `<span class="qchip${selOn(g.v, n2)}" data-cat="crop" data-v="${esc(g.v)}" data-name="${esc(n2)}" style="font-size:12px;padding:5px 11px">${esc(n2)}</span>`;
+      const groupChip = gDirect ? `<div style="margin-bottom:5px"><span class="qchip${selOn(g.v)}" data-cat="crop" data-v="${esc(g.v)}" style="font-size:12px;padding:5px 11px;background:var(--green-soft-2);border-color:color-mix(in srgb,var(--green) 35%,var(--line));color:var(--green-deep);font-weight:700">${esc(g.v)}（全般として記載 ${gDirect}件）</span></div>` : '';
+      let inner = '';
+      if (allVis.length <= 8) {
+        /* 作目が少ない → 中作物群を省略して繰り上げ */
+        inner = allVis.length ? `<div class="sug-chips">${allVis.map(cropChip).join('')}</div>` : '';
+      } else {
+        /* 多い → 直接記載のある作目を持つ中作物群だけ表示 */
+        const mids = (CROP_GROUPS_V2[g.v] || []).filter(m2 => m2 !== g.v)
+          .map(m2 => ({ m2, vis: CROP_MASTER.filter(c => c.g === g.v && c.m === m2 && CROP_DIRECT[c.n]).map(c => c.n) }))
+          .filter(x2 => x2.vis.length);
+        inner = mids.map(({ m2, vis }) => `<div style="margin:3px 0">
+              <span class="qchip${selOn(g.v, m2)}" data-cat="crop" data-v="${esc(g.v)}" data-name="${esc(m2)}" style="font-size:12px;padding:5px 11px;font-weight:700"><span class="cat-label" style="--h:var(--ink-3)">分類</span>${esc(m2)}</span></div>
+            <div class="sug-chips" style="padding:2px 0 8px 12px;margin-left:13px;border-left:2px solid var(--line);padding-left:14px">${vis.map(cropChip).join('')}</div>`).join('');
+      }
+      return head + `<div style="padding:2px 6px 10px 24px">${groupChip}${inner}</div>`;
     }).join('');
+    return treeHtml + `<div class="fguide" style="margin-top:8px;margin-bottom:2px">一覧には、資材に記載のある作目だけを表示しています。ここにない作目も、検索窓からすべて探せます。</div>`;
   };
   const isSel = t => selTags.some(x => x.cat === t.cat && x.v === t.v && (x.cropName || '') === (t.cropName || ''));
 
@@ -2970,7 +3002,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           selHtml('material'),
           `<div>${matChipsHtml}</div>`) +
         sec('crop', '作物で探す',
-          `<input data-cropfilter class="input" style="${mini}" placeholder="作物名で検索（例：トマト、柿）" value="${esc(cropQuery)}">${selHtml('crop')}`,
+          `<input data-cropfilter class="input" style="${mini}" placeholder="作物名で検索（例：トマト、柿）" value="${esc(cropQuery)}"><div class="fguide" style="margin:2px 0 6px">文字検索はすべての作目・別名が対象です。下のタグ一覧は、資材に記載のある作目だけを表示しています。</div>${selHtml('crop')}`,
           `<div id="cropTree">${cropTreeHtml()}</div>`) +
         sec('mk', `メーカーから探す（全${TAG_POOL.filter(t => t.cat === 'maker').length}社）`,
           `<input data-mkfilter class="input" style="${mini}" placeholder="メーカー名で絞り込み" value="${esc(makerQuery)}">${selHtml('maker')}`,
@@ -3074,7 +3106,11 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       }
       const el = e.target.closest('[data-v]'); if (!el) return;
       const t = tagFromEl(el);
-      if (!isSel(t)) selTags.push(t);
+      if (isSel(t)) {
+        /* 選択済みタグをもう一度タップ → 解除 */
+        const k9 = selTags.findIndex(x9 => x9.cat === t.cat && x9.v === t.v && (x9.cropName || '') === (t.cropName || ''));
+        if (k9 >= 0) selTags.splice(k9, 1);
+      } else selTags.push(t);
       input.value = ''; pending = [];
       if (isHome) { toSearch(); return; }
       render();
@@ -3144,7 +3180,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       <div class="mat-main" style="min-width:0">
         <div class="mat-maker" style="margin:0 0 1px;font-size:10.5px">${esc(p.maker)}${pv ? ' ・ メーカー確認済み' : ''}</div>
         <div class="mat-name" style="font-size:14.5px">${esc(p.name)}</div>
-        <div style="font-size:11.5px;margin-top:3px"><span style="color:var(--amber);font-weight:800">★ <span class="tnum">${st2.score.toFixed(1)}</span></span><span class="muted">（${st2.rev}）</span>
+        <div style="font-size:11.5px;margin-top:3px">${st2.rev ? `<span style="color:var(--amber);font-weight:800">★ <span class="tnum">${st2.score.toFixed(1)}</span></span><span class="muted">（${st2.rev}）</span>` : ``}
           <span class="muted"> ・ 実証詳細レポート <b class="tnum" style="color:${st2.rep > 0 ? 'var(--amber)' : 'var(--ink)'};font-size:${st2.rep > 0 ? '1.2em' : '1em'}">${st2.rep}</b> 件 ・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum" style="color:var(--ink)">${st2.fav}</b></span></div>
         ${desc2 ? `<div class="mat-desc" style="margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">${esc(desc2)}</div>` : ''}
         ${mats ? `<div class="mat-rate" style="gap:5px;margin-top:5px;flex-wrap:wrap">${mats}</div>` : ''}
@@ -3178,9 +3214,22 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       if (relaxed.length) h += `<br><span style="color:var(--amber)">※ 0件だったため <b>${relaxed.map(esc).join('・')}</b> の条件を自動で外して表示しています</span>`;
       logic.innerHTML = h;
     }
-    host.innerHTML = hits.length
-      ? hits.map(prodCard).join('')
-      : `<div class="card pad" style="text-align:center;color:var(--ink-3);font-size:12.5px">条件に合う資材が見つかりませんでした</div>`;
+    if (!hits.length) {
+      host.innerHTML = `<div class="card pad" style="text-align:center;color:var(--ink-3);font-size:12.5px">条件に合う資材が見つかりませんでした</div>`;
+      return;
+    }
+    if (byCat.crop && byCat.crop.length) {
+      /* FAMICルール7章：個別作目への明示と、作物分類としての記載を区別して表示 */
+      const label9 = byCat.crop.map(t9 => t9.cropName || t9.v).join('・');
+      const direct9 = hits.filter(h9 => h9.tier === 1);
+      const upper9 = hits.filter(h9 => h9.tier !== 1);
+      const sec9 = (t9, sub9) => `<div style="padding:10px 2px 2px"><b style="font-size:12.5px">${t9}</b>${sub9 ? `<span class="muted" style="font-size:11px;margin-left:8px">${sub9}</span>` : ''}</div>`;
+      host.innerHTML =
+        (direct9.length ? sec9(`「${esc(label9)}」の記載がある資材 <span class="tnum">${direct9.length}</span>件`) + direct9.map(prodCard).join('') : '') +
+        (upper9.length ? sec9(`作物分類として記載のある資材 <span class="tnum">${upper9.length}</span>件`, '「〇〇類全般」など、上位の分類で対象に含まれているもの') + upper9.map(prodCard).join('') : '');
+      return;
+    }
+    host.innerHTML = hits.map(prodCard).join('');
   };
 
   /* ---- 製品詳細ページ：実データ描画 ---- */
@@ -3262,7 +3311,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const tab = window.__mdTab || 'dash';
     const mk = 'アクプランタ株式会社';
     const prods = DB_PRODUCTS.map((pp, i2) => ({ pp, i: i2 })).filter(x => x.pp.maker === mk);
-    const cur = prods.find(x => x.pp.name === 'スキーポン') || prods[0];
+    const cur = prods.find(x => x.i === window.__mdProdI) || prods.find(x => x.pp.name === 'スキーポン') || prods[0];
     const p = cur.pp;
     const has = v => { if (v == null || v === false || v === 0) return false; if (Array.isArray(v)) return v.length > 0; return String(v).trim() !== ''; };
     const st = (kind, txt) => `<span class="md-st ${kind}">${txt}</span>`;
@@ -3270,12 +3319,9 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       const o = opts || {};
       const filled = has(v);
       const disp = filled ? esc(Array.isArray(v) ? v.join('、') : v) : (o.emptyText || '未入力（農家のページでは空欄になります）');
-      const state = o.review ? st('rev', 'Farmille確認中')
-        : o.farm ? st('farm', 'Farmille整理')
+      const state = o.farm ? st('farm', 'Farmille整理')
         : (filled ? st('ok', '公開中') : st('miss', '未入力'));
-      const act = o.farm
-        ? `<button class="md-btn">確認する</button><button class="md-btn ghost">修正を依頼</button>`
-        : `<button class="md-btn">編集</button>`;
+      const act = o.farm ? `` : o.lock ? `<span class="muted" style="font-size:10px;white-space:nowrap">変更はお問い合わせ</span>` : `<button class="md-btn">編集</button>`;
       return `<div class="md-row"><div class="k">${esc(k)}</div>
         <div class="v${filled ? '' : ' empty'}">${disp}${o.count ? `<div class="md-count">${o.count}</div>` : ''}</div>
         <div class="act">${state}${act}</div></div>`;
@@ -3295,16 +3341,15 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           </div>
           <div class="md-kpis">
             <div class="md-kpi"><div class="n tnum">${prods.length}</div><div class="l">掲載製品</div></div>
-            <div class="md-kpi"><div class="n tnum">${prods.filter(x => isMakerVerified(x.pp)).length}</div><div class="l">メーカー確認済み</div></div>
-            <div class="md-kpi"><div class="n tnum">4</div><div class="l">対応待ちのタスク</div></div>
+            <div class="md-kpi"><div class="n tnum">${prods.filter(x => isMakerVerified(x.pp)).length}</div><div class="l">情報入力済み</div></div>
           </div>
           <div class="md-check">
             <div class="md-check-h">はじめに済ませておきたいこと</div>
             <div class="md-ck done"><span class="cb">✓</span>公式メーカーアカウントの登録</div>
             <div class="md-ck done"><span class="cb">✓</span>企業紹介の入力</div>
             <div class="md-ck"><span class="cb"></span>企業ロゴのアップロード<button class="md-btn" data-mdtab="profile">設定する</button></div>
-            <div class="md-ck"><span class="cb"></span>Farmilleによる分類の確認（4件）<button class="md-btn" data-mdtab="product">確認する</button></div>
-            <div class="md-ck"><span class="cb"></span>「${esc((prods[1] || cur).pp.name).slice(0, 14)}」の製品情報の入力<button class="md-btn" data-mdtab="product">入力する</button></div>
+            <div class="md-ck${has(p.regs) ? ' done' : ''}"><span class="cb">${has(p.regs) ? '✓' : ''}</span>登録・認証（肥料登録番号など）の記入${has(p.regs) ? '' : '<button class="md-btn" data-mdtab="product">記入する</button>'}</div>
+            <div class="md-ck"><span class="cb"></span>「${esc((prods[1] || cur).pp.name)}」の製品情報の入力<button class="md-btn" data-mdtab="product">入力する</button></div>
           </div>
         </div>`;
 
@@ -3316,83 +3361,174 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
             <div class="req">PNG / JPG / SVG ・ 400px四方以上 ・ 5MBまで</div>
             <div class="now muted">現在：未設定（頭文字「ア」を表示中）</div></div>
         </div>
+        ${(() => { const PD = window.__mdProfDraft || window.__mdProfile || {}; const pf9 = (k9, d9) => PD[k9] != null ? PD[k9] : d9; return `
+        ${window.__mdProfDraft ? `<div class="card pad" style="margin-bottom:12px;background:var(--green-soft-2);border:1px dashed var(--green)">
+          <b style="font-size:12.5px">未公開の下書きを編集中です。</b><span class="muted" style="font-size:12px">保存するまでメーカーページには反映されません。</span>
+          <button type="button" class="md-btn ghost" id="mdProfDrop" style="margin-left:8px">下書きを破棄</button></div>` : ``}
         <div class="card">
-          ${row('企業紹介', '植物が環境ストレスに適応する仕組みの研究から生まれた、酢酸ベースのバイオスティミュラントを開発・販売しています。', { count: '58 / 500文字' })}
-          ${row('公式サイト', 'https://ac-planta.com')}
-          ${row('本社所在地', '東京都文京区')}
-          <div class="md-save"><button class="btn btn-primary btn-sm">プロフィールを保存</button></div>
-        </div>`;
+          <div class="field" style="padding:14px 16px 0"><label style="font-size:13px">企業紹介</label>
+            <textarea class="textarea" id="mdPfIntro" style="min-height:96px">${esc(pf9('intro', '植物が環境ストレスに適応する仕組みの研究から生まれた、酢酸ベースのバイオスティミュラントを開発・販売しています。'))}</textarea></div>
+          <div class="field" style="padding:0 16px"><label style="font-size:13px">公式サイト</label>
+            <input class="input" id="mdPfUrl" value="${esc(pf9('url', 'https://ac-planta.com'))}"></div>
+          <div class="field" style="padding:0 16px"><label style="font-size:13px">本社所在地</label>
+            <input class="input" id="mdPfAddr" value="${esc(pf9('addr', '東京都文京区'))}"></div>
+          <div class="md-save" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" id="mdProfSave">プロフィールを保存</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="mdProfDraftBtn" style="padding:9px 16px">下書きを保存</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="mdProfPreview" style="padding:9px 16px">プレビュー</button>
+            <span id="mdProfSaved" class="muted" style="font-size:12px" hidden>保存しました。メーカーページに反映されます。</span>
+            <span id="mdProfDrafted" class="muted" style="font-size:12px" hidden>下書きを保存しました（未公開）。</span></div>
+        </div>`; })()}`;
 
-    /* --- タブ：製品情報（資材ごとの情報すべて：画像・説明・分類・公式資料） --- */
+    /* --- タブ：製品情報（資材ページと同じ構成をそのまま編集。保存で即反映・Farmilleは事後監査） --- */
+    const D = (window.__mdDrafts || {})[cur.i] || {};   /* 未公開の下書き */
+    const EFF25 = ['養分吸収の改善','水分吸収の改善','酸素の供給効率の改善','CO2の供給効率の改善','養分の利用効率の改善',
+      '耐暑性改善','耐寒性改善','耐乾燥性改善','湿害からの回復改善','低照度下での生育改善','塩害耐性改善','遮光効果','耐霜性改善','環境ストレス耐性を高める',
+      '収量改善','秀品率の改善','有用成分（栄養成分・機能性成分）の改善','糖度増加',
+      '光合成改善','細胞壁の強化','樹勢改善','成り疲れ改善','外部損傷の修復','しおれ軽減','根圏の有用微生物の活性化'];
+    const MAT8L = ['海藻、海藻抽出物','アミノ酸、ペプチド、タンパク質加水分解物','腐植酸、腐植物質、フミン酸、フルボ酸','微生物','微量ミネラル、ビタミン','キチン、キトサン、多糖類','動植物抽出物、微生物抽出物','その他'];
+    const APPLY6 = ['散布','灌注','混和','浸漬','粉衣・塗布','その他'];
+    const GROUPS19 = Object.keys(CROP_GROUPS);
+    const CROP_SPECIALS = (p.crops || []).filter(c => c === '土壌根圏' || c === '作物（全般）');
+    const curGroups = D.cropg || (p.crops || []).filter(c => c !== '土壌根圏' && c !== '作物（全般）');
+    const mat8Sel = D.mat8 || p.mat8 || [];
+    const ub0 = (D.usageBlocks && D.usageBlocks.length) ? D.usageBlocks : (p.usageBlocks && p.usageBlocks.length) ? p.usageBlocks : (p.name === 'スキーポン' ? [
+      '育苗灌注：定植前日に128穴トレー1枚あたり500倍希釈液1Lを灌注、または根を12〜24時間浸漬。',
+      '土壌潅水：10aあたり500倍希釈液500〜1,000Lを潅水。',
+      '株元灌注：50mLの500倍希釈液を株元に灌注（9cmポット苗での乾燥ストレス試験事例）。',
+    ] : (p.usage ? [p.usage] : ['']));
+    /* タグ行：資材ページと同じ行スタイル＋「タグを選ぶ」で一覧から選択 */
+    const tagRowEd = (k, key9, sel9, all9, note9) => `
+        <div class="detail-row" style="align-items:flex-start"><div class="dk">${esc(k)}</div>
+          <div class="dv">
+            <div class="ts-chips" style="margin-top:2px" data-picksel="${key9}">${sel9.map(t2 => `<span class="chip">${esc(t2)}</span>`).join(' ')}</div>
+            <div class="md-pick" data-pick="${key9}" hidden style="margin-top:8px;padding:10px;border:1px dashed var(--line-strong);border-radius:10px">
+              <div class="fguide" style="margin-top:0">タグ一覧から選択してください（複数可）。${note9 || ''}</div>
+              <div class="ts-box" style="margin-top:6px;max-width:320px"><span class="ts-ic">${SEARCH_ICON}</span>
+                <input class="ts-input md-pick-search" placeholder="タグを検索" autocomplete="off"></div>
+              <div class="sug-chips" style="margin-top:8px">${all9.map(t2 => `<span class="qchip${sel9.includes(t2) ? ' on' : ''}" data-v="${esc(t2)}" style="font-size:11.5px;padding:4px 10px;cursor:pointer">${esc(t2)}</span>`).join('')}</div>
+            </div>
+          </div>
+          <div class="act"><button type="button" class="md-btn" data-pickbtn="${key9}">タグを選ぶ</button></div></div>`;
+    const rowEd = (k, id3, val, ta) => `
+        <div class="detail-row" style="align-items:flex-start"><div class="dk">${esc(k)}</div>
+          <div class="dv">${ta ? `<textarea class="textarea" id="${id3}" style="min-height:60px">${esc(val || '')}</textarea>`
+                              : `<input class="input" id="${id3}" value="${esc(val || '')}">`}</div></div>`;
+    const srcRows = test2 => (p.srcs || []).map((sc, si2) => ({ sc, si2 })).filter(x2 => test2(x2.sc.t || '')).map(x2 => `
+          <div class="md-row" data-srcrow="${x2.si2}"><div class="k">${esc(x2.sc.t)}</div><div class="v">${esc(x2.sc.title || x2.sc.u)}</div>
+            <div class="act">${st('ok', '掲載中')}<button class="md-btn ghost" data-srcdel="${x2.si2}">削除</button></div></div>`).join('');
+    const srcGrp = (label3, test2, deft) => `
+        <div style="font-size:12px;font-weight:700;margin:12px 0 4px">${label3}</div>
+        <div class="card" data-srcgrp="${deft}">${srcRows(test2) || ''}
+          <div class="md-row md-src-addrow" hidden><div class="k">${deft}</div>
+            <div class="v" style="display:flex;gap:6px;flex-wrap:wrap"><input class="input src-title" placeholder="資料名" style="flex:1;min-width:140px;padding:7px 10px;font-size:12px"><input class="input src-url" placeholder="https://" style="flex:1;min-width:140px;padding:7px 10px;font-size:12px"></div>
+            <div class="act"><button class="md-btn" data-srcok>追加</button><button class="md-btn ghost" data-srcng>取消</button></div></div>
+          <div class="md-row"><div class="k"></div><div class="v empty">資料を追加できます（追加・削除はすぐ反映されます）</div>
+            <div class="act"><button class="md-btn" data-srcadd>＋ 資料を追加</button></div></div>
+        </div>`;
     const tabProduct = `
-        <div class="md-sec-note">製品を選んで、その資材の情報をまとめて管理します。</div>
+        <div class="md-sec-note">製品を選んで編集します。<b>以下は、農家に表示される資材ページと同じ構成です。枠の中をそのまま編集できます。</b>保存した内容はFarmilleの確認を経て資材ページに反映されます（表現の確認のみで、内容の編集権はメーカー様にあります）。</div>
         <div class="md-plist">
-          ${prods.slice(0, 6).map(x => `<div class="md-p${x.i === cur.i ? ' on' : ''}">
-            ${esc(x.pp.name)} <span class="st${isMakerVerified(x.pp) ? ' v' : ''}">${isMakerVerified(x.pp) ? '確認済み' : '確認待ち'}</span></div>`).join('')}
+          ${prods.slice(0, 6).map(x => `<div class="md-p${x.i === cur.i ? ' on' : ''}" data-pidx="${x.i}" style="cursor:pointer">
+            ${esc(x.pp.name)} <span class="st${isMakerVerified(x.pp) ? ' v' : ''}">${isMakerVerified(x.pp) ? '入力済み' : '未入力あり'}</span></div>`).join('')}
         </div>
         <div class="card" style="margin-top:10px">
           <div class="md-row" style="background:var(--green-soft-2)"><div class="k">公開ステータス</div>
-            <div class="v"><b>公開中</b> ・ 最終更新 2026-08-23 <span style="text-decoration:underline;cursor:pointer" data-mdtab="log">変更履歴</span></div>
-            <div class="act">${isMakerVerified(p) ? `<span class="verified-badge">メーカー確認済み</span>` : `<span class="set-by">確認待ち</span>`}</div></div>
-          ${row('製品名', p.name)}
-          ${row('英名', p.en)}
+            <div class="v"><b>公開中</b> ・ 最終更新 ${p.__lastSaved || '2026-08-23'} <span style="text-decoration:underline;cursor:pointer" data-mdtab="log">変更履歴</span></div>
+            <div class="act">${isMakerVerified(p) ? `<span class="verified-badge">入力済み</span>` : `<span class="set-by">未入力あり</span>`}</div></div>
+          ${row('製品名', p.name, { lock: true })}
+          ${row('英名', p.en, { lock: true })}
         </div>
-        <div class="md-slots" style="margin-top:14px">
-          <div class="md-slot"><div class="ph">＋<br>製品画像をアップロード</div>
-            <div class="req">${esc(p.name)}の製品画像 ・ PNG / JPG ・ 長辺1000px以上推奨</div>
-            <div class="now muted">現在：未設定（NO IMAGE を表示中）</div></div>
+        <div class="md-sec-note" style="margin-top:6px">製品名の変更は、感想口コミ・実証詳細レポートとの紐づけを保護するため、Farmilleへご連絡ください。</div>
+        <div class="pp-h" style="margin-top:14px">製品画像</div>
+        <div id="mdImgs" style="display:flex;gap:10px;flex-wrap:wrap;align-items:stretch">
+          <div class="md-slot" style="flex:0 0 190px;margin:0"><div class="ph">＋<br>メイン画像</div>
+            <div class="req">正面・白背景・正方形を推奨</div>
+            <div class="now muted">現在：未設定（NO IMAGE）</div></div>
+          <button type="button" class="md-slot" id="mdImgAdd" style="flex:0 0 130px;margin:0;cursor:pointer;background:none"><div class="ph">＋<br>画像を追加</div></button>
         </div>
-        <div class="sec-h" style="margin-top:20px"><h2 style="font-size:15px">製品の説明</h2></div>
+        <div class="md-sec-note" style="margin-top:6px">メイン画像は資材ページと検索カードに表示されます。追加画像は、ラベル裏（保証票）・使用方法・使用風景などを複数枚掲載できます。PNG / JPG。</div>
+
+        <div class="pp-h">製品説明</div>
+        <div class="card pad">
+          <textarea class="textarea" id="mdDesc" style="min-height:180px">${esc(D.effOfficial != null ? D.effOfficial : (p.effOfficial || p.usecase || ''))}</textarea>
+          <div class="disclaimer">資材ページの「製品説明」枠に、このまま表示されます。農林水産省「バイオスティミュラントの表示等に係るガイドライン」に沿ってご記入ください（効果を保証する表現、農薬的な効能の標榜は不可）。</div>
+        </div>
+
+        <div class="pp-h">施用タイミング</div>
+        <div class="card pad">
+          <div class="fguide" style="margin-top:0">当てはまる時期を選択してください（複数可）。作物ごとには分けず、共通の目安として資材ページのタイムラインに表示されます。</div>
+          <div class="tl-wrap" style="margin-top:8px"><div class="tl" id="mdTiming">${['栽培開始前','播種・定植時','播種・定植直後','生育初〜中期','開花・生殖成長開始期','着果・生育中期','生育後期〜収穫前','収穫後'].map(st3 => {
+            const on3 = (D.timing || ((p.timing && p.timing.length) ? p.timing : ['播種・定植時','播種・定植直後','生育初〜中期'])).includes(st3);
+            return `<div class="tl-i tagtoggle${on3 ? ' on' : ''}" data-stage="${st3}" style="cursor:pointer"><span class="dot"></span><span class="lb">${st3}</span></div>`; }).join('')}</div></div>
+        </div>
+
+        <div class="pp-h">リンク・資料</div>
+        <div class="md-sec-note">資材ページの「リンク・資料」に、この3グループで表示されます。根拠の所在を示す枠です。</div>
+        ${srcGrp('概要（製品説明・パンフレット・画像）', t2 => !/SDS|ラベル|論文|技術|成分/i.test(t2), 'パンフレット')}
+        ${srcGrp('使用上の注意（ラベル・安全データシート）', t2 => /SDS|ラベル|安全/i.test(t2), 'ラベル・SDS')}
+        ${srcGrp('技術（根拠論文・詳細資料）', t2 => /論文|技術|成分|詳細/i.test(t2), '技術資料')}
+
+        <div class="pp-h">施用方法</div>
         <div class="card">
-          ${row('期待効果', p.effOfficial, { count: '約' + String(p.effOfficial || '').length + '文字' })}
-          ${row('作用機作', p.moa)}
-          ${row('主な成分', p.ingredients)}
-          ${row('施用方法の詳細', '3件の記入枠を登録済み（育苗灌注／土壌潅水／株元灌注）', { review: true })}
-          <div class="md-row"><div class="k"></div><div class="v empty">方法ごとに記入枠を追加できます</div>
-            <div class="act"><button class="md-btn">＋ 記入枠を追加</button></div></div>
-          ${row('使用上の注意', p.precautions)}
-          ${row('保管方法・有効期限', p.storage)}
+          ${tagRowEd('施用方法', 'apply', D.apply || p.apply || [], APPLY6, '検索の絞り込みにも使われます。')}
+          <div class="detail-row" style="align-items:flex-start"><div class="dk">詳細</div>
+            <div class="dv"><div id="mdUsage">
+              ${ub0.map(u3 => `<div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px"><textarea class="textarea md-usage-block" style="min-height:52px">${esc(u3)}</textarea><button type="button" class="md-btn ghost md-usage-del" style="flex:0 0 auto">×</button></div>`).join('')}
+            </div>
+            <button type="button" class="md-btn" id="mdUsageAdd">＋ 記入枠を追加</button></div></div>
         </div>
-        <div class="md-sec-note" style="margin-top:8px">「Farmille確認中」の項目は、表現の確認（農薬的な効果の断定を避ける等）が済みしだい公開されます。通常3営業日以内です。</div>
-        <div class="sec-h" style="margin-top:20px"><h2 style="font-size:15px">Farmilleによる分類</h2></div>
-        <div class="md-sec-note">公式資料をもとにFarmilleが整理したものです。直接編集はできません。内容の確認、または修正の依頼ができます。</div>
+        <div class="md-sec-note" style="margin-top:6px">詳細は、資材ページの「施用方法」枠内の開閉表示にそのまま載ります。</div>
+
+        <div class="pp-h">製品詳細</div>
+        <div class="md-sec-note">資材ページの「製品詳細」の各行に対応します。分類タグは検索の絞り込みにも使われます。</div>
         <div class="card">
-          ${row('効果分類（JBSA）', p.effects, { farm: true })}
-          ${row('対象作物の分類', (p.crops || []).filter(c => c !== '土壌根圏' && c !== '作物（全般）'), { farm: true })}
-          ${row('施用方法', p.apply, { farm: true })}
-          ${row('資材ジャンル（JBSA分類）', p.mat8, { farm: true })}
+          ${tagRowEd('期待効果', 'effects', D.effects || p.effects || [], EFF25, 'JBSA公式の効果25分類です。')}
+          ${tagRowEd('資材ジャンル', 'mat8', mat8Sel, MAT8L, 'JBSAの材料8分類です。')}
+          ${rowEd('主な成分', 'mdIng', D.ingredients != null ? D.ingredients : p.ingredients, false)}
+          ${tagRowEd('対象作物の分類', 'cropg', curGroups, GROUPS19, '農水省通知の大作物群です。個別の作目はFarmilleが公式資料から整理します。')}
+          ${rowEd('作用機作', 'mdMoa', D.moa != null ? D.moa : p.moa, true)}
+          <div class="detail-row" style="align-items:flex-start"><div class="dk">登録・認証</div>
+          <div class="dv"><div id="mdRegsList">
+            ${(D.regsList || p.regsList || [p.regs || '肥料登録済み（完成見本のためサンプル表示です）']).map(r3 => `<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px"><input class="input md-regs-item" value="${esc(r3)}"><button type="button" class="md-btn ghost md-regs-del" style="flex:0 0 auto">×</button></div>`).join('')}
+          </div>
+          <button type="button" class="md-btn" id="mdRegsAdd">＋ 追加</button>
+          <div class="fguide" style="margin-top:6px;margin-bottom:0">肥料登録・農薬登録・有機JAS適合など、1件ずつ記入してください。</div></div></div>
         </div>
-        <div class="sec-h" style="margin-top:20px"><h2 style="font-size:15px">公式資料</h2></div>
-        <div class="card">
-          ${(p.srcs || []).map(sc => `<div class="md-row"><div class="k">${esc(sc.t)}</div>
-            <div class="v">${esc(sc.title || sc.u)}</div>
-            <div class="act">${st('ok', '掲載中')}<button class="md-btn ghost">削除</button></div></div>`).join('')}
-          <div class="md-row"><div class="k"></div><div class="v empty">製品ページ・パンフレットPDF・SDSなどを追加できます</div>
-            <div class="act"><button class="md-btn">＋ 資料を追加</button></div></div>
-        </div>`;
+
+        ${(window.__mdDrafts || {})[cur.i] ? `<div class="card pad" style="margin-top:14px;background:var(--green-soft-2);border:1px dashed var(--green)">
+          <b style="font-size:12.5px">未公開の下書きを編集中です。</b><span class="muted" style="font-size:12px">「保存して資材ページに反映」を押すまで、農家には表示されません。</span>
+          <button type="button" class="md-btn ghost" id="mdDraftDrop" style="margin-left:8px">下書きを破棄</button></div>` : ``}
+        <div class="md-save" style="margin-top:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="mdSave" data-mdidx="${cur.i}">保存して反映を申請</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="mdDraft" style="padding:9px 16px">下書きを保存</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="mdPreview" style="padding:9px 16px">プレビュー</button>
+          <span id="mdSaved" class="muted" style="font-size:12px" hidden>保存しました。<b>Farmilleの確認後に資材ページへ反映されます。</b></span>
+          <span id="mdDrafted" class="muted" style="font-size:12px" hidden>下書きを保存しました（未公開）。</span>
+        </div>
+        ${(window.__mdPendings || {})[cur.i] ? `<div class="card pad" style="margin-top:12px;background:var(--amber-soft);border:1px dashed var(--amber);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <b style="font-size:12.5px">Farmille確認待ちの変更があります。</b><span class="muted" style="font-size:12px">確認が完了すると資材ページに反映されます。</span>
+          <button type="button" class="md-btn" id="mdApprove" style="margin-left:auto">（デモ）確認を完了して反映</button></div>` : ``}
+        <div class="md-sec-note" style="margin-top:8px">保存すると変更履歴に記録されます。掲載後の内容には管理者としての責任をお持ちいただきます。</div>`;
 
     /* --- タブ：変更履歴 --- */
     const tabLog = `
         <div class="md-sec-note">プロフィール・製品情報への変更の記録です。</div>
         <div class="card">
+          ${(window.__mdLog || []).map(l9 => `<div class="md-log"><span class="d tnum">${l9.d}</span><div class="t">${esc(l9.t)}</div><span class="set-by">メーカーにより更新</span></div>`).join('')}
           <div class="md-log"><span class="d tnum">2026-08-23</span><div class="t">スキーポン：効果分類をJBSA別表1（ver1.0）へ再整理</div><span class="set-by">Farmille編集部により更新</span></div>
-          <div class="md-log"><span class="d tnum">2026-08-21</span><div class="t">スキーポン：「使い方の目安」を修正</div><span class="md-st rev">確認中</span></div>
-          <div class="md-log"><span class="d tnum">2026-08-18</span><div class="t">スキーポン：期待効果・作用機作を確認し、メーカー確認済みに変更</div><span class="md-st ok">確認済み</span></div>
+          <div class="md-log"><span class="d tnum">2026-08-21</span><div class="t">スキーポン：施用方法の詳細を修正</div><span class="set-by">メーカーにより更新</span></div>
+          <div class="md-log"><span class="d tnum">2026-08-18</span><div class="t">スキーポン：期待効果・作用機作を記入</div><span class="set-by">メーカーにより更新</span></div>
           <div class="md-log"><span class="d tnum">2026-08-10</span><div class="t">公式資料をもとに掲載開始</div><span class="set-by">Farmille編集部により登録</span></div>
         </div>`;
 
     const TABS = { dash: tabDash, profile: tabProfile, product: tabProduct, log: tabLog };
     return appbar('製品情報の管理', {}) + `
-    <div class="body md-shell">
-      <aside class="md-nav">
-        <div class="md-nav-h">メーカー管理</div>
-        ${navItem('dash', 'ダッシュボード')}
-        ${navItem('profile', 'メーカープロフィール')}
-        ${navItem('product', '製品情報')}
-        ${navItem('log', '変更履歴')}
-        ${navItem('', 'お知らせ配信', true)}
-        ${navItem('', 'アカウント設定', true)}
-      </aside>
+    <div class="body" style="max-width:880px;margin-left:auto;margin-right:auto">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+        ${[['dash','ダッシュボード'],['profile','メーカープロフィール'],['product','製品情報'],['log','変更履歴']].map(t9 =>
+          `<span class="fpill${tab === t9[0] ? ' on' : ''}" data-mdtab="${t9[0]}" style="cursor:pointer">${t9[1]}</span>`).join('')}
+      </div>
       <div class="md-main">
         ${TABS[tab] || tabDash}
         ${tab === 'dash' ? `
@@ -3472,8 +3608,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       <div class="card pad">
         <div style="display:flex;align-items:center;gap:12px">
           <span class="org-mini" style="width:44px;height:44px;font-size:16px;border-radius:12px">${esc(initials(mk))}</span>
-          <div style="flex:1;min-width:0"><b style="font-size:16px">${esc(mk)}</b>
-            <div class="muted" style="font-size:10.5px;margin-top:3px">このメーカーはFarmilleに未参加です。掲載情報はFarmille編集部が公式資料から整理したものです。</div></div>
+          <div style="flex:1;min-width:0"><b style="font-size:16px">${esc(mk)}</b></div>
         </div>
         ${site ? `<div style="margin-top:12px"><a class="link-more" href="${esc(site)}" target="_blank" rel="noopener">公式サイト・公式資料 ↗</a></div>` : ''}
       </div>
@@ -3484,7 +3619,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           <div class="info">
             <div class="mk">${esc(x.pp.maker)}</div>
             <div class="nm">${esc(x.pp.name)}</div>
-            <div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st9.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st9.rev})</span></div>
+            ${st9.rev ? `<div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st9.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st9.rev})</span></div>` : ``}
             <div class="cnt"><span style="white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${st9.rep > 0 ? 'var(--amber)' : 'inherit'}">${st9.rep}</b>件</span></div>
             <div class="ef">${(x.pp.mat8 || []).slice(0, 2).map(m9 => `<span class="pm-tag">${esc(m9)}</span>`).join('')}</div>
           </div></div>`; }).join('')}
@@ -3519,7 +3654,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
 
     /* --- 施用タイミング（8ステージ一律・メーカー確認後に記入） --- */
     const STAGES8 = ['栽培開始前','播種・定植時','播種・定植直後','生育初〜中期','開花・生殖成長開始期','着果・生育中期','生育後期〜収穫前','収穫後'];
-    const onStages = ['播種・定植時','播種・定植直後','生育初〜中期'];   // 見本（スキーポンの推奨時期）
+    const onStages = (p.timing && p.timing.length) ? p.timing : ['播種・定植時','播種・定植直後','生育初〜中期'];   // 未設定時は見本（スキーポンの推奨時期）
     const boxTiming = vOK ? `
       <div class="card pad">
         <div class="tl-wrap"><div class="tl">${STAGES8.map(st2 => `
@@ -3537,11 +3672,11 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const box3 = '';
 
     /* 施用方法の詳細：メーカーが方法ごとに複数の記入枠を持てる（見本はスキーポンを3枠に分割） */
-    const usageBlocks = !vOK ? [] : (p.name === 'スキーポン' ? [
+    const usageBlocks = !vOK ? [] : ((p.usageBlocks && p.usageBlocks.length) ? p.usageBlocks : (p.name === 'スキーポン' ? [
       '育苗灌注：定植前日に128穴トレー1枚あたり500倍希釈液1Lを灌注、または根を12〜24時間浸漬。',
       '土壌潅水：10aあたり500倍希釈液500〜1,000Lを潅水。',
       '株元灌注：50mLの500倍希釈液を株元に灌注（9cmポット苗での乾燥ストレス試験事例）。',
-    ] : (p.usage ? [p.usage] : []));
+    ] : (p.usage ? [p.usage] : [])));
     const tagRow = (k, tags, style) => (tags || []).length ? `<div class="detail-row"><div class="dk">${esc(k)}</div>
       <div class="dv"><div class="ts-chips" style="margin-top:2px">${tags.map(t2 => chip(t2, style)).join(' ')}</div></div></div>` : '';
     /* 仕様一覧（構成メモ2章の表の行順）：組成の大分類→主な成分→対象作物→施用方法→
@@ -3564,7 +3699,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       </div>
       <div class="card" style="margin-top:10px">
         ${vOK ? dRowV('作用機作', p.moa) : dRowV('作用機作', '−')}
-        ${vOK ? dRowV('登録・認証', '肥料登録済み（完成見本のためサンプル表示です）') : ''}
+        ${vOK ? dRowV('登録・認証', p.regs || '肥料登録済み（完成見本のためサンプル表示です）') : ''}
         ${dRowV('販売状況', '市販中（サンプル）')}
       </div>
       <div class="disclaimer" style="margin-top:8px;line-height:1.9">
@@ -3643,10 +3778,13 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       <div class="muted" style="font-size:11px;margin-bottom:10px">
         <span data-go="search" style="cursor:pointer;text-decoration:underline">資材をさがす</span> › ${esc(p.name)}</div>
       <div class="card mat-hero">
-        <div class="mat-hero-img">${bottleImg()}</div>
+        <div style="flex:0 0 auto">
+          <div class="mat-hero-img">${bottleImg()}</div>
+          ${(p.imgExtra || 0) ? `<div id="mhThumbs" style="display:flex;gap:5px;margin-top:6px">${Array.from({length: Math.min(4, 1 + (p.imgExtra || 0))}, (x9, i9) => `<div data-mhimg="${i9 + 1}" style="cursor:pointer;width:34px;height:34px;border:1px solid var(--line);border-radius:7px;background:var(--bg);display:grid;place-items:center;font-size:6.5px;color:var(--ink-3);letter-spacing:.04em${i9 === 0 ? ';outline:2px solid var(--green);outline-offset:-2px' : ''}">NO IMG</div>`).join('')}${(p.imgExtra || 0) > 3 ? `<div style="width:34px;height:34px;border-radius:7px;display:grid;place-items:center;font-size:10px;color:var(--ink-3)">+${p.imgExtra - 3}</div>` : ''}</div>` : ''}
+        </div>
         <div style="flex:1;min-width:0">
           <h2 style="font-size:17px">${esc(p.name)}</h2>
-          <div style="margin-top:4px;color:var(--amber);font-weight:800;font-size:14px">${stars(Math.round(stx.score))} <span class="tnum">${stx.score.toFixed(1)}</span></div>
+          ${stx.rev ? `<div style="margin-top:4px;color:var(--amber);font-weight:800;font-size:14px">${stars(Math.round(stx.score))} <span class="tnum">${stx.score.toFixed(1)}</span></div>` : ``}
           ${p.en && p.en !== p.name ? `<div class="muted" style="font-size:11px;margin-top:2px">${esc(p.en)}</div>` : ''}
           <div class="mat-maker" data-go="seller" style="margin-top:5px;cursor:pointer;color:var(--green);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--green) 40%,transparent)">${esc(p.maker)}</div>
           ${(p.mat8 || []).length ? `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">${p.mat8.map(m2 => `<span class="chip">${esc(m2)}</span>`).join('')}</div>` : ''}
@@ -3977,7 +4115,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
             <div class="info">
               <div class="mk">${escM(p.maker)}</div>
               <div class="nm">${escM(p.name)}</div>
-              <div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st.rev})</span></div>
+              ${st.rev ? `<div class="cnt" style="color:var(--amber);font-weight:700">★ <span class="tnum">${st.score.toFixed(1)}</span> <span class="muted" style="font-weight:400">(${st.rev})</span></div>` : ``}
               <div class="cnt"><span style="white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${st.rep > 0 ? 'var(--amber)' : 'inherit'};font-size:${st.rep > 0 ? '1.2em' : '1em'}">${st.rep}</b>件</span> <span style="white-space:nowrap">・ <span style="color:var(--green-deep)">★</span> お気に入り <b class="tnum">${st.fav}</b></span></div>
               <div class="ef">${tags.map(t2 => `<span class="pm-tag">${escM(t2)}</span>`).join('')}</div>
             </div></div>`; };
@@ -4080,9 +4218,9 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         ].map(v => bind({ ...v, anchor: 'anchorReviews' }));
         /* 実証詳細レポート（記事カード＋資材行） */
         const REPS = [
-          { n:'炎天マスター',   user:'のはら園芸', crop:'なす',   img:'used',    ttl:'耐暑性改善・しおれ軽減｜なす', txt:'猛暑の8月でも成り疲れが軽く、収穫後半まで持ちました。比較区との差も記録しています。' },
-          { n:'アクティバイオ', user:'いちご屋A',  crop:'いちご', img:'apply',   ttl:'養分吸収の改善｜いちご', txt:'定植後の活着が早く、初期生育が揃いました。散布の様子も写真で記録しています。' },
-          { n:'ホストップ',     user:'田中ファーム', crop:'きゅうり', img:'harvest', ttl:'成り疲れ改善・収量改善｜きゅうり', txt:'収穫後半のバテが減りました。収量の推移を月ごとにまとめています。' },
+          { n:'炎天マスター',   user:'のはら園芸', crop:'ミニトマト',   img:'used',    txt:'猛暑の8月でも成り疲れが軽く、収穫後半まで持ちました。比較区との差も記録しています。' },
+          { n:'アクティバイオ', user:'いちご屋A',  crop:'ミニトマト', img:'apply',   txt:'定植後の活着が早く、初期生育が揃いました。散布の様子も写真で記録しています。' },
+          { n:'ホストップ',     user:'田中ファーム', crop:'ミニトマト', img:'harvest', txt:'収穫後半のバテが減りました。収量の推移を月ごとにまとめています。' },
         ].map(v => bind({ ...v, anchor: 'anchorReports' }));
         const repCard = v => `<div class="alist-card" data-go="reportArticle">
             <div class="cover">${typeof ph === 'function' ? ph(v.img) : ''}</div>
@@ -4165,7 +4303,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
               <div class="sf-col"><h5>参加する</h5>
                 <a data-go="signup">新規会員登録</a><a data-go="pickMaterial">実証詳細レポートを投稿</a><a data-go="mypage">マイページ</a></div>
               <div class="sf-col"><h5>メーカー・団体の方</h5>
-                <a data-go="makerFlow">メーカー掲載の流れ</a><a data-go="sellerApply">出品者申請</a><a data-go="seller">メーカーページ（見本）</a></div>
+                <a data-go="makerFlow">メーカー掲載の流れ</a><a data-go="sellerApply">出品者申請</a><a data-go="seller">メーカーページ（見本）</a><a data-go="makerDash">製品情報の管理（見本）</a></div>
             </div>
             <div class="sf-bottom"><span>© 2026 Farmille</span>
               <span class="sf-legal"><a class="dis">プライバシーポリシー（準備中）</a><a class="dis">利用規約（準備中）</a></span></div>
@@ -4202,12 +4340,202 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       }
     }
     if (id === 'makerDash') {
+      if (window.__mdProfPreview) {
+        const pv8 = window.__mdProfPreview; window.__mdProfPreview = null;
+        window.__mdProfile = pv8.backup; window.__mdProfDraft = pv8.draft;
+        go('makerDash'); return;
+      }
+      if (window.__mdPreview) {
+        const pv8 = window.__mdPreview; window.__mdPreview = null;
+        Object.assign(DB_PRODUCTS[pv8.i], pv8.backup);
+        window.__mdDrafts = window.__mdDrafts || {}; window.__mdDrafts[pv8.i] = pv8.draft;
+        go('makerDash'); return;
+      }
       scr.querySelectorAll('[data-mdtab]').forEach(el => el.addEventListener('click', () => {
         window.__mdTab = el.dataset.mdtab;
         go('makerDash');
       }));
+      /* 製品リスト：クリックで製品を切り替え */
+      scr.querySelectorAll('[data-pidx]').forEach(el9 => el9.addEventListener('click', () => {
+        window.__mdProdI = +el9.dataset.pidx; go('makerDash');
+      }));
+      /* リンク・資料：追加・削除（すぐ反映） */
+      scr.querySelectorAll('[data-srcgrp]').forEach(gc9 => {
+        const pcur9 = DB_PRODUCTS[+(scr.querySelector('#mdSave') || { dataset: {} }).dataset.mdidx] || null;
+        gc9.addEventListener('click', e9 => {
+          const del9 = e9.target.closest('[data-srcdel]');
+          if (del9 && pcur9) {
+            pcur9.srcs.splice(+del9.dataset.srcdel, 1);
+            window.__mdLog = window.__mdLog || [];
+            window.__mdLog.unshift({ d: new Date().toISOString().slice(0, 10), t: pcur9.name + '：資料を削除' });
+            go('makerDash'); return;
+          }
+          if (e9.target.closest('[data-srcadd]')) { gc9.querySelector('.md-src-addrow').hidden = false; return; }
+          if (e9.target.closest('[data-srcng]')) { gc9.querySelector('.md-src-addrow').hidden = true; return; }
+          if (e9.target.closest('[data-srcok]') && pcur9) {
+            const ti9 = gc9.querySelector('.src-title').value.trim();
+            const ur9 = gc9.querySelector('.src-url').value.trim();
+            if (!ti9 && !ur9) return;
+            pcur9.srcs = pcur9.srcs || [];
+            pcur9.srcs.push({ t: gc9.dataset.srcgrp, title: ti9 || ur9, u: ur9 || '#' });
+            window.__mdLog = window.__mdLog || [];
+            window.__mdLog.unshift({ d: new Date().toISOString().slice(0, 10), t: pcur9.name + '：資料「' + (ti9 || ur9) + '」を追加' });
+            go('makerDash'); return;
+          }
+        });
+      });
+      /* 施用方法の詳細：枠の削除 */
+      const rl9 = scr.querySelector('#mdRegsList');
+      if (rl9) rl9.addEventListener('click', e9 => { const d9 = e9.target.closest('.md-regs-del'); if (d9) d9.parentElement.remove(); });
+      const ra9 = scr.querySelector('#mdRegsAdd');
+      if (ra9) ra9.addEventListener('click', () => {
+        rl9.insertAdjacentHTML('beforeend', `<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px"><input class="input md-regs-item" placeholder="例）肥料登録済み"><button type="button" class="md-btn ghost md-regs-del" style="flex:0 0 auto">×</button></div>`);
+      });
+      const uw9 = scr.querySelector('#mdUsage');
+      if (uw9) uw9.addEventListener('click', e9 => {
+        const d9 = e9.target.closest('.md-usage-del'); if (d9) d9.parentElement.remove();
+      });
+      /* プロフィール保存 */
+      const pfCollect = () => ({
+        intro: scr.querySelector('#mdPfIntro').value, url: scr.querySelector('#mdPfUrl').value, addr: scr.querySelector('#mdPfAddr').value,
+      });
+      const pfs9 = scr.querySelector('#mdProfSave');
+      if (pfs9) pfs9.addEventListener('click', () => {
+        window.__mdProfile = pfCollect();
+        window.__mdProfDraft = null;
+        window.__mdLog = window.__mdLog || [];
+        window.__mdLog.unshift({ d: new Date().toISOString().slice(0, 10), t: 'メーカープロフィールを更新' });
+        const n9 = scr.querySelector('#mdProfSaved'); if (n9) n9.hidden = false;
+        const d0 = scr.querySelector('#mdProfDrafted'); if (d0) d0.hidden = true;
+      });
+      const pfd9 = scr.querySelector('#mdProfDraftBtn');
+      if (pfd9) pfd9.addEventListener('click', () => {
+        window.__mdProfDraft = pfCollect();
+        const d0 = scr.querySelector('#mdProfDrafted'); if (d0) d0.hidden = false;
+        const n9 = scr.querySelector('#mdProfSaved'); if (n9) n9.hidden = true;
+      });
+      const pfdrop = scr.querySelector('#mdProfDrop');
+      if (pfdrop) pfdrop.addEventListener('click', () => { window.__mdProfDraft = null; go('makerDash'); });
+      const pfpv = scr.querySelector('#mdProfPreview');
+      if (pfpv) pfpv.addEventListener('click', () => {
+        window.__mdProfPreview = { backup: window.__mdProfile || null, draft: pfCollect() };
+        window.__mdProfile = pfCollect();
+        const i9 = DB_PRODUCTS.findIndex(px => px.maker === 'アクプランタ株式会社');
+        const t9 = document.createElement('span');
+        t9.setAttribute('data-go', 'seller'); t9.setAttribute('data-idx', String(i9));
+        t9.hidden = true; scr.appendChild(t9); t9.click(); t9.remove();
+      });
+      const addI = scr.querySelector('#mdImgAdd');
+      if (addI) addI.addEventListener('click', () => {
+        addI.insertAdjacentHTML('beforebegin', `<div class="md-slot" style="flex:0 0 130px;margin:0"><div class="ph">＋<br>追加画像</div><div class="req">ラベル裏・使用風景など</div></div>`);
+      });
+      const tm9 = scr.querySelector('#mdTiming');
+      if (tm9) tm9.addEventListener('click', e9 => { const c9 = e9.target.closest('.tl-i'); if (c9) c9.classList.toggle('on'); });
+      const addU = scr.querySelector('#mdUsageAdd');
+      if (addU) addU.addEventListener('click', () => {
+        scr.querySelector('#mdUsage').insertAdjacentHTML('beforeend', `<div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:8px"><textarea class="textarea md-usage-block" style="min-height:52px"></textarea><button type="button" class="md-btn ghost md-usage-del" style="flex:0 0 auto">×</button></div>`);
+      });
+      /* タグ選択：一覧の開閉とトグル、選択中チップへの即時反映 */
+      scr.querySelectorAll('[data-pickbtn]').forEach(b9 => b9.addEventListener('click', () => {
+        const pk9 = scr.querySelector(`[data-pick="${b9.dataset.pickbtn}"]`);
+        pk9.hidden = !pk9.hidden;
+        b9.textContent = pk9.hidden ? 'タグを選ぶ' : '閉じる';
+      }));
+      scr.querySelectorAll('.md-pick-search').forEach(si9 => si9.addEventListener('input', () => {
+        const q9 = si9.value.trim();
+        si9.closest('.md-pick').querySelectorAll('.qchip').forEach(c9 => {
+          c9.style.display = (!q9 || jaHit(c9.dataset.v, q9)) ? '' : 'none';
+        });
+      }));
+      scr.querySelectorAll('.md-pick').forEach(pk9 => pk9.addEventListener('click', e9 => {
+        const c9 = e9.target.closest('.qchip'); if (!c9) return;
+        c9.classList.toggle('on');
+        const key9 = pk9.dataset.pick;
+        const sel9 = [...pk9.querySelectorAll('.qchip.on')].map(x9 => x9.dataset.v);
+        scr.querySelector(`[data-picksel="${key9}"]`).innerHTML = sel9.map(t9 => `<span class="chip">${t9}</span>`).join(' ');
+      }));
+      const sv = scr.querySelector('#mdSave');
+      const collect9 = () => {
+        const g8 = id8 => (scr.querySelector('#' + id8) || {}).value || '';
+        const picked = key8 => [...scr.querySelectorAll(`[data-pick="${key8}"] .qchip.on`)].map(x8 => x8.dataset.v);
+        return {
+          effOfficial: g8('mdDesc').trim(), moa: g8('mdMoa').trim(), ingredients: g8('mdIng').trim(),
+          regsList: [...scr.querySelectorAll('.md-regs-item')].map(x8 => x8.value.trim()).filter(Boolean),
+          usageBlocks: [...scr.querySelectorAll('.md-usage-block')].map(t8 => t8.value.trim()).filter(Boolean),
+          apply: picked('apply'), effects: picked('effects'), mat8: picked('mat8'), cropg: picked('cropg'),
+          timing: [...scr.querySelectorAll('#mdTiming .tl-i.on')].map(x8 => x8.dataset.stage),
+          imgExtra: Math.max(0, scr.querySelectorAll('#mdImgs .md-slot').length - 2),
+        };
+      };
+      const applyTo9 = (p8, d9) => {
+        p8.effOfficial = d9.effOfficial; p8.moa = d9.moa; p8.regsList = d9.regsList; p8.regs = d9.regsList.join('、'); p8.ingredients = d9.ingredients; p8.imgExtra = d9.imgExtra;
+        p8.usageBlocks = d9.usageBlocks; p8.apply = d9.apply; p8.effects = d9.effects; p8.mat8 = d9.mat8; p8.timing = d9.timing;
+        const sp8 = (p8.crops || []).filter(c8 => c8 === '土壌根圏' || c8 === '作物（全般）');
+        p8.crops = [...d9.cropg, ...sp8];
+      };
+      if (sv) {
+        const idx9 = +sv.dataset.mdidx;
+        window.__mdDrafts = window.__mdDrafts || {};
+        window.__mdPendings = window.__mdPendings || {};
+        sv.addEventListener('click', () => {
+          const p8 = DB_PRODUCTS[idx9];
+          window.__mdPendings[idx9] = collect9();   /* 直接は反映せず、Farmille確認待ちに積む（形としてのペンディング） */
+          window.__mdDrafts[idx9] = collect9();     /* 入力内容は画面上も保持 */
+          window.__mdLog = window.__mdLog || [];
+          window.__mdLog.unshift({ d: new Date().toISOString().slice(0, 10), t: p8.name + '：製品情報の更新を申請（Farmille確認待ち）' });
+          go('makerDash');
+        });
+        const ap9 = scr.querySelector('#mdApprove');
+        if (ap9) ap9.addEventListener('click', () => {
+          const p8 = DB_PRODUCTS[idx9];
+          applyTo9(p8, window.__mdPendings[idx9]);
+          delete window.__mdPendings[idx9]; delete window.__mdDrafts[idx9];
+          p8.__lastSaved = new Date().toISOString().slice(0, 10);
+          window.__mdLog.unshift({ d: p8.__lastSaved, t: p8.name + '：Farmilleの確認が完了し、資材ページに反映' });
+          go('makerDash');
+        });
+        const db9 = scr.querySelector('#mdDraft');
+        if (db9) db9.addEventListener('click', () => {
+          window.__mdDrafts[idx9] = collect9();
+          const dk8 = scr.querySelector('#mdDrafted'); if (dk8) dk8.hidden = false;
+          const ok8 = scr.querySelector('#mdSaved'); if (ok8) ok8.hidden = true;
+        });
+        const dd9 = scr.querySelector('#mdDraftDrop');
+        if (dd9) dd9.addEventListener('click', () => { delete window.__mdDrafts[idx9]; go('makerDash'); });
+        const pv9 = scr.querySelector('#mdPreview');
+        if (pv9) pv9.addEventListener('click', () => {
+          const p8 = DB_PRODUCTS[idx9];
+          const keep9 = {};
+          ['effOfficial','moa','regs','ingredients','usageBlocks','apply','effects','mat8','timing','crops'].forEach(k8 => { keep9[k8] = p8[k8]; });
+          const d9 = collect9();
+          window.__mdPreview = { i: idx9, backup: keep9, draft: d9 };
+          applyTo9(p8, d9);
+          /* selProd は別クロージャのため、既存の data-idx クリック機構で製品を選択して遷移する */
+          const tmp9 = document.createElement('span');
+          tmp9.setAttribute('data-go', 'material'); tmp9.setAttribute('data-idx', String(idx9));
+          tmp9.hidden = true; scr.appendChild(tmp9); tmp9.click(); tmp9.remove();
+        });
+      }
     }
     if (id === 'material') {
+      const th9 = scr.querySelector('#mhThumbs');
+      if (th9 && !th9.dataset.init) {
+        th9.dataset.init = '1';
+        th9.addEventListener('click', e9 => {
+          const c9 = e9.target.closest('[data-mhimg]'); if (!c9) return;
+          [...th9.querySelectorAll('[data-mhimg]')].forEach(x9 => { x9.style.outline = x9 === c9 ? '2px solid var(--green)' : 'none'; });
+          const main9 = scr.querySelector('.mat-hero-img');
+          if (main9) main9.innerHTML = `<div style="display:grid;place-items:center;width:100%;height:100%;color:var(--ink-3);font-size:11px;letter-spacing:.06em">NO IMAGE<br><span style="font-size:9px">画像 ${c9.dataset.mhimg} / ${th9.querySelectorAll('[data-mhimg]').length}</span></div>`;
+        });
+      }
+      if (window.__mdPreview) {
+        const body9 = scr.querySelector('.body');
+        if (body9) body9.insertAdjacentHTML('afterbegin', `<div class="card pad" style="margin-bottom:14px;background:var(--green-soft-2);border:1px dashed var(--green);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <b style="font-size:12.5px">プレビュー表示中（未保存の下書き）</b><span class="muted" style="font-size:12px">この内容はまだ公開されていません。</span>
+          <button type="button" class="md-btn" id="pvBack" style="margin-left:auto">編集に戻る</button></div>`);
+        const pb9 = scr.querySelector('#pvBack');
+        if (pb9) pb9.addEventListener('click', () => { window.__mdTab = 'product'; go('makerDash'); });
+      }
       /* 感想口コミ投稿者タップ → プロフィールページ（デモは共通の公開プロフィール） */
       scr.querySelectorAll('.rc .rc-head').forEach(h => {
         h.setAttribute('data-go', 'profilePublic');
@@ -4686,6 +5014,14 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       if (anyTgt && !anyTgt.dataset.idx) anyTgt.setAttribute('data-sample-skeepon', '1');
     }
     if (id === 'seller') {
+      if (window.__mdProfPreview) {
+        const body9 = scr.querySelector('.body');
+        if (body9) body9.insertAdjacentHTML('afterbegin', `<div class="card pad" style="margin-bottom:14px;background:var(--green-soft-2);border:1px dashed var(--green);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <b style="font-size:12.5px">プレビュー表示中（未保存の下書き）</b><span class="muted" style="font-size:12px">この内容はまだ公開されていません。</span>
+          <button type="button" class="md-btn" id="pfPvBack" style="margin-left:auto">編集に戻る</button></div>`);
+        const pb9 = scr.querySelector('#pfPvBack');
+        if (pb9) pb9.addEventListener('click', () => { window.__mdTab = 'profile'; go('makerDash'); });
+      }
       /* メーカーページ：選択中製品のメーカー実データで上書き */
       const sp = window.getSelProd && window.getSelProd();
       if (sp) {
@@ -4694,17 +5030,19 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
         const ttl = scr.querySelector('.appbar .ttl'); if (ttl) ttl.textContent = sp.maker;
         const nm = scr.querySelector('.org-name h2'); if (nm) nm.textContent = sp.maker;
         const logo = scr.querySelector('.org-logo'); if (logo) logo.textContent = sp.maker.replace(/株式会社|有限会社|\s/g, '').slice(0, 1) || '社';
-        const desc = scr.querySelector('.org-desc');
-        if (desc) desc.remove();
-        /* 公式サイト：出典URLのオリジンがあればリンク、なければ削除 */
-        const links = scr.querySelector('.org-links');
-        if (links) {
-          const src = prods.flatMap(x => x.srcs || []).find(x => x.u);
-          if (src) {
-            try { const origin = new URL(src.u).origin;
-              links.innerHTML = `<a href="${escS(origin)}" target="_blank" rel="noopener">${EXT} 公式サイトを見る</a>`;
-            } catch { links.remove(); }
-          } else links.remove();
+        if (sp.maker !== 'アクプランタ株式会社') {   /* 参加済みメーカーは管理画面のプロフィール（紹介文・リンク・所在地）をそのまま表示する */
+          const desc = scr.querySelector('.org-desc');
+          if (desc) desc.remove();
+          /* 公式サイト：出典URLのオリジンがあればリンク、なければ削除 */
+          const links = scr.querySelector('.org-links');
+          if (links) {
+            const src = prods.flatMap(x => x.srcs || []).find(x => x.u);
+            if (src) {
+              try { const origin = new URL(src.u).origin;
+                links.innerHTML = `<a href="${escS(origin)}" target="_blank" rel="noopener">${EXT} 公式サイトを見る</a>`;
+              } catch { links.remove(); }
+            } else links.remove();
+          }
         }
         /* 統計：掲載製品は実数、他はサンプル明記 */
         const stats = scr.querySelectorAll('.stat');
