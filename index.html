@@ -1006,6 +1006,11 @@
   .todo-hint { display:inline-flex; align-items:center; gap:6px; margin-top:5px; font-size:12px; font-weight:700; color:var(--green-deep); cursor:pointer; text-decoration:none; }
   .todo-hint:hover { text-decoration:underline; }
   .todo-ic { width:16px; height:16px; border-radius:50%; border:1.5px dashed var(--green); color:var(--green-deep); font-size:11px; font-weight:900; display:grid; place-items:center; flex:0 0 auto; line-height:1; }
+  /* ===== 会員登録：住所 ===== */
+  .addr-grid { display:grid; grid-template-columns:1fr; gap:6px 12px; margin-top:4px; }
+  .addr-lb { font-size:12.5px; font-weight:700; color:var(--ink-2); padding-top:9px; }
+  .addr-grid > div { min-width:0; }
+  @media (min-width: 640px) { .addr-grid { grid-template-columns:150px minmax(0,1fr); gap:10px 12px; align-items:start; } }
   /* ===== 実証詳細レポート：区・調査項目 ===== */
   .plot-kind { font-size:11px; font-weight:800; color:var(--green-deep); background:var(--green-soft); border-radius:999px; padding:3px 9px; flex:0 0 auto; }
   .plot-name { max-width:220px; }
@@ -1500,13 +1505,9 @@ S.reportForm = () => appbar('実証詳細レポート入力') + `
     <div id="cropScoped">
     <div class="form-sec"><span class="no">1</span><h3>まずは結果から</h3><span class="sub">レポートのタイトルは、下で選ぶ使用目的のタグになります</span></div>
 
-    <div class="field"><label>使ってみて、どうでしたか？ <span class="badge badge-req">必須</span></label>
-      <div class="fguide">いつ頃から・どこに・どんな変化があったかと、全体の感想を、あなたの言葉で。明確な変化が見られなかった場合もそのまま記入してください（数値は下の定量データ欄へ）。</div>
-      <textarea class="textarea big" placeholder="例）2回目の使用から数日後、使用前と比べて午後の葉の萎れがやや軽くなったように感じました。暑い時期の萎れ対策として手応えがあり、来季も使う予定です。"></textarea></div>
-
-    <div class="field"><label>良くなかった点（薬害など） <span class="badge badge-opt">任意</span></label>
-      <div class="fguide">薬害、生育の悪化、作業負担の増加などがあれば入力してください。</div>
-      <textarea class="textarea" placeholder="例）特になし／散布直後に葉先が白くなったが数日で回復した　など"></textarea></div>
+    <div class="field"><label>結果・感想 <span class="badge badge-req">必須</span></label>
+      <div class="fguide">いつ頃から・どこに・どんな変化があったかと、全体の感想を記入します。明確な変化が見られなかった場合も、そのまま記入してください。薬害や生育の悪化など良くなかった点があれば併記してください（数値は下の定量データ欄に入力します）。</div>
+      <textarea class="textarea big" placeholder="例）2回目の使用から数日後、使用前と比べて午後の葉の萎れがやや軽くなったように感じました。暑い時期の萎れ対策として手応えがあり、来季も使う予定です。薬害（葉焼け・変色）や生育の悪化は見られませんでしたが、散布の手間は増えました。"></textarea></div>
 
     
     <div class="form-sec"><span class="no">2</span><h3>くわしい条件を教えてください</h3><span class="sub">タップ中心・次回からは自動入力されます</span></div>
@@ -1869,8 +1870,8 @@ S.mypage = () => appbar('マイページ') + `
             <div style="font-size:17px;font-weight:800">いちごマン <span class="type-label" style="font-size:10px;vertical-align:2px">生産者</span></div>
             <a class="todo-hint" data-go="profileEdit"><span class="todo-ic">＋</span>プロフィール画像を設定する</a>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px">
-              <span class="muted" style="font-size:11px">地域</span><span class="chip">茨城県</span>
-              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">JA青年部</span>
+              <span class="muted" style="font-size:11px">地域</span><span class="chip">茨城県</span><a class="todo-hint" data-go="profileEdit" style="margin:0 0 0 4px;font-size:11.5px"><span class="todo-ic">＋</span>市区町村まで公開する場合はこちら</a>
+              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">JA全青協</span>
             </div>
           </div>
           <button class="btn btn-ghost btn-sm" data-go="profileEdit" style="flex:0 0 auto;padding:7px 16px;font-size:12px">プロフィールを編集</button>
@@ -1889,7 +1890,6 @@ S.mypage = () => appbar('マイページ') + `
           <span>感想口コミ <b class="tnum">2</b></span>
           <span>お気に入り <b class="tnum">12</b></span>
         </div>
-        <div class="muted" style="font-size:12px;margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${pubTag()}都道府県まで公開中 ／ ${privTag()}市区町村・本名 <span class="link-more" style="cursor:pointer;font-size:12px">設定 →</span></div>
       </div>
     </div>
     <div class="sec-h"><h2>これまでの投稿</h2></div>
@@ -1930,7 +1930,7 @@ S.profileEdit = () => appbar('プロフィールを編集') + `
       <div id="peCropTree" class="pe-tree" style="display:none"></div></div>
     <div class="field"><label>所属 <span class="badge badge-opt">任意</span></label>
       <div class="fguide">当てはまるものを選んでください（複数可）。一覧にない所属は「その他」から記入できます。</div>
-      <div id="peOrgTags" class="org-picker">${['JA青年部','4Hクラブ','農業法人協会','JA営農指導員','普及指導員','農業研究員','大学研究者'].map(t=>`<button type="button" class="org-opt${t==='JA青年部'?' on':''}" data-org="${t}">${t}</button>`).join('')}<span id="peOrgChips" style="display:contents"></span><button type="button" class="org-opt other" data-org-other="1">その他（自分で記入）</button></div>
+      <div id="peOrgTags" class="org-picker">${['JA全青協','日本農業法人協会','都道府県 農業普及指導員','都道府県 農業研究員','農研機構 研究員','大学 研究員'].map(t=>`<button type="button" class="org-opt${t==='JA全青協'?' on':''}" data-org="${t}">${t}</button>`).join('')}<span id="peOrgChips" style="display:contents"></span><button type="button" class="org-opt other" data-org-other="1">その他（自分で記入）</button></div>
       <div id="peOrgOther" style="display:none;margin-top:8px">
         <div class="ts-box"><span class="ts-ic">${SEARCH_ICON}</span>
           <input id="peOrgInput" class="ts-input" placeholder="所属を入力してEnter（例）〇〇市トマト生産部会" autocomplete="off"></div>
@@ -1968,20 +1968,27 @@ S.signup = () => appbar('Farmilleをはじめる') + `
     <div class="field"><label>あなたの立場 <span class="badge badge-req">必須</span> ${pubTag()}</label>
       <div class="radios">
         <label class="radio on"><span class="ring"></span> 生産者</label>
-        <label class="radio"><span class="ring"></span> JA関係者（指導員等も含む）</label>
+        <label class="radio"><span class="ring"></span> JAグループ職員（営農指導員など）</label>
         <label class="radio"><span class="ring"></span> 行政関係者（都道府県の普及員や研究員）</label>
-        <label class="radio"><span class="ring"></span> その他（メーカー関係者、専門家、研究者など）</label>
+        <label class="radio"><span class="ring"></span> その他（メーカー関係者、専門家、大学研究員など）</label>
       </div>
       <div class="fguide" style="margin-top:8px;margin-bottom:0">立場は、投稿やマイページで肩書きとして表示されます。</div></div>
-    <div class="field"><label>お住まいの地域 <span class="badge badge-req">必須</span></label>
-      <input class="input" id="suZip" placeholder="郵便番号　例）3100011" inputmode="numeric" maxlength="8">
-      <div class="fguide" style="margin:6px 0 0">郵便番号を入れると住所が自動で入ります。</div>
-      <div class="amount-row" style="margin-top:6px">
-        <select class="input" id="suPref">${prefOptions('')}</select>
-        <input class="input" id="suCity" placeholder="市区町村">
+    <div class="field"><label>住所 <span class="badge badge-req">必須</span></label>
+      <div class="fguide" style="margin:0 0 6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${pubTag()}都道府県 ／ ${privTag()}市区町村・番地・建物名</div>
+      <div class="addr-grid">
+        <label class="addr-lb" for="suZip">郵便番号</label>
+        <div><input class="input" id="suZip" placeholder="例）3100011（半角・ハイフンなし）" inputmode="numeric" maxlength="7" style="max-width:320px">
+          <div class="fguide" id="suZipNote" style="margin:4px 0 0">郵便番号を入れると、都道府県と市区町村（町域まで）が自動で入ります。</div></div>
+        <label class="addr-lb" for="suPref">都道府県</label>
+        <div><select class="input" id="suPref" style="max-width:220px">${prefOptions('')}</select></div>
+        <label class="addr-lb" for="suCity">市区町村</label>
+        <div><input class="input" id="suCity" placeholder="例）水戸市笠原町"></div>
+        <label class="addr-lb" for="suAddr1">番地</label>
+        <div><input class="input" id="suAddr1" placeholder="例）978-6"></div>
+        <label class="addr-lb" for="suAddr2">建物名・部屋番号 <span class="badge badge-opt">任意</span></label>
+        <div><input class="input" id="suAddr2" placeholder="例）〇〇マンション101"></div>
       </div>
-      <div class="fguide" style="margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${pubTag()}県名まで ／ ${privTag()}市区町村</div>
-      <div class="fguide" style="margin-top:4px;margin-bottom:0">※ 投稿で「市区町村も公開する」を選択した場合のみ、公開されることがあります。</div></div>
+      <div class="fguide" style="margin-top:6px;margin-bottom:0">※ 市区町村は、プロフィール設定で「市区町村も表示する」を選んだ場合のみ公開されます。番地・建物名は公開されません。</div></div>
     <div class="field"><label>パスワード <span class="badge badge-req">必須</span></label><input class="input" type="password" placeholder="••••••••"></div>
     <label class="check-toggle" style="margin-top:10px"><span class="cbox"></span> <span><span style="text-decoration:underline">総合利用規約</span>・<span style="text-decoration:underline">投稿ガイドライン</span>に同意する <span class="badge badge-req">必須</span></span></label>
     <div class="fguide" style="margin-top:4px">アイコン・主な作目・所属などは、あとからマイページで設定できます。</div>
@@ -2213,7 +2220,7 @@ S.profilePublic = () => appbar('しおさい農園') + `
             <div style="font-size:17px;font-weight:800">しおさい農園 <span class="type-label" style="font-size:10px;vertical-align:2px">生産者</span></div>
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px">
               <span class="muted" style="font-size:11px">地域</span><span class="chip">千葉県</span>
-              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">JA青年部</span>
+              <span class="muted" style="font-size:11px;margin-left:6px">所属</span><span class="aff-badge aff-blue">JA全青協</span>
             </div>
           </div>
         </div>
@@ -4739,15 +4746,34 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       const zip = scr.querySelector('#suZip');
       if (zip && !zip.dataset.init) {
         zip.dataset.init = '1';
-        const DEMO = { '310':'茨城県|水戸市', '100':'東京都|千代田区', '420':'静岡県|静岡市葵区', '640':'和歌山県|和歌山市', '860':'熊本県|熊本市' };
-        zip.addEventListener('input', () => {
-          const v = zip.value.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[^0-9]/g, '');
-          if (v.length < 7) return;
-          const hit = DEMO[v.slice(0, 3)] || '茨城県|水戸市';
-          const [pf, ct] = hit.split('|');
+        /* 郵便番号API（zipcloud）で都道府県・市区町村を補完。届かない環境（Artifact等）では簡易辞書で代替 */
+        const DEMO = { '3100011':'茨城県|水戸市三の丸', '2701176':'千葉県|我孫子市柴崎台', '1000001':'東京都|千代田区千代田', '4200853':'静岡県|静岡市葵区追手町', '6408511':'和歌山県|和歌山市小松原通', '8600808':'熊本県|熊本市中央区手取本町' };
+        const note = scr.querySelector('#suZipNote');
+        const fill = (pf, ct) => {
           const pref = scr.querySelector('#suPref'), city = scr.querySelector('#suCity');
           if (pref) pref.value = pf;
-          if (city && !city.value) city.value = ct;
+          if (city) city.value = ct;
+          if (note) { note.textContent = '郵便番号から都道府県と市区町村を入力しました。違う場合は直してください。'; note.style.color = 'var(--green-deep)'; }
+        };
+        let seq = 0;
+        zip.addEventListener('input', async () => {
+          const v = zip.value.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[^0-9]/g, '');
+          if (v !== zip.value) zip.value = v;
+          if (v.length < 7) { if (note) { note.textContent = '郵便番号を入れると、都道府県と市区町村（町域まで）が自動で入ります。'; note.style.color = ''; } return; }
+          const my = ++seq;
+          if (note) { note.textContent = '住所を検索しています…'; note.style.color = ''; }
+          try {
+            const r = await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + v);
+            const j = await r.json();
+            if (my !== seq) return;
+            if (j && j.results && j.results[0]) { const r0 = j.results[0]; fill(r0.address1, r0.address2 + (r0.address3 || '')); return; }
+            if (note) { note.textContent = '該当する住所が見つかりませんでした。都道府県と市区町村を入力してください。'; note.style.color = '#B26A00'; }
+          } catch (err) {
+            if (my !== seq) return;
+            const hit = DEMO[v];
+            if (hit) { const [pf, ct] = hit.split('|'); fill(pf, ct); }
+            else if (note) { note.textContent = '住所の自動入力が使えない環境です。都道府県と市区町村を入力してください。'; note.style.color = '#B26A00'; }
+          }
         });
       }
     }
@@ -5230,7 +5256,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       scr.querySelectorAll('textarea').forEach(ta => {
         const ph = ta.getAttribute('placeholder') || '';
         const labelTxt = ta.closest('.field')?.querySelector('label')?.textContent || '';
-        const isKey = labelTxt.includes('使ってみて') || labelTxt.includes('感想口コミ本文') || labelTxt.includes('調査結果');
+        const isKey = labelTxt.includes('結果・感想') || labelTxt.includes('使ってみて') || labelTxt.includes('感想口コミ本文') || labelTxt.includes('調査結果');
         if ((!ph.startsWith('例）') && !isKey) || ph.length < 40) return;
         ta.setAttribute('placeholder', '自由に記入してください');
         const wrap = document.createElement('div');
