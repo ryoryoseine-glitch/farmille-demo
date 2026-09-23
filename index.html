@@ -1415,21 +1415,24 @@
 
   .slp .slp-guide { grid-template-columns:1fr !important; }
   .slp .slp-guide .g.wide ol { columns:1 !important; }
-  .slp .gd { margin-top:10px; }
-  .slp .gd.inline { display:inline-block; margin:0 0 0 10px; vertical-align:baseline; }
-  .slp .gd summary { list-style:none; display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color:var(--green-deep); cursor:pointer; border:1px solid var(--line-strong); border-radius:999px; padding:3px 11px; background:var(--card); }
+  .slp .gd { margin-top:12px; border-top:1px solid var(--line); }
+  .slp .gd summary { list-style:none; display:flex; align-items:center; gap:10px; padding:11px 0 2px; font-size:13px; font-weight:700; color:var(--green-deep); cursor:pointer; }
   .slp .gd summary::-webkit-details-marker { display:none; }
-  .slp .gd summary::after { content:'▾'; font-size:10px; }
-  .slp .gd[open] summary::after { content:'▴'; }
-  .slp .gd .gd-b { display:grid; grid-template-columns:1fr; gap:12px; margin-top:10px; }
-  .slp .gd.inline .gd-b { display:grid; }
-  .slp .gd.inline[open] { display:block; margin:8px 0 4px; }
+  .slp .gd summary::before { content:''; width:6px; height:6px; border-right:2px solid var(--green-deep); border-bottom:2px solid var(--green-deep); transform:rotate(-45deg); margin-left:2px; transition:transform .18s; }
+  .slp .gd[open] summary::before { transform:rotate(45deg); }
+  .slp .gd summary .pm { display:none; }
+  .slp .gd .gd-b { display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; padding-bottom:4px; }
   .slp .gd .gd-c { background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
   .slp .gd .gh { font-size:12.5px; font-weight:800; color:var(--green-deep); margin-bottom:6px; }
   .slp .gd ul { margin:0; padding-left:1.2em; font-size:12.5px; line-height:1.8; color:var(--ink-2); }
   .slp .gd li + li { margin-top:4px; }
   .slp .gd li b { color:var(--ink); font-weight:700; }
   .slp .gd li .w { display:block; font-size:11.5px; color:var(--ink-3); }
+  .slp .gd.inline { display:block; border-top:none; margin:2px 0 6px 2.2em; }
+  .slp .gd.inline summary { padding:2px 0; font-size:12px; font-weight:600; color:var(--ink-2); }
+  .slp .gd.inline summary::before { border-color:var(--ink-3); }
+  .slp .gd.inline[open] summary { color:var(--green-deep); }
+  .slp .gd.inline .gd-b { margin-top:8px; }
   @media (min-width: 900px) { .slp .gd .gd-b { grid-template-columns:1fr 1fr; } }
 
 
@@ -2457,7 +2460,7 @@ S.sellerApply = () => appbar('企業会員登録の申請') + `
 /* ---- メーカーの方へ（本番 www.farmille.com/sellers の写し・2026-09-23時点） ---- */
 const CHECK_IC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
 /* ガイドの「詳細を見る」：対象となる企業様／ご準備いただくもの（PROCS から） */
-const GD = (key, inline) => `<details class="gd${inline ? ' inline' : ''}"><summary>詳細を見る</summary><div class="gd-b"><div class="gd-c"><div class="gh">対象となる企業様</div><ul>${PROCS[key].conds.map(c => `<li>${c}</li>`).join('')}</ul></div><div class="gd-c"><div class="gh">ご準備いただくもの</div><ul>${PROCS[key].prep.map(x => `<li><b>${x[0]}</b>${x[1] ? `<span class="w">${x[1]}</span>` : ''}</li>`).join('')}</ul></div></div></details>`;
+const GD = (key, inline) => `<details class="gd${inline ? ' inline' : ''}"><summary>${inline ? '対象となる企業様・ご準備いただくもの' : '対象となる企業様・ご準備いただくもの'}<span class="pm"></span></summary><div class="gd-b"><div class="gd-c"><div class="gh">対象となる企業様</div><ul>${PROCS[key].conds.map(c => `<li>${c}</li>`).join('')}</ul></div><div class="gd-c"><div class="gh">ご準備いただくもの</div><ul>${PROCS[key].prep.map(x => `<li><b>${x[0]}</b>${x[1] ? `<span class="w">${x[1]}</span>` : ''}</li>`).join('')}</ul></div></div></details>`;
 S.sellersLP = () => appbar('メーカーの方へ') + `
   <div class="body slp">
     <div class="slp-photo"><div><div class="ey">FOR BUSINESS</div><h1>Farmille 企業様向け利用ガイド</h1></div></div>
@@ -2476,7 +2479,7 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
     <div class="slp-toc">
       <div class="h">目次</div>
       <a data-go="sellersLP" data-anchor="lpFlow">Farmille掲載までの流れ（初回5STEP）</a>
-      <a data-go="sellersLP" data-anchor="lpPrep">初回申請時にご用意いただくもの</a>
+      <a data-go="sellersLP" data-anchor="lpPrep">申請にご用意いただくもの</a>
       <a data-go="sellersLP" data-anchor="lpGuide">ご利用ガイド（新規掲載・編集・終売申請）</a>
       <a data-go="sellersLP" data-anchor="lpFaq">よくあるご質問</a>
       <a data-go="sellersLP" data-anchor="lpOwner">資材オーナー権限とは？</a>
@@ -2499,7 +2502,7 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
     </div>
 
     <div class="slp-stepcard"><span class="st">STEP1　企業会員登録</span>
-      <div class="d">下記「初回申請時にご用意いただくもの」がそろってからSTEP2以降にお進みください。まずは企業会員登録の申請をお願いいたします。運営が法人情報を確認のうえ、ご登録のメールアドレス宛にログインIDとパスワード設定のご案内をお送りします。</div>
+      <div class="d">下記「申請にご用意いただくもの」がそろってからSTEP2以降にお進みください。まずは企業会員登録の申請をお願いいたします。運営が法人情報を確認のうえ、ご登録のメールアドレス宛にログインIDとパスワード設定のご案内をお送りします。</div>
       <span class="lk" data-go="sellerApply">企業会員登録の申請はこちらから →</span>
     </div>
     <div class="slp-stepcard"><span class="st">STEP2　資材オーナー権限の申請</span>
@@ -2519,11 +2522,11 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
     </div>
 
     <div id="lpPrep"></div>
-    <h2 class="slp-h2">初回申請時にご用意いただくもの</h2>
-    <p class="slp-sub">Farmilleへ初めて資材情報をご登録いただく際に、下記のご準備をお願いします。パッケージ・ラベルの画像またはPDFの添付、あるいはパッケージが確認できる製品ページURLのご提示を、STEP2の申請フォームでお願いします。</p>
+    <h2 class="slp-h2">申請にご用意いただくもの</h2>
+    <p class="slp-sub">企業会員登録と資材オーナー権限の申請にあたり、下記のご準備をお願いします。パッケージ・ラベルの画像またはPDFの添付、あるいはパッケージが確認できる製品ページURLのご提示は、STEP2の申請フォームで行います。</p>
     <div class="slp-prep2"><div class="h">ご用意いただくもの</div>
       <ol>
-        <li><b>資材ごとのパッケージ・ラベルの画像1点</b>（貴社名の記載箇所を含む。当該資材との関係確認のため）。または、パッケージ画像が掲載されている公式サイト・ECサイトの製品ページURL</li>
+        <li><b>資材ごとのパッケージ・ラベルの画像</b>（貴社名の記載箇所を含む。当該資材との関係確認のため）。または、パッケージ画像が掲載されている公式サイト・ECサイトの製品ページURL</li>
         <li><b>会社概要ページのURL</b>（申請元確認のため）</li>
         <li><b>法人番号（13桁）</b>。国税庁 法人番号公表サイトで確認できます</li>
         <li><b>ご担当者の氏名・部署・メールアドレス・電話番号</b>（公開されません）</li>
@@ -2543,12 +2546,12 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
       <div class="g"><div class="h">新しく資材を掲載したい<span class="need">ID必須</span></div><ol>
         <li><span class="n">１．</span><a data-go="sellerApply">企業会員登録の申請</a></li>
         <li><span class="n">２．</span><a data-go="formA">資材オーナー権限の申請フォーム</a></li>
-        <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a></li>
+        <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a>（企業会員ダッシュボードから）</li>
       </ol>${GD('procOwner')}</div>
       <div class="g"><div class="h">掲載されている自社資材の情報を確認・編集したい<span class="need">ID必須</span></div><ol>
         <li><span class="n">１．</span><a data-go="sellerApply">企業会員登録の申請</a></li>
         <li><span class="n">２．</span><a data-go="formA">資材オーナー権限の申請フォーム</a></li>
-        <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a></li>
+        <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a>（企業会員ダッシュボードから）</li>
       </ol>${GD('procOwner')}</div>
       <div class="g"><div class="h">終売・非表示にしたい<span class="need no">ID不要</span></div><ol>
         <li><span class="n">１．</span><a data-go="delistIntake">受付フォームにご記入</a>（申請用フォームを送付いたします）</li>
@@ -2556,7 +2559,7 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
       </ol>${GD('procDelist')}</div>
       <div class="g"><div class="h">企業会員登録済みの方の活用ガイド</div><ol>
         <li><span class="n">１．</span><a data-go="formA">新しい資材を掲載する</a>${GD('procOwner', true)}</li>
-        <li><span class="n">２．</span><a data-go="makerDash">自社資材の情報を確認・編集する</a></li>
+        <li><span class="n">２．</span><a data-go="makerDash">自社資材の情報を確認・編集する</a>（企業会員ダッシュボードから）</li>
         <li class="sub">┗ <a data-go="makerDash">仮掲載ページの情報を確認・編集する</a></li>
         <li><span class="n">３．</span><a data-go="delistIntake">資材を終売・非表示にする</a>${GD('procDelist', true)}</li>
         <li><span class="n">４．</span><a data-go="formB">資材オーナー権限を別の会社に引き渡す</a>${GD('procTransferOut', true)}</li>
@@ -2610,7 +2613,7 @@ const PROCS = {
       ['ログインし、「各種お手続き」から申請フォームにご記入ください','資材ごとに、申請内容（新規掲載／掲載済み資材の資材オーナー権限）、資材名、当該資材との関係（製造元・販売元・輸入元）、パッケージが確認できる資料を記入します。'],
       ['運営が内容を確認後、資材ごとに資材オーナー権限をお渡しいたします','完了した場合、またご提出資料に不足がある場合は、担当者メールアドレス宛にメールでご連絡いたします。'],
     ],
-    conds:['申請するすべての資材について、当該資材の製造元・販売元・輸入元のいずれか、または複数に該当すること。特定地域の販売代理店・卸・小売店は受付対象外です。','「販売元」とは、当該資材のパッケージ上で「販売元」「発売元」等として表記され、国内における販売を代表する立場にある企業を指します。','当該資材の製造・輸入・販売等に関わる他の関係会社との間で合意を得ているか、または貴社の判断で申請できる立場にあり、本申請を行う正当な権利を有していること。','資材オーナー権限は、1資材につき1社に付与されます。すでに別の会社が資材オーナー企業の資材に申請した場合は、確認のうえ当事者間での話し合いをお願いすることがあります。'],
+    conds:['申請するすべての資材について、当該資材の製造元・販売元・輸入元のいずれか、または複数に該当すること。特定地域の販売代理店・卸・小売店は受付対象外です。','「販売元」とは、当該資材のパッケージ上で「販売元」「発売元」等として表記され、国内における販売を代表する立場にある企業を指します。','当該資材の製造・輸入・販売等に関わる他の関係会社との間で合意を得ているか、または貴社の判断で申請できる立場にあり、本申請を行う正当な権利を有していること。','資材オーナー権限は、1資材につき1社に付与されます。すでに別の会社が資材オーナー企業になっている資材に申請している場合は、確認のうえ当事者間での話し合いをお願いすることがあります。'],
     prep:[['法人番号（13桁）とFarmilleアカウントID',''],['ご担当者の氏名・部署名・メールアドレス・電話番号',''],['資材名（パッケージ記載の正式名称）',''],['掲載済み資材の場合：FarmilleページのURL','製品公式ページのURLは任意です'],['資材ごとのパッケージ・ラベルの画像（貴社名の記載箇所を含む）','または、パッケージ画像が掲載されている公式サイト・ECサイトの製品ページURL']] },
   procTransferOut: { title:'資材オーナー権限を別の会社に引き渡す', lead:'貴社が資材オーナー企業になっている資材について、資材オーナー権限を別の会社に移す申請です。現在の資材オーナー企業から申請します。', needId:true,
     steps:[
@@ -2637,7 +2640,7 @@ const PROCS = {
       ['運営が内容を確認後、完了のご連絡をいたします','ご提出資料に不足がある場合も、担当者メールアドレス宛にメールでご連絡いたします。資材ページやレビューのデータは削除しません。'],
     ],
     conds:['申請するすべての資材について、当該資材の製造元・販売元・輸入元のいずれか、または複数に該当すること。特定地域の販売代理店、二次卸・三次卸、小売店は受付対象外です。','当該資材の製造・輸入・販売等に関わる他の関係会社との間で合意を得ているか、または貴社の判断で申請できる立場にあり、本申請を行う正当な権利を有していること。','本申請を行う担当者が、所属法人から必要な権限を付与されていること。'],
-    prep:[['対象資材のFarmilleページURLと資材名',''],['ご担当者の氏名・部署名・メールアドレス・電話番号',''],['会社概要ページのURL',''],['資材ごとのパッケージ・ラベルの画像（貴社名の記載箇所を含む）','または、パッケージ画像が掲載されている公式サイト・ECサイトの製品ページURL'],['FarmilleアカウントID（お持ちの場合）','なくても申請できます']] },
+    prep:[['対象資材のFarmilleページURLと資材名',''],['ご担当者の氏名・部署名・メールアドレス・電話番号',''],['会社概要ページのURL',''],['資材ごとのパッケージ・ラベルの画像（貴社名の記載箇所を含む）','または、パッケージ画像が掲載されている公式サイト・ECサイトの製品ページURL']] },
 };
 const PROC_ORDER = ['procOwner', 'procTransferOut', 'procTransferIn', 'procDelist'];
 Object.keys(PROCS).forEach(key => {
