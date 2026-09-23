@@ -1345,7 +1345,7 @@
 
 
   .slp .slp-guide .g .h .need { display:inline-block; vertical-align:2px; margin-left:10px; font-size:10.5px; font-weight:700; color:var(--amber); background:var(--amber-soft); border-radius:999px; padding:2px 9px; white-space:nowrap; }
-  .slp .need.no { color:var(--ink-2); background:var(--bg); border:1px solid var(--line-strong); }
+  .slp .need.no, .slp .slp-guide .g .h .need.no, .slp .slp-guide .g li .need.no { color:var(--ink-2); background:var(--bg); border:1px solid var(--line-strong); }
 
 
   .slp .slp-owner { display:grid; grid-template-columns:1fr; gap:12px; margin-top:14px; }
@@ -1411,6 +1411,33 @@
   .fm-chic .form-actions .btn-primary { width:auto; min-width:220px; background:#1F9E95; border-radius:3px; padding:14px 40px; font-size:15px; }
   .fm-chic .form-actions .draft { color:#8592a0; font-size:12px; margin-top:10px; }
   .fm-chic .err-box { border-radius:3px; }
+
+
+  .slp .slp-guide { grid-template-columns:1fr !important; }
+  .slp .slp-guide .g.wide ol { columns:1 !important; }
+  .slp .gd { margin-top:10px; }
+  .slp .gd.inline { display:inline-block; margin:0 0 0 10px; vertical-align:baseline; }
+  .slp .gd summary { list-style:none; display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color:var(--green-deep); cursor:pointer; border:1px solid var(--line-strong); border-radius:999px; padding:3px 11px; background:var(--card); }
+  .slp .gd summary::-webkit-details-marker { display:none; }
+  .slp .gd summary::after { content:'▾'; font-size:10px; }
+  .slp .gd[open] summary::after { content:'▴'; }
+  .slp .gd .gd-b { display:grid; grid-template-columns:1fr; gap:12px; margin-top:10px; }
+  .slp .gd.inline .gd-b { display:grid; }
+  .slp .gd.inline[open] { display:block; margin:8px 0 4px; }
+  .slp .gd .gd-c { background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .slp .gd .gh { font-size:12.5px; font-weight:800; color:var(--green-deep); margin-bottom:6px; }
+  .slp .gd ul { margin:0; padding-left:1.2em; font-size:12.5px; line-height:1.8; color:var(--ink-2); }
+  .slp .gd li + li { margin-top:4px; }
+  .slp .gd li b { color:var(--ink); font-weight:700; }
+  .slp .gd li .w { display:block; font-size:11.5px; color:var(--ink-3); }
+  @media (min-width: 900px) { .slp .gd .gd-b { grid-template-columns:1fr 1fr; } }
+
+
+  .slp .slp-ownerbox { margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; }
+  .slp .slp-ownerbox p { font-size:13.5px; line-height:1.8; color:var(--ink); }
+  .slp .slp-ownerbox ul { margin:10px 0 0; padding-left:1.2em; font-size:12.5px; line-height:1.8; color:var(--ink-2); }
+  .slp .slp-ownerbox li + li { margin-top:5px; }
+  .slp .slp-ownerbox li b { color:var(--green-deep); }
 
   /* ---- 申請詳細：見出し右のID案内 ---- */
   .slp .slp-head2 { display:flex; flex-direction:column; gap:14px; }
@@ -2429,6 +2456,8 @@ S.sellerApply = () => appbar('企業会員登録の申請') + `
 /* ---- 投稿先選択（＋ボタンから） ---- */
 /* ---- メーカーの方へ（本番 www.farmille.com/sellers の写し・2026-09-23時点） ---- */
 const CHECK_IC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>`;
+/* ガイドの「詳細を見る」：対象となる企業様／ご準備いただくもの（PROCS から） */
+const GD = (key, inline) => `<details class="gd${inline ? ' inline' : ''}"><summary>詳細を見る</summary><div class="gd-b"><div class="gd-c"><div class="gh">対象となる企業様</div><ul>${PROCS[key].conds.map(c => `<li>${c}</li>`).join('')}</ul></div><div class="gd-c"><div class="gh">ご準備いただくもの</div><ul>${PROCS[key].prep.map(x => `<li><b>${x[0]}</b>${x[1] ? `<span class="w">${x[1]}</span>` : ''}</li>`).join('')}</ul></div></div></details>`;
 S.sellersLP = () => appbar('メーカーの方へ') + `
   <div class="body slp">
     <div class="slp-photo"><div><div class="ey">FOR BUSINESS</div><h1>Farmille 企業様向け利用ガイド</h1></div></div>
@@ -2514,25 +2543,24 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
       <div class="g"><div class="h">新しく資材を掲載したい<span class="need">ID必須</span></div><ol>
         <li><span class="n">１．</span><a data-go="sellerApply">企業会員登録の申請</a></li>
         <li><span class="n">２．</span><a data-go="formA">資材オーナー権限の申請フォーム</a></li>
-        <li><span class="n">３．</span><a data-go="makerDash">資材情報の登録・公開申請</a></li>
-      </ol></div>
-      <div class="g"><div class="h">自社資材の情報を確認・編集したい<span class="need">ID必須</span></div><ol>
+        <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a></li>
+      </ol>${GD('procOwner')}</div>
+      <div class="g"><div class="h">掲載されている自社資材の情報を確認・編集したい<span class="need">ID必須</span></div><ol>
         <li><span class="n">１．</span><a data-go="sellerApply">企業会員登録の申請</a></li>
         <li><span class="n">２．</span><a data-go="formA">資材オーナー権限の申請フォーム</a></li>
         <li><span class="n">３．</span><a data-go="makerDash">資材情報の確認・編集</a></li>
-      </ol></div>
+      </ol>${GD('procOwner')}</div>
       <div class="g"><div class="h">終売・非表示にしたい<span class="need no">ID不要</span></div><ol>
-        <li><span class="n">１．</span><a data-go="delistIntake">受付フォームにご記入</a></li>
-        <li><span class="n">２．</span><a data-go="formD">メールで届く申請フォームにご記入</a></li>
-        <li><span class="n">３．</span><a data-go="procDelist">対応の流れを見る</a></li>
-      </ol></div>
-      <div class="g wide"><div class="h">企業会員登録済みの方の活用ガイド<span class="need">ID必須</span></div><ol>
-        <li><span class="n">１．</span><a data-go="formA">新しい資材を掲載する</a></li>
+        <li><span class="n">１．</span><a data-go="delistIntake">受付フォームにご記入</a>（申請用フォームを送付いたします）</li>
+        <li><span class="n">２．</span>申請フォームにご記入・ご提出（メールに記載のURLから開きます）</li>
+      </ol>${GD('procDelist')}</div>
+      <div class="g"><div class="h">企業会員登録済みの方の活用ガイド</div><ol>
+        <li><span class="n">１．</span><a data-go="formA">新しい資材を掲載する</a>${GD('procOwner', true)}</li>
         <li><span class="n">２．</span><a data-go="makerDash">自社資材の情報を確認・編集する</a></li>
         <li class="sub">┗ <a data-go="makerDash">仮掲載ページの情報を確認・編集する</a></li>
-        <li><span class="n">３．</span><a data-go="delistIntake">資材を終売・非表示にする</a><span class="need no">ID不要</span></li>
-        <li><span class="n">４．</span><a data-go="formB">資材オーナー権限を別の会社に引き渡す</a></li>
-        <li><span class="n">５．</span><a data-go="formC">引き継いだ資材の資材オーナー権限を申請する</a></li>
+        <li><span class="n">３．</span><a data-go="delistIntake">資材を終売・非表示にする</a>${GD('procDelist', true)}</li>
+        <li><span class="n">４．</span><a data-go="formB">資材オーナー権限を別の会社に引き渡す</a>${GD('procTransferOut', true)}</li>
+        <li><span class="n">５．</span><a data-go="formC">引き継いだ資材の資材オーナー権限を申請する</a>${GD('procTransferIn', true)}</li>
         <li><span class="n">６．</span><a data-go="makerDash">会社の情報（メーカープロフィール）を編集する</a></li>
         <li><span class="n">７．</span><a data-go="makerDash">担当者・連絡先を変更する</a></li>
         <li><span class="n">８．</span><a data-go="makerProcs">各種お手続きの一覧を見る</a></li>
@@ -2541,27 +2569,8 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
 
     <div id="lpOwner"></div>
     <h2 class="slp-h2">資材オーナー権限とは？</h2>
-    <p class="slp-sub">Farmilleに掲載される資材ごとに1社に設定する権限で、資材情報の編集権限を含みます。製造元・販売元・輸入元の企業様に、資材ごとにお渡しします。</p>
-    <div class="slp-owner">
-      <div class="oi"><div class="h">資材オーナー企業ができること</div><ul>
-        <li>製品説明・施用方法・施用タイミング・技術と作用機作・登録認証・リンク資料など、資材ページの情報を企業会員ダッシュボードで記入し、公開を申請できます。記入した情報には「メーカー記入」と表示します。</li>
-        <li>生産者の感想口コミ・実証詳細レポートを、どの作物でどのように使われたかまで確認できます。</li>
-        <li>編集権限だけを代理店等に委託できます。委託先が記入した内容も、資材オーナー企業の責任で管理します。</li>
-      </ul></div>
-      <div class="oi"><div class="h">権限を持てる企業</div><ul>
-        <li>当該資材の製造元・販売元・輸入元のいずれかに該当する企業。1資材につき1社です。</li>
-        <li>「販売元」とは、パッケージ上で「販売元」「発売元」等として表記され、国内の販売を代表する立場の企業を指します。特定地域の販売代理店・卸・小売店は対象外です。</li>
-        <li>権限は、パッケージの記載で貴社と資材の関係を確認したうえでお渡しします。会社名が同じでも自動では付きません。</li>
-      </ul></div>
-      <div class="oi"><div class="h">権限がない間の資材ページ</div><ul>
-        <li>運営が公開情報をもとに作成した「仮掲載ページ」として表示します。メーカーの記入がない項目は「−」と表示します。</li>
-        <li>感想口コミ・実証詳細レポートは仮掲載の間も蓄積され、権限をお渡しした後もそのまま引き継がれます。</li>
-      </ul></div>
-      <div class="oi"><div class="h">権限の移行・停止</div><ul>
-        <li>資材オーナー権限は別の会社に移行できます。現在の資材オーナー企業から引き渡す場合と、事業を引き継いだ会社から申請する場合で手続きが異なります。</li>
-        <li>権限の帰属について競合する申請や異議があった場合、または重大な誤情報が確認された場合は、運営の判断で編集を一時停止することがあります。掲載情報はその間も表示したままにします。</li>
-        <li>権限を渡す・引き継ぐ手続きは「ご利用ガイド」の各項目から進めます。</li>
-      </ul></div>
+    <div class="slp-ownerbox">
+      <p>Farmilleに掲載される資材ごとに1社に設定する権限で、資材情報の編集権限を含みます。当該資材の製造元・販売元・輸入元の企業様を対象に、パッケージの記載で貴社と資材の関係を確認したうえでお渡しします。権限をお渡しした資材は、企業会員ダッシュボードから製品説明・施用方法・試験結果などの情報を編集できます。記入した情報には「メーカー記入」と表示します。</p>
     </div>
 
     <div id="lpFaq"></div>
