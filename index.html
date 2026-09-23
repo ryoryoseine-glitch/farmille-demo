@@ -2580,7 +2580,7 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
     <div id="lpOwner"></div>
     <h2 class="slp-h2">資材オーナー権限とは？</h2>
     <div class="slp-ownerbox">
-      <p>Farmilleに掲載される資材ごとに1社に設定する権限で、資材情報の編集権限を含みます。当該資材の製造元・販売元・輸入元の企業様を対象に、パッケージの記載で貴社と資材の関係を確認したうえでお渡しします。権限をお渡しした資材は、企業会員ダッシュボードから製品説明・施用方法・試験結果などの情報を編集できます。記入した情報には「メーカー記入」と表示します。</p>
+      <p>Farmilleに掲載される資材ごとに1社に設定する権限で、資材情報の編集権限を含みます。当該資材の製造元・販売元・輸入元の企業様を対象に、パッケージの記載で貴社と資材の関係を確認したうえでお渡しします。権限をお渡しした資材は、企業会員ダッシュボードから製品説明・施用方法・試験結果などの情報を編集できます。</p>
     </div>
 
     <div id="lpFaq"></div>
@@ -2593,7 +2593,6 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
         ['販売代理店や卸売業者でも申請できますか？','特定地域の販売代理店・卸・小売店の皆様からのお手続きは受け付けておりません。パッケージ上で「販売元」「発売元」等として表記され、国内の販売を代表する立場の企業様は「販売元」としてお申し込みいただけます。', null],
         ['資材オーナー権限を別の会社に移せますか？','資材オーナー権限を移行することは可能です。現在の資材オーナー企業から申請する場合と、事業譲渡・合併などで引き継いだ会社から申請する場合で、手続きが異なります。', ['sellersLP#lpGuideMore','権限の引き渡し・引き継ぎについて →']],
         ['終売や非表示の申請にFarmilleアカウントは必要ですか？','不要です。受付フォームに法人名・ご担当者名・メールアドレスを入力すると、申請フォームのURLをメールでお送りします。', ['sellersLP#lpGuideDelist','終売・非表示の申請について →']],
-        ['メーカーが記入した情報はどのように表示されますか？','メーカーが記入した情報には「メーカー記入」と表示します。公式認証や製品の効果を保証するマークではありません。記入内容の取り扱いは、Farmille企業向けサービス利用規約と資材ページ広告表現ガイドラインをご確認ください。', null],
         ['生産者の感想口コミや実証詳細レポートを削除してもらえますか？','生産者の投稿を、メーカー様のご希望を理由に削除することは基本的に行いません。明らかな事実誤認、法令違反、誹謗中傷に該当すると思われる場合は、運営にお問い合わせください。', null],
         ['申請の結果はどのように連絡されますか？','運営から、ご記入いただいたご担当者様のメールアドレス宛にご連絡いたします。ご提出資料に不足がある場合も、同じくメールでご連絡します。', null],
         ['非表示にした後、再び掲載できますか？','可能です。関係する会社間で掲載についての合意をいただいたうえで、あらためて資材オーナー権限をご申請ください。', ['sellersLP#lpGuideNew','資材オーナー権限の申請について →']],
@@ -4692,10 +4691,10 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const tabLog = `
         <div class="md-sec-note">プロフィール・製品情報への変更の記録です。</div>
         <div class="card">
-          ${(window.__mdLog || []).map(l9 => `<div class="md-log"><span class="d tnum">${l9.d}</span><div class="t">${esc(l9.t)}</div><span class="set-by">メーカーにより更新</span></div>`).join('')}
+          ${(window.__mdLog || []).map(l9 => `<div class="md-log"><span class="d tnum">${l9.d}</span><div class="t">${esc(l9.t)}</div><span class="set-by">企業会員により更新</span></div>`).join('')}
           <div class="md-log"><span class="d tnum">2026-08-23</span><div class="t">スキーポン：効果分類をJBSA別表1（ver1.0）へ再整理</div><span class="set-by">Farmille運営により更新</span></div>
-          <div class="md-log"><span class="d tnum">2026-08-21</span><div class="t">スキーポン：施用方法の詳細を修正</div><span class="set-by">メーカーにより更新</span></div>
-          <div class="md-log"><span class="d tnum">2026-08-18</span><div class="t">スキーポン：期待効果・作用機作を記入</div><span class="set-by">メーカーにより更新</span></div>
+          <div class="md-log"><span class="d tnum">2026-08-21</span><div class="t">スキーポン：施用方法の詳細を修正</div><span class="set-by">企業会員により更新</span></div>
+          <div class="md-log"><span class="d tnum">2026-08-18</span><div class="t">スキーポン：期待効果・作用機作を記入</div><span class="set-by">企業会員により更新</span></div>
           <div class="md-log"><span class="d tnum">2026-08-10</span><div class="t">公式資料をもとに掲載開始</div><span class="set-by">Farmille運営により登録</span></div>
         </div>`;
 
@@ -4826,7 +4825,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
     const boxDesc = vOK ? `
       <div class="card pad">
         <p style="font-size:13.5px;line-height:1.8">${esc(p.effOfficial || p.usecase || '')}</p>
-        <div class="disclaimer">メーカー記入（完成見本のためサンプル表示です）</div>
+        <div class="disclaimer">完成見本のためサンプル表示です</div>
       </div>` : `<div class="card pad"><p class="muted" style="font-size:13px">−</p></div>`;
 
     /* --- 施用タイミング（8ステージ一律・メーカー確認後に記入） --- */
@@ -4836,7 +4835,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       <div class="card pad">
         <div class="tl-wrap"><div class="tl">${STAGES8.map(st2 => `
           <div class="tl-i${onStages.includes(st2) ? ' on' : ''}"><span class="dot"></span><span class="lb">${st2}</span></div>`).join('')}</div></div>
-        <div class="disclaimer">メーカー記入（完成見本のためサンプル表示です）。作物ごとには分けず、共通の目安として表示します。</div>
+        <div class="disclaimer">完成見本のためサンプル表示です。作物ごとには分けず、共通の目安として表示します。</div>
       </div>` : '';
 
     /* 対象作物：分類も作目も並列タグ（内部では通知の階層で正規化）。表示は仕様一覧の行 */
@@ -4979,7 +4978,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
           ${stx.rev ? `<div style="margin-top:4px;color:var(--amber);font-weight:800;font-size:14px">${stars(Math.round(stx.score))} <span class="tnum">${stx.score.toFixed(1)}</span></div>` : ``}
           ${p.en && p.en !== p.name ? `<div class="muted" style="font-size:11px;margin-top:2px">${esc(p.en)}</div>` : ''}
           <div class="mat-maker" data-go="seller" style="margin-top:5px;cursor:pointer;color:var(--green);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--green) 40%,transparent)">${esc(p.maker)}</div>
-          ${vOK ? '' : `<div class="muted" style="font-size:10.5px;margin-top:3px;line-height:1.6">国内での販売を代表する立場にあるとFarmille運営が調査・認識した企業を表示しています。相違がある場合は、<span data-go="sellerApply" style="color:var(--green-deep);font-weight:600;cursor:pointer">メーカー登録</span>からご連絡ください。</div>`}
+          ${vOK ? '' : `<div class="muted" style="font-size:10.5px;margin-top:3px;line-height:1.6">国内での販売を代表する立場にあるとFarmille運営が調査・認識した企業を表示しています。相違がある場合は、<span data-go="sellerApply" style="color:var(--green-deep);font-weight:600;cursor:pointer">企業会員登録</span>からご連絡ください。</div>`}
           ${(p.mat8 || []).length || listTag(p) ? `<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">${(p.mat8 || []).map(m2 => `<span class="chip">${esc(m2)}</span>`).join('')}${listTag(p)}</div>` : ''}
           <div class="muted" style="font-size:11.5px;margin-top:6px">
             <span data-scrollto="anchorReports" style="cursor:pointer;white-space:nowrap">実証詳細レポート <b class="tnum" style="color:${repN > 0 ? 'var(--amber)' : 'var(--ink)'};font-size:${repN > 0 ? '1.15em' : '1em'}">${repN}件</b></span>
@@ -4990,7 +4989,7 @@ function runSearch(sel) {   /* window.runSearch としても公開（下部） *
       </div>
       <div class="compliance" style="margin-top:12px"><span class="ck">${CK}</span>
         <div>${vOK
-          ? `製品情報はメーカーが記入・管理しています。掲載情報は効果を保証するものではありません。`
+          ? `製品情報は企業会員（資材オーナー企業）が記入・管理しています。掲載情報は効果を保証するものではありません。`
           : `このページはFarmille運営が、メーカーの公開資料（製品ページ・パンフレット・SDS等）をもとに作成したもので、メーカーによる内容の確認は受けていません。誤記や最新でない内容を含むことがあり、効果を保証するものではありません。`}
           使用前に必ずメーカー公式情報をご確認ください。
           <span class="link-more" data-go="disclaimer" style="cursor:pointer">免責事項 →</span>
