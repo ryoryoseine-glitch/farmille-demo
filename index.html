@@ -1442,6 +1442,15 @@
   .slp .slp-ownerbox li + li { margin-top:5px; }
   .slp .slp-ownerbox li b { color:var(--green-deep); }
 
+
+  .slp .faq-acc .fq { border-top:1px solid var(--line); padding:16px 18px; }
+  .slp .faq-acc .fq:first-child { border-top:none; }
+  .slp .faq-acc .fq .q { display:flex; gap:10px; font-size:14.5px; font-weight:800; line-height:1.5; }
+  .slp .faq-acc .fq .q::before { content:'Q'; color:var(--green); flex:0 0 auto; }
+  .slp .faq-acc .fq .a { display:block; position:relative; margin-top:8px; padding:0 0 0 24px; font-size:13px; line-height:1.85; color:var(--ink-2); }
+  .slp .faq-acc .fq .a::before { content:'A'; position:absolute; left:2px; top:0; color:var(--ink-3); font-weight:800; }
+  .slp .faq-acc .fq .a > div { margin-top:6px; }
+
   /* ---- 申請詳細：見出し右のID案内 ---- */
   .slp .slp-head2 { display:flex; flex-direction:column; gap:14px; }
   .slp .slp-idbox { background:var(--green-soft-2); border:1.5px solid color-mix(in srgb,var(--green) 35%,var(--line)); border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:10px; }
@@ -2589,7 +2598,7 @@ S.sellersLP = () => appbar('メーカーの方へ') + `
         ['生産者の感想口コミや実証詳細レポートを削除してもらえますか？','事実にもとづく投稿は、メーカー様のご希望による削除は行いません。明らかな事実誤認、法令違反、誹謗中傷に該当すると判断される場合は、運営に調査・対応をご依頼いただけます。', null],
         ['申請の結果はどのように連絡されますか？','お手続きが完了した場合は、担当者メールアドレス宛にメールでお知らせします。ご提出資料に不足がある場合も、メールでご連絡します。', null],
         ['非表示にした後、再び掲載できますか？','できます。関係する会社間で掲載についての合意をいただいたうえで、あらためて資材オーナー権限の申請をお願いします。', ['formA','資材オーナー権限の申請 →']],
-      ].map(q => `<details><summary>${q[0]}<span class="pm"></span></summary><div class="a">${q[1]}${q[2] ? `<div style="margin-top:6px">${[q[2], q[3]].filter(Boolean).map(l => `<span class="lk" data-go="${l[0]}">${l[1]}</span>`).join('')}</div>` : ''}</div></details>`).join('')}
+      ].map(q => `<div class="fq"><div class="q">${q[0]}</div><div class="a">${q[1]}${q[2] ? `<div style="margin-top:6px">${[q[2], q[3]].filter(Boolean).map(l => `<span class="lk" data-go="${l[0]}">${l[1]}</span>`).join('')}</div>` : ''}</div></div>`).join('')}
     </div>
 
     <div class="slp-contact">
