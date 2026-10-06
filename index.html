@@ -3419,6 +3419,8 @@ function go(id, reset, anchor) {
   if (!reset && current !== id) history.push(current);
   if (reset) history = [];
   current = id;
+  /* 開いている画面をアドレスの末尾に残す（リンクで送れるように） */
+  try { window.history.replaceState(null, '', id === 'home' ? location.pathname + location.search : '#' + id); } catch (e) {}
   screenEl.innerHTML = S[id]();
   screenEl.scrollTop = 0;
   const hasFab = FAB_SCREENS.includes(id);
@@ -6852,7 +6854,9 @@ window.FARMILLE_CAMPAIGNS = [];   /* キャンペーンバナーは廃止（LP�
     head.querySelector('#navToggle').addEventListener('click',()=>document.querySelector('.phone').classList.toggle('nav-collapsed'));
   }
 })();
-go('home', true);
+{ /* リンクで開いたときは、アドレス末尾の画面から始める（見本にはログインの仕組みがないので、ログインの画面は挟まない） */
+  const h = decodeURIComponent(location.hash.replace(/^#/, ''));
+  if (h && h !== 'home' && h !== 'reportForm' && S[h]) { if (LOGIN_GATE.includes(h)) window.__sellerAuth = true; go(h, true); } else go('home', true); }
 </script>
 
 
