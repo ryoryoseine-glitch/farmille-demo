@@ -3433,7 +3433,8 @@ function go(id, reset, anchor) {
   initScreen(id);
   const fdef = screenEl.querySelector('form[data-code]'); if (fdef) initForm(fdef, FORMS[fdef.dataset.code]);
   const dl = document.getElementById('doLogin'); if (dl) dl.addEventListener('click', () => { window.__sellerAuth = true; const to = window.__afterLogin || 'makerDash'; window.__afterLogin = null; go(to, true); });
-  const inq = document.getElementById('intakeForm'); if (inq) inq.addEventListener('submit', e => { e.preventDefault(); window.__intake = { to: (document.getElementById('iEmail')||{}).value || 'tanto@example.co.jp', name: (document.getElementById('iName')||{}).value || '金子 太郎' }; go('delistIntakeDone'); });
+  const inq = document.getElementById('intakeForm'); if (inq) inq.addEventListener('submit', e => { e.preventDefault(); window.__intake = { to: (document.getElementById('iEmail')||{}).value || 'tanto@example.co.jp', name: (document.getElementById('iName')||{}).value || '金子 太郎' }; const v = id => ((document.getElementById(id)||{}).value || '').trim(); window.__intakeFill = { dCompany: v('iCompany'), dName: v('iName'), dEmail: v('iEmail') }; go('formD'); });
+  if (id === 'formD' && window.__intakeFill) { const f = window.__intakeFill; window.__intakeFill = null; Object.keys(f).forEach(k => { const el = document.getElementById(k); if (el && f[k]) { el.value = f[k]; el.dispatchEvent(new Event('input', { bubbles:true })); } }); screenEl.scrollTop = 0; }
   if (anchor) { const t = document.getElementById(anchor); if (t) screenEl.scrollTop = t.offsetTop - 70; }
 }
 fabHost.addEventListener('click', e => {
